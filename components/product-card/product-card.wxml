@@ -1,0 +1,22 @@
+  
+  
+    {{product.name}}
+    {{product.desc}}
+    
+    
+      
+        ¥
+        {{product.price}}
+        ¥{{product.originalPrice}}
+      
+      
+      
+        已售{{product.sales}}
+      
+    
+  
+  
+  
+  
+    {{item}}
+  

@@ -1,0 +1,98 @@
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40rpx 0;
+}
+
+/* Spinner加载 */
+.loading-spinner {
+  display: inline-block;
+}
+
+.spinner-border {
+  width: 40rpx;
+  height: 40rpx;
+  border: 4rpx solid rgba(255, 107, 107, 0.2);
+  border-top-color: #ff6b6b;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.loading-spinner.size-small .spinner-border {
+  width: 32rpx;
+  height: 32rpx;
+  border-width: 3rpx;
+}
+
+.loading-spinner.size-large .spinner-border {
+  width: 56rpx;
+  height: 56rpx;
+  border-width: 5rpx;
+}
+
+/* Dots加载 */
+.loading-dots {
+  display: flex;
+  gap: 12rpx;
+}
+
+.loading-dots .dot {
+  width: 12rpx;
+  height: 12rpx;
+  background-color: #ff6b6b;
+  border-radius: 50%;
+  animation: bounce 1.4s infinite ease-in-out both;
+}
+
+.loading-dots .dot:nth-child(1) {
+  animation-delay: -0.32s;
+}
+
+.loading-dots .dot:nth-child(2) {
+  animation-delay: -0.16s;
+}
+
+.loading-dots.size-small .dot {
+  width: 8rpx;
+  height: 8rpx;
+}
+
+.loading-dots.size-large .dot {
+  width: 16rpx;
+  height: 16rpx;
+}
+
+/* Circle加载 */
+.loading-circle .circle {
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 50%;
+  border: 4rpx solid transparent;
+  border-top-color: #ff6b6b;
+  border-right-color: #ff6b6b;
+  animation: spin 0.8s linear infinite;
+}
+
+.loading-text {
+  margin-top: 20rpx;
+  font-size: 24rpx;
+  color: #999;
+}
+
+/* 动画 */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes bounce {
+  0%, 80%, 100% {
+    transform: scale(0);
+  }
+  40% {
+    transform: scale(1);
+  }
+}

@@ -1,0 +1,89 @@
+     
+        {{isLogin ? userInfo.nickname : '点击登录'}}
+        VIP会员
+      
+    
+    
+    
+      
+        {{userInfo.balance || 0}}
+        余额
+      
+      
+        {{userInfo.points || 0}}
+        积分
+      
+      
+        {{userInfo.coupons || 0}}
+        优惠券
+      
+    
+  
+
+  
+  
+    
+      我的订单
+      
+        全部订单
+        ›
+      
+    
+    
+    
+      
+        
+          💰
+          {{orderCount.unpaid}}
+        
+        待付款
+      
+      
+      
+        
+          📦
+          {{orderCount.unshipped}}
+        
+        待发货
+      
+      
+      
+        
+          🚚
+          {{orderCount.unreceived}}
+        
+        待收货
+      
+      
+      
+        
+          💬
+          {{orderCount.uncommented}}
+        
+        待评价
+      
+      
+      
+        
+          🔧
+        
+        售后
+      
+    
+  
+
+  
+  
+    
+      
+        {{item.icon === 'icon-location' ? '📍' : item.icon === 'icon-coupon' ? '🎫' : item.icon === 'icon-service' ? '💬' : '⚙️'}}
+        {{item.title}}
+      
+      ›
+    
+  
+
+  
+  
+    退出登录
+  

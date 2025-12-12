@@ -1,0 +1,76 @@
+{
+    "pages": [
+      "pages/index/index",
+      "pages/category/category",
+      "pages/cart/cart",
+      "pages/user/user",
+      "pages/product/detail/detail",
+      "pages/product/list/list",
+      "pages/order/list/list",
+      "pages/order/detail/detail",
+      "pages/order/confirm/confirm",
+      "pages/payment/payment",
+      "pages/address/list/list",
+      "pages/address/edit/edit",
+      "pages/search/search",
+      "pages/auth/login"
+    ],
+    "window": {
+      "backgroundTextStyle": "light",
+      "navigationBarBackgroundColor": "#fff",
+      "navigationBarTitleText": "微商城",
+      "navigationBarTextStyle": "black",
+      "enablePullDownRefresh": true,
+      "backgroundColor": "#f5f5f5"
+    },
+    "tabBar": {
+      "color": "#999999",
+      "selectedColor": "#ff6b6b",
+      "backgroundColor": "#ffffff",
+      "borderStyle": "black",
+      "list": [
+        {
+          "pagePath": "pages/index/index",
+          "text": "首页",
+          "iconPath": "assets/images/icons/home.png",
+          "selectedIconPath": "assets/images/icons/home-active.png"
+        },
+        {
+          "pagePath": "pages/category/category",
+          "text": "分类",
+          "iconPath": "assets/images/icons/category.png",
+          "selectedIconPath": "assets/images/icons/category-active.png"
+        },
+        {
+          "pagePath": "pages/cart/cart",
+          "text": "购物车",
+          "iconPath": "assets/images/icons/cart.png",
+          "selectedIconPath": "assets/images/icons/cart-active.png"
+        },
+        {
+          "pagePath": "pages/user/user",
+          "text": "我的",
+          "iconPath": "assets/images/icons/user.png",
+          "selectedIconPath": "assets/images/icons/user-active.png"
+        }
+      ]
+    },
+    "usingComponents": {
+    "product-card": "/components/product-card/product-card",
+    "swiper-banner": "/components/swiper-banner/swiper-banner",
+    "empty-state": "/components/empty-state/empty-state",
+    "loading": "/components/loading/loading"
+  },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "获取您的位置信息用于配送服务"
+    }
+  },
+  "requiredPrivateInfos": [
+    "getLocation",
+    "chooseAddress"
+  ],
+  "lazyCodeLoading": "requiredComponents",
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

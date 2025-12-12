@@ -1,0 +1,48 @@
+/* 颜色变量 */
+page {
+  --primary-color: #ff6b6b;
+  --primary-light: #ff8787;
+  --primary-dark: #ff5252;
+  
+  --success-color: #4caf50;
+  --warning-color: #ff9800;
+  --error-color: #f44336;
+  --info-color: #2196f3;
+  
+  --text-primary: #333333;
+  --text-secondary: #666666;
+  --text-placeholder: #999999;
+  --text-disabled: #cccccc;
+  
+  --bg-color: #f5f5f5;
+  --bg-white: #ffffff;
+  --border-color: #eeeeee;
+  --divider-color: #e0e0e0;
+  
+  /* 尺寸变量 */
+  --border-radius-sm: 8rpx;
+  --border-radius-md: 16rpx;
+  --border-radius-lg: 24rpx;
+  
+  --spacing-xs: 16rpx;
+  --spacing-sm: 24rpx;
+  --spacing-md: 32rpx;
+  --spacing-lg: 48rpx;
+  
+  /* 字体大小 */
+  --font-size-xs: 20rpx;
+  --font-size-sm: 24rpx;
+  --font-size-md: 28rpx;
+  --font-size-lg: 32rpx;
+  --font-size-xl: 36rpx;
+  
+  /* 阴影 */
+  --shadow-sm: 0 2rpx 8rpx rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4rpx 16rpx rgba(0, 0, 0, 0.12);
+  --shadow-lg: 0 8rpx 24rpx rgba(0, 0, 0, 0.16);
+  
+  /* 过渡 */
+  --transition-fast: 0.15s;
+  --transition-base: 0.3s;
+  --transition-slow: 0.5s;
+}
