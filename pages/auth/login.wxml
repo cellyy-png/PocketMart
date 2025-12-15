@@ -1,2 +1,54 @@
-<!--pages/auth/login.wxml-->
-<text>pages/auth/login.wxml</text>
+<view class="container">
+  <view class="header">
+    <image class="logo" src="/assets/images/icons/home-active.png" mode="aspectFit"></image>
+    <view class="title">{{isRegister ? '欢迎注册' : '欢迎回来'}}</view>
+    <view class="sub-title">{{isRegister ? '注册账号以体验更多功能' : '登录账号以同步您的订单和资产'}}</view>
+  </view>
+
+  <view class="form-section">
+    <view class="input-group">
+      <view class="input-icon">👤</view>
+      <input 
+        class="input" 
+        placeholder="请输入账号/手机号" 
+        model:value="{{account}}" 
+        maxlength="20"
+      />
+    </view>
+
+    <view class="input-group">
+      <view class="input-icon">🔒</view>
+      <input 
+        class="input" 
+        placeholder="请输入密码" 
+        password 
+        model:value="{{password}}" 
+        maxlength="20"
+      />
+    </view>
+
+    <view class="input-group" wx:if="{{isRegister}}">
+      <view class="input-icon">🔐</view>
+      <input 
+        class="input" 
+        placeholder="请再次确认密码" 
+        password 
+        model:value="{{confirmPassword}}" 
+        maxlength="20"
+      />
+    </view>
+
+    <button class="btn-primary" bindtap="onSubmit" loading="{{loading}}">
+      {{isRegister ? '立即注册' : '登 录'}}
+    </button>
+
+    <view class="switch-mode" bindtap="toggleMode">
+      <text>{{isRegister ? '已有账号？' : '没有账号？'}}</text>
+      <text class="link">{{isRegister ? '去登录' : '去注册'}}</text>
+    </view>
+  </view>
+
+  <view class="footer">
+    登录即代表同意 <text class="link">用户协议</text> 和 <text class="link">隐私政策</text>
+  </view>
+</view>

@@ -1,102 +1,97 @@
-import request from './request'
+/**
+ * 模拟认证服务
+ * 包含：账号登录、注册、微信登录(保留但未用)、退出等
+ */
+
+// 模拟的Token生成
+const mockToken = () => 'token_' + Date.now() + Math.random().toString(36).substr(2);
 
 /**
- * 检查登录状态
+ * 账号密码登录
  */
-export const checkAuth = async () => {
-  try {
-    const res = await request.get('/api/auth/check', {}, { loading: false })
-    return res.isValid
-  } catch (error) {
-    return false
-  }
-}
-
-/**
- * 刷新Token
- */
-export const refreshToken = async () => {
-  try {
-    const app = getApp()
-    const res = await request.post('/api/auth/refresh', {
-      token: app.globalData.token
-    }, { loading: false })
-    
-    app.globalData.token = res.token
-    wx.setStorageSync('token', res.token)
-    
-    return res.token
-  } catch (error) {
-    throw error
-  }
-}
-
-/**
- * 微信登录
- */
-export const wxLogin = async () => {
+export const login = (account, password) => {
   return new Promise((resolve, reject) => {
-    wx.login({
-      success: async (res) => {
-        if (res.code) {
-          try {
-            const loginRes = await request.post('/api/auth/wx-login', {
-              code: res.code
-            })
-            
-            const app = getApp()
-            app.setUserInfo(loginRes.userInfo, loginRes.token)
-            
-            resolve(loginRes)
-          } catch (error) {
-            reject(error)
+    setTimeout(() => {
+      // 1. 获取本地存储的模拟用户库
+      const users = wx.getStorageSync('mock_users') || [];
+      
+      // 2. 查找用户
+      const user = users.find(u => u.account === account && u.password === password);
+      
+      if (user) {
+        resolve({
+          token: mockToken(),
+          userInfo: {
+            id: user.id,
+            nickname: user.nickname || '新用户',
+            avatar: '/assets/images/icons/user.png', // 默认头像
+            isVip: false,
+            balance: 0.00,
+            points: 0,
+            coupons: 0
           }
+        });
+      } else {
+        // 为了演示方便，如果账号是 admin/123456 也允许登录
+        if (account === 'admin' && password === '123456') {
+          resolve({
+            token: mockToken(),
+            userInfo: {
+              id: 1,
+              nickname: '管理员',
+              avatar: '/assets/images/icons/user.png',
+              isVip: true,
+              balance: 9999.00,
+              points: 1000,
+              coupons: 10
+            }
+          });
         } else {
-          reject(new Error('获取code失败'))
+          reject(new Error('账号或密码错误'));
         }
-      },
-      fail: reject
-    })
-  })
-}
+      }
+    }, 500); // 模拟网络延迟
+  });
+};
 
 /**
- * 获取用户信息授权
+ * 账号注册
  */
-export const getUserProfile = () => {
+export const register = (account, password, nickname) => {
   return new Promise((resolve, reject) => {
-    wx.getUserProfile({
-      desc: '用于完善用户资料',
-      success: (res) => {
-        resolve(res.userInfo)
-      },
-      fail: reject
-    })
-  })
-}
+    setTimeout(() => {
+      const users = wx.getStorageSync('mock_users') || [];
+      
+      // 检查账号是否已存在
+      if (users.find(u => u.account === account)) {
+        reject(new Error('该账号已存在'));
+        return;
+      }
+      
+      // 创建新用户
+      const newUser = {
+        id: Date.now(),
+        account,
+        password,
+        nickname: nickname || `用户${account.substr(-4)}`
+      };
+      
+      users.push(newUser);
+      wx.setStorageSync('mock_users', users);
+      
+      resolve({ success: true });
+    }, 500);
+  });
+};
 
-/**
- * 检查授权状态
- */
-export const checkScope = (scope) => {
-  return new Promise((resolve) => {
-    wx.getSetting({
-      success: (res) => {
-        resolve(!!res.authSetting[scope])
-      },
-      fail: () => resolve(false)
-    })
-  })
-}
+// 保留之前的辅助函数
+export const checkAuth = async () => {
+  const token = wx.getStorageSync('token');
+  return !!token;
+};
 
-/**
- * 打开授权设置
- */
-export const openSetting = () => {
-  return new Promise((resolve, reject) => {
-    wx.openSetting({
-      success: resolve,
-      fail: reject
-    })
-  })
-}
+export const logout = () => {
+  wx.removeStorageSync('token');
+  wx.removeStorageSync('userInfo');
+  return Promise.resolve(true);
+};

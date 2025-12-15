@@ -1,2 +1,21 @@
-<!--pages/product/list/list.wxml-->
-<text>pages/product/list/list.wxml</text>
+<view class="container">
+  <view class="filter-bar">
+    <view class="filter-item {{currentSort === 'default' ? 'active' : ''}}" bindtap="onSortTap" data-type="default">综合</view>
+    <view class="filter-item {{currentSort === 'sales' ? 'active' : ''}}" bindtap="onSortTap" data-type="sales">销量</view>
+    <view class="filter-item {{currentSort === 'price' ? 'active' : ''}}" bindtap="onSortTap" data-type="price">
+      价格 <text class="arrow">{{priceSort === 'asc' ? '↑' : '↓'}}</text>
+    </view>
+  </view>
+
+  <scroll-view class="product-list" scroll-y bindscrolltolower="onReachBottom" wx:if="{{products.length > 0}}">
+    <view class="product-grid">
+      <block wx:for="{{products}}" wx:key="id">
+        <product-card product="{{item}}" bind:tap="onProductTap" data-id="{{item.id}}" />
+      </block>
+    </view>
+    <loading wx:if="{{loading}}" text="加载中..." />
+    <view class="no-more" wx:if="{{!hasMore && !loading}}">没有更多了</view>
+  </scroll-view>
+
+  <empty-state wx:if="{{!loading && products.length === 0}}" icon="search" text="暂无相关商品" />
+</view>

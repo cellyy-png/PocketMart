@@ -110,21 +110,20 @@ Page({
   /**
    * 取消订单
    */
-  onCancelOrder(e) {
+onCancelOrder(e) {
     const { id } = e.currentTarget.dataset
-    
     wx.showModal({
       title: '提示',
       content: '确定要取消订单吗？',
       success: async (res) => {
         if (res.confirm) {
           try {
-            await cancelOrder(id, '不想要了')
-            wx.showToast({
-              title: '订单已取消',
-              icon: 'success'
-            })
-            this.loadOrders()
+            await cancelOrder(id)
+            wx.showToast({ title: '订单已取消', icon: 'success' })
+            
+            // 【关键】取消成功后，重新加载列表
+            this.loadOrders() 
+            
           } catch (error) {
             console.error('取消订单失败', error)
           }
@@ -132,7 +131,6 @@ Page({
       }
     })
   },
-
   /**
    * 去支付
    */

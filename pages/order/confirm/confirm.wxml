@@ -1,2 +1,68 @@
-<!--pages/order/confirm/confirm.wxml-->
-<text>pages/order/confirm/confirm.wxml</text>
+<view class="container" wx:if="{{products.length > 0}}">
+  <view class="address-card" bindtap="onAddressSelect">
+    <block wx:if="{{address}}">
+      <view class="addr-info">
+        <view class="addr-top">
+          <text class="addr-tag" wx:if="{{address.isDefault}}">默认</text>
+          <text class="addr-province">{{address.province}} {{address.city}}</text>
+        </view>
+        <view class="addr-detail">{{address.district}} {{address.detail}}</view>
+        <view class="user-info">
+          <text class="name">{{address.name}}</text>
+          <text class="phone">{{address.phone}}</text>
+        </view>
+      </view>
+      <text class="arrow">›</text>
+    </block>
+    <view class="no-address" wx:else>
+      <text class="add-icon">+</text>
+      <text>请选择收货地址</text>
+    </view>
+  </view>
+
+  <view class="product-group">
+    <view class="group-title">商品信息</view>
+    <view class="product-item" wx:for="{{products}}" wx:key="id">
+      <image class="p-img" src="{{item.image}}" mode="aspectFill"></image>
+      <view class="p-info">
+        <view class="p-name">{{item.name}}</view>
+        <view class="p-spec">{{item.spec}}</view>
+        <view class="p-price-row">
+          <text class="p-price">¥{{item.price}}</text>
+          <text class="p-qty">x{{item.quantity}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="order-info">
+    <view class="info-row">
+      <text class="label">商品总额</text>
+      <text class="value">¥{{productTotal}}</text>
+    </view>
+    <view class="info-row">
+      <text class="label">运费</text>
+      <text class="value">+ ¥{{shippingFee}}</text>
+    </view>
+    <view class="info-row" bindtap="onCouponSelect">
+      <text class="label">优惠券</text>
+      <view class="value-wrapper">
+        <text class="value red" wx:if="{{couponDiscount > 0}}">- ¥{{couponDiscount}}</text>
+        <text class="value gray" wx:else>无可用</text>
+        <text class="arrow">›</text>
+      </view>
+    </view>
+    <view class="info-row">
+      <text class="label">备注</text>
+      <input class="remark-input" placeholder="选填，建议先和商家沟通确认" bindinput="onRemarkInput" />
+    </view>
+  </view>
+
+  <view class="footer-bar">
+    <view class="total-wrapper">
+      <text class="total-label">实付款:</text>
+      <text class="total-price">¥{{totalPrice}}</text>
+    </view>
+    <button class="submit-btn" bindtap="onSubmit" loading="{{submitting}}">提交订单</button>
+  </view>
+</view>

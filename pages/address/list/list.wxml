@@ -1,2 +1,30 @@
-<!--pages/address/list/list.wxml-->
-<text>pages/address/list/list.wxml</text>
+<view class="container">
+  <view class="address-list" wx:if="{{addressList.length > 0}}">
+    <view class="address-item" wx:for="{{addressList}}" wx:key="id" bindtap="onAddressTap" data-item="{{item}}">
+      <view class="info-content">
+        <view class="user-row">
+          <text class="name">{{item.name}}</text>
+          <text class="phone">{{item.phone}}</text>
+          <text class="tag-default" wx:if="{{item.isDefault}}">默认</text>
+        </view>
+        <view class="address-text">{{item.province}} {{item.city}} {{item.district}} {{item.detail}}</view>
+      </view>
+      
+      <view class="edit-btn" catchtap="onEditTap" data-id="{{item.id}}">
+        <text class="edit-icon-text">编辑</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="empty-state" wx:else>
+   <image class="empty-img" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iI2NjYyI+PHBhdGggZD0iTTEyIDJDMTcuNTIgMiAyMiA2LjQ4IDIyIDEyQzIyIDE3LjUyIDE3LjUyIDIyIDEyIDIyQzYuNDggMjIgMiAxNy41MiAyIDEyQzIgNi40OCA2LjQ4IDIgMTIgMlpNMTEgN1YxM0gxM1Y3SDExWk0xMSAxNVYxN0gxM1YxNUgxMVoiLz48L3N2Zz4=" mode="aspectFit" style="width:120rpx;height:120rpx;margin-bottom:20rpx;opacity:0.6;"></image>
+    <text class="empty-text">暂无收货地址</text>
+  </view>
+
+  <view class="footer-safe-area">
+    <view class="btn-add-wrapper" bindtap="onAddTap">
+      <view class="plus-icon">+</view>
+      <text>新建收货地址</text>
+    </view>
+  </view>
+</view>

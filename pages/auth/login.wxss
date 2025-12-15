@@ -1,1 +1,105 @@
-/* pages/auth/login.wxss */
+.container {
+  min-height: 100vh;
+  background: #fff;
+  padding: 60rpx 40rpx;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 头部 */
+.header {
+  margin-bottom: 80rpx;
+  text-align: center;
+}
+
+.logo {
+  width: 140rpx;
+  height: 140rpx;
+  margin-bottom: 30rpx;
+}
+
+.title {
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 16rpx;
+}
+
+.sub-title {
+  font-size: 26rpx;
+  color: #999;
+}
+
+/* 表单 */
+.form-section {
+  width: 100%;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  background: #f8f8f8;
+  border-radius: 44rpx;
+  height: 88rpx;
+  padding: 0 30rpx;
+  margin-bottom: 30rpx;
+  border: 1rpx solid transparent;
+  transition: all 0.3s;
+}
+
+.input-group:hover {
+  background: #fff;
+  border-color: #ff6b6b;
+}
+
+.input-icon {
+  font-size: 36rpx;
+  margin-right: 20rpx;
+  color: #666;
+}
+
+.input {
+  flex: 1;
+  height: 100%;
+  font-size: 28rpx;
+  color: #333;
+}
+
+.btn-primary {
+  background: linear-gradient(90deg, #ff6b6b, #ff4757);
+  color: #fff;
+  border-radius: 44rpx;
+  height: 88rpx;
+  line-height: 88rpx;
+  font-size: 32rpx;
+  font-weight: bold;
+  margin-top: 60rpx;
+  box-shadow: 0 8rpx 16rpx rgba(255, 107, 107, 0.3);
+}
+
+.btn-primary:active {
+  opacity: 0.9;
+  transform: scale(0.98);
+}
+
+/* 切换模式 */
+.switch-mode {
+  text-align: center;
+  margin-top: 30rpx;
+  font-size: 28rpx;
+  color: #666;
+}
+
+.link {
+  color: #ff6b6b;
+  font-weight: bold;
+  margin-left: 8rpx;
+}
+
+/* 底部 */
+.footer {
+  margin-top: auto;
+  text-align: center;
+  font-size: 24rpx;
+  color: #ccc;
+}

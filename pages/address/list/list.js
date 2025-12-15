@@ -1,66 +1,57 @@
-// pages/address/list/list.js
+import { getAddressList } from '../../../services/address'
+
 Page({
-
-  /**
-   * 页面的初始数据
-   */
   data: {
-
+    addressList: [],
+    isSelectMode: false // 标记是否为选择模式
   },
 
-  /**
-   * 生命周期函数--监听页面加载
-   */
   onLoad(options) {
-
+    // 如果是从确认订单页跳转过来的，url会带上 select=true
+    if (options.select) {
+      this.setData({ isSelectMode: true })
+      wx.setNavigationBarTitle({ title: '选择收货地址' })
+    }
   },
 
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady() {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
   onShow() {
-
+    this.loadData()
   },
 
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide() {
-
+  async loadData() {
+    try {
+      const list = await getAddressList()
+      this.setData({ addressList: list })
+    } catch (error) {
+      console.error('加载地址失败', error)
+    }
   },
 
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload() {
-
+  onAddressTap(e) {
+    // 如果是选择模式，点击选中并返回
+    if (this.data.isSelectMode) {
+      const address = e.currentTarget.dataset.item
+      const pages = getCurrentPages()
+      const prevPage = pages[pages.length - 2]
+      
+      if (prevPage) {
+        // 更新上一页（确认订单页）的地址数据
+        prevPage.setData({ address })
+        wx.navigateBack()
+      }
+    }
   },
 
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh() {
-
+  onEditTap(e) {
+    const { id } = e.currentTarget.dataset
+    wx.navigateTo({
+      url: `/pages/address/edit/edit?id=${id}`
+    })
   },
 
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom() {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage() {
-
+  onAddTap() {
+    wx.navigateTo({
+      url: '/pages/address/edit/edit'
+    })
   }
 })

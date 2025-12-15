@@ -1,120 +1,100 @@
 import Storage from '../utils/storage'
 
-/**
- * 购物车状态管理
- */
 class CartStore {
   constructor(store) {
     this.store = store
   }
 
-  /**
-   * 设置购物车
-   */
   setCart(cart) {
     this.store.setState('cart', cart)
   }
 
-  /**
-   * 获取购物车
-   */
   getCart() {
     return this.store.getState('cart') || []
   }
 
   /**
-   * 添加到购物车
+   * 添加到购物车 (修复：区分不同规格)
    */
   addToCart(product) {
     const cart = this.getCart()
-    const existIndex = cart.findIndex(item => item.id === product.id)
+    
+    // 1. 生成唯一标识 cartId (ID + 规格字符串)
+    // 这样同一个商品选不同颜色，cartId 会不同
+    const specStr = product.spec || ''
+    const newCartId = `${product.id}_${specStr}`.replace(/[\s:]/g, '')
+
+    // 2. 查找是否存在完全相同的商品 (ID 和 规格都相同)
+    const existIndex = cart.findIndex(item => item.cartId === newCartId)
 
     if (existIndex > -1) {
+      // 存在则增加数量
       cart[existIndex].quantity += product.quantity || 1
     } else {
+      // 不存在则新增
       cart.push({
         ...product,
+        cartId: newCartId, // 赋予唯一标识
         quantity: product.quantity || 1
       })
     }
 
     this.setCart(cart)
     this.saveToLocal(cart)
+    this.updateTabBarBadge(cart)
   }
 
   /**
    * 更新数量
    */
-  updateQuantity(productId, quantity) {
+  updateQuantity(identifier, quantity) {
     const cart = this.getCart()
-    const product = cart.find(item => item.id === productId)
+    // 兼容使用 cartId 或 id 查找
+    const product = cart.find(item => (item.cartId || item.id) === identifier)
 
     if (product) {
-      if (quantity <= 0) {
-        this.removeFromCart(productId)
-      } else {
-        product.quantity = quantity
-        this.setCart(cart)
-        this.saveToLocal(cart)
-      }
+      product.quantity = quantity
+      this.setCart(cart)
+      this.saveToLocal(cart)
+      this.updateTabBarBadge(cart)
     }
   }
 
   /**
-   * 从购物车移除
+   * 移除商品
    */
-  removeFromCart(productId) {
+  removeFromCart(identifier) {
     const cart = this.getCart()
-    const newCart = cart.filter(item => item.id !== productId)
+    // 过滤掉匹配的商品
+    const newCart = cart.filter(item => (item.cartId || item.id) !== identifier)
 
     this.setCart(newCart)
     this.saveToLocal(newCart)
+    this.updateTabBarBadge(newCart)
   }
 
-  /**
-   * 清空购物车
-   */
   clearCart() {
     this.setCart([])
     this.saveToLocal([])
+    this.updateTabBarBadge([])
   }
 
-  /**
-   * 获取总价
-   */
-  getTotal() {
-    const cart = this.getCart()
-    return cart.reduce((total, item) => {
-      return total + (item.price * item.quantity)
-    }, 0)
-  }
-
-  /**
-   * 获取商品数量
-   */
   getCount() {
     const cart = this.getCart()
     return cart.reduce((count, item) => count + item.quantity, 0)
   }
 
-  /**
-   * 保存到本地
-   */
   saveToLocal(cart) {
     Storage.set('cart', cart)
-    const app = getApp()
-    if (app) {
-      app.saveCart(cart)
-    }
   }
 
-  /**
-   * 从本地加载
-   */
-  loadFromLocal() {
-    const cart = Storage.get('cart', [])
-    this.setCart(cart)
-    return cart
+  updateTabBarBadge(cart) {
+    const count = cart.reduce((sum, item) => sum + item.quantity, 0)
+    if (count > 0) {
+      wx.setTabBarBadge({ index: 2, text: String(count) }).catch(() => {})
+    } else {
+      wx.removeTabBarBadge({ index: 2 }).catch(() => {})
+    }
   }
 }
 

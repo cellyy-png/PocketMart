@@ -1,2 +1,44 @@
-<!--pages/category/category.wxml-->
-<text>pages/category/category.wxml</text>
+<view class="container">
+  <scroll-view class="left-menu" scroll-y>
+    <view 
+      wx:for="{{categories}}" 
+      wx:key="id" 
+      class="menu-item {{activeIndex === index ? 'active' : ''}}"
+      data-index="{{index}}"
+      bindtap="onMenuTap"
+    >
+      {{item.name}}
+    </view>
+  </scroll-view>
+
+  <scroll-view class="right-content" scroll-y scroll-top="{{scrollTop}}">
+    <view class="goods-list" wx:if="{{categories[activeIndex].children.length > 0}}">
+      <view 
+        class="goods-item" 
+        wx:for="{{categories[activeIndex].children}}" 
+        wx:key="id"
+        bindtap="onCategoryTap"
+        data-id="{{item.id}}"
+      >
+        <image class="goods-image" src="{{item.icon}}" mode="aspectFill"></image>
+        <view class="goods-info">
+          <view class="goods-name">{{item.name}}</view>
+        </view>
+      </view>
+    </view>
+
+    <view class="goods-list" wx:else>
+      <view class="goods-item" wx:for="{{[1,2,3,4]}}" wx:key="*this">
+        <image class="goods-image" src="" style="background: #eee;"></image>
+        <view class="goods-info">
+          <view class="goods-name">示例商品 {{item}}</view>
+          <view class="goods-price">
+            <text class="price-num">¥99.00</text>
+          </view>
+        </view>
+      </view>
+    </view>
+    
+    <view class="tip-text">- 到底了 -</view>
+  </scroll-view>
+</view>

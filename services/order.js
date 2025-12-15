@@ -1,184 +1,87 @@
+const STORAGE_KEY = 'order_list';
+
+const getLocalOrders = () => {
+  return wx.getStorageSync(STORAGE_KEY) || [];
+};
 
 /**
  * 创建订单
  */
 export const createOrder = (data) => {
-  console.log('createOrder调用', data)
+  const orders = getLocalOrders();
   
-  return Promise.resolve({
-    id: 'ORDER' + Date.now(),
-    orderNo: 'NO' + Date.now(),
-    status: 0,
-    totalPrice: 9999.00
-  })
-}
+  let totalPrice = 0;
+  if (data.products) {
+    totalPrice = data.products.reduce((sum, p) => sum + (p.price * p.quantity), 0);
+  }
+  totalPrice += 10; // 运费
 
-/**
- * 获取订单列表
- */
-export const getOrders = (params) => {
-  console.log('getOrders调用', params)
-  
-  return Promise.resolve({
-    list: [
-      {
-        id: 1,
-        orderNo: 'NO20231201001',
-        status: 0,
-        productCount: 2,
-        totalPrice: 299.00,
-        createTime: '2023-12-01 10:30:00',
-        products: [
-          {
-            id: 1,
-            name: '测试商品1',
-            image: 'https://via.placeholder.com/160x160/ff6b6b/ffffff?text=商品1',
-            price: 99.00,
-            quantity: 2,
-            spec: '颜色:红色;尺寸:M'
-          }
-        ]
-      },
-      {
-        id: 2,
-        orderNo: 'NO20231201002',
-        status: 2,
-        productCount: 1,
-        totalPrice: 999.00,
-        createTime: '2023-11-30 15:20:00',
-        products: [
-          {
-            id: 2,
-            name: '测试商品2',
-            image: 'https://via.placeholder.com/160x160/4caf50/ffffff?text=商品2',
-            price: 999.00,
-            quantity: 1,
-            spec: '颜色:蓝色'
-          }
-        ]
-      }
-    ],
-    hasMore: false
-  })
-}
+  const newOrder = {
+    id: 'ORD' + Date.now(),
+    orderNo: 'NO' + Date.now() + Math.floor(Math.random() * 1000),
+    status: 0, 
+    statusDesc: '待支付',
+    createTime: new Date().toLocaleString(),
+    totalPrice: totalPrice.toFixed(2),
+    ...data
+  };
 
-/**
- * 获取订单详情
- */
+  orders.unshift(newOrder);
+  wx.setStorageSync(STORAGE_KEY, orders);
+  return Promise.resolve(newOrder);
+};
+
 export const getOrderDetail = (orderId) => {
-  console.log('getOrderDetail调用', orderId)
-  
-  return Promise.resolve({
-    id: orderId,
-    orderNo: 'NO20231201001',
-    status: 0,
-    statusDesc: '等待买家付款',
-    productTotal: 99.00,
-    shippingFee: 10.00,
-    couponDiscount: 0,
-    totalPrice: 109.00,
-    createTime: '2023-12-01 10:30:00',
-    payTime: '',
-    remark: '请尽快发货',
-    address: {
-      id: 1,
-      name: '张三',
-      phone: '13800138000',
-      province: '广东省',
-      city: '深圳市',
-      district: '南山区',
-      detail: '科技园XXX大厦',
-      fullAddress: '广东省深圳市南山区科技园XXX大厦'
-    },
-    products: [
-      {
-        id: 1,
-        name: '测试商品1',
-        image: 'https://via.placeholder.com/160x160/ff6b6b/ffffff?text=商品1',
-        price: 99.00,
-        quantity: 1,
-        spec: '颜色:红色;尺寸:M'
-      }
-    ]
-  })
-}
+  const orders = getLocalOrders();
+  const order = orders.find(o => o.id === orderId);
+  return order ? Promise.resolve(order) : Promise.reject('订单不存在');
+};
+
+export const getOrders = (params) => {
+  let orders = getLocalOrders();
+  if (params.status !== undefined && params.status !== 'all') {
+    orders = orders.filter(o => String(o.status) === String(params.status));
+  }
+  return Promise.resolve({ list: orders, hasMore: false });
+};
+
+export const payOrder = (orderId) => {
+  const orders = getLocalOrders();
+  const index = orders.findIndex(o => o.id === orderId);
+  if (index > -1) {
+    orders[index].status = 1;
+    orders[index].statusDesc = '待发货';
+    wx.setStorageSync(STORAGE_KEY, orders);
+    return Promise.resolve(true);
+  }
+  return Promise.reject('订单不存在');
+};
 
 /**
- * 取消订单
+ * 取消订单 (修复：写入缓存)
  */
-export const cancelOrder = (orderId, reason) => {
-  console.log('cancelOrder调用', orderId, reason)
-  return Promise.resolve({ success: true })
-}
+export const cancelOrder = (orderId) => {
+  const orders = getLocalOrders();
+  const index = orders.findIndex(o => o.id === orderId);
+  if (index > -1) {
+    orders[index].status = 5; // 5 = 已取消
+    orders[index].statusDesc = '已取消';
+    wx.setStorageSync(STORAGE_KEY, orders); // 保存
+    return Promise.resolve(true);
+  }
+  return Promise.reject('订单不存在');
+};
 
-/**
- * 确认收货
- */
-export const confirmReceipt = (orderId) => {
-  console.log('confirmReceipt调用', orderId)
-  return Promise.resolve({ success: true })
-}
-
-/**
- * 删除订单
- */
 export const deleteOrder = (orderId) => {
-  console.log('deleteOrder调用', orderId)
-  return Promise.resolve({ success: true })
-}
+  let orders = getLocalOrders();
+  const newOrders = orders.filter(o => o.id !== orderId);
+  if (newOrders.length !== orders.length) {
+    wx.setStorageSync(STORAGE_KEY, newOrders); // 保存
+    return Promise.resolve(true);
+  }
+  return Promise.reject('删除失败');
+};
 
-/**
- * 获取订单数量统计
- */
-export const getOrderCount = () => {
-  console.log('getOrderCount调用')
-  
-  return Promise.resolve({
-    unpaid: 2,
-    unshipped: 1,
-    unreceived: 3,
-    uncommented: 5
-  })
-}
-
-/**
- * 申请退款
- */
-export const applyRefund = (orderId, data) => {
-  console.log('applyRefund调用', orderId, data)
-  return Promise.resolve({ success: true })
-}
-
-/**
- * 获取物流信息
- */
-export const getLogistics = (orderId) => {
-  console.log('getLogistics调用', orderId)
-  
-  return Promise.resolve({
-    company: '顺丰速运',
-    number: 'SF1234567890',
-    list: [
-      {
-        time: '2023-12-01 14:30:00',
-        status: '快件已签收'
-      },
-      {
-        time: '2023-12-01 10:20:00',
-        status: '派送中'
-      },
-      {
-        time: '2023-11-30 20:15:00',
-        status: '到达目的地'
-      }
-    ]
-  })
-}
-
-/**
- * 评价订单
- */
-export const commentOrder = (orderId, data) => {
-  console.log('commentOrder调用', orderId, data)
-  return Promise.resolve({ success: true })
-}
+// 辅助占位
+export const confirmReceipt = () => Promise.resolve(true);
+export const getOrderCount = () => Promise.resolve({ unpaid: 0, unshipped: 0, unreceived: 0, uncommented: 0 });

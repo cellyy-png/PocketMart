@@ -133,50 +133,40 @@ Page({
     })
   },
 
-  /**
-   * 提交订单
-   */
+// ... 其他代码不变 ...
+
   async onSubmit() {
-    const { address, products, remark, couponId, submitting } = this.data
+    const { address, products, remark, submitting } = this.data;
     
-    if (submitting) return
-    
+    if (submitting) return;
     if (!address) {
-      wx.showToast({
-        title: '请选择收货地址',
-        icon: 'none'
-      })
-      return
+      return wx.showToast({ title: '请选择收货地址', icon: 'none' });
     }
     
-    this.setData({ submitting: true })
+    this.setData({ submitting: true });
     
     try {
       const orderData = {
-        addressId: address.id,
-        products: products.map(p => ({
-          productId: p.id,
-          quantity: p.quantity,
-          spec: p.spec
-        })),
-        remark,
-        couponId
-      }
+        address,
+        products,
+        remark
+      };
       
-      const order = await createOrder(orderData)
+      const order = await createOrder(orderData);
       
-      // 跳转支付
+      // 【修改点】这里不再调用 removeFromCart
+      // 商品保留在购物车，直到支付成功
+      
       wx.redirectTo({
         url: `/pages/payment/payment?orderId=${order.id}`
-      })
+      });
+      
     } catch (error) {
-      console.error('创建订单失败', error)
-      wx.showToast({
-        title: '订单创建失败',
-        icon: 'none'
-      })
+      console.error('创建订单失败', error);
+      wx.showToast({ title: '订单创建失败', icon: 'none' });
     } finally {
-      this.setData({ submitting: false })
+      this.setData({ submitting: false });
     }
   }
+
 })

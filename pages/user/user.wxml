@@ -1,89 +1,84 @@
-     
-        {{isLogin ? userInfo.nickname : '点击登录'}}
-        VIP会员
-      
+<view class="container">
+  <view class="user-header" bindtap="{{!isLogin ? 'onLoginTap' : ''}}">
+    <view class="user-info">
+      <image class="avatar" src="{{isLogin ? userInfo.avatar : '/assets/images/icons/user.png'}}" mode="aspectFill"></image>
+      <view class="user-detail">
+        <text class="nickname">{{isLogin ? userInfo.nickname : '点击登录 / 注册'}}</text>
+        <view class="user-level" wx:if="{{isLogin}}">VIP会员</view>
+      </view>
+    </view>
     
-    
-    
-      
-        {{userInfo.balance || 0}}
-        余额
-      
-      
-        {{userInfo.points || 0}}
-        积分
-      
-      
-        {{userInfo.coupons || 0}}
-        优惠券
-      
-    
-  
+    <view class="user-stats">
+      <view class="stat-item">
+        <text class="stat-value">{{userInfo.balance || '0.00'}}</text>
+        <text class="stat-label">余额</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-value">{{userInfo.points || '0'}}</text>
+        <text class="stat-label">积分</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-value">{{userInfo.coupons || '0'}}</text>
+        <text class="stat-label">优惠券</text>
+      </view>
+    </view>
+  </view>
 
-  
-  
+  <view class="order-section">
+    <view class="section-header" bindtap="onOrderTap" data-status="all">
+      <text class="section-title">我的订单</text>
+      <view class="section-more">
+        <text>全部订单</text>
+        <text class="arrow">›</text>
+      </view>
+    </view>
     
-      我的订单
+    <view class="order-types">
+      <view class="order-type" bindtap="onOrderTap" data-status="0">
+        <view class="order-icon">
+          <text class="icon-text">💳</text>
+          <view class="badge" wx:if="{{orderCount.unpaid > 0}}">{{orderCount.unpaid}}</view>
+        </view>
+        <text class="order-label">待付款</text>
+      </view>
       
-        全部订单
-        ›
+      <view class="order-type" bindtap="onOrderTap" data-status="1">
+        <view class="order-icon">
+          <text class="icon-text">📦</text>
+          <view class="badge" wx:if="{{orderCount.unshipped > 0}}">{{orderCount.unshipped}}</view>
+        </view>
+        <text class="order-label">待发货</text>
+      </view>
       
-    
-    
-    
+      <view class="order-type" bindtap="onOrderTap" data-status="2">
+        <view class="order-icon">
+          <text class="icon-text">🚚</text>
+          <view class="badge" wx:if="{{orderCount.unreceived > 0}}">{{orderCount.unreceived}}</view>
+        </view>
+        <text class="order-label">待收货</text>
+      </view>
       
-        
-          💰
-          {{orderCount.unpaid}}
-        
-        待付款
-      
-      
-      
-        
-          📦
-          {{orderCount.unshipped}}
-        
-        待发货
-      
-      
-      
-        
-          🚚
-          {{orderCount.unreceived}}
-        
-        待收货
-      
-      
-      
-        
-          💬
-          {{orderCount.uncommented}}
-        
-        待评价
-      
-      
-      
-        
-          🔧
-        
-        售后
-      
-    
-  
+      <view class="order-type" bindtap="onOrderTap" data-status="3">
+        <view class="order-icon">
+          <text class="icon-text">💬</text>
+          <view class="badge" wx:if="{{orderCount.uncommented > 0}}">{{orderCount.uncommented}}</view>
+        </view>
+        <text class="order-label">待评价</text>
+      </view>
+    </view>
+  </view>
 
-  
-  
-    
-      
-        {{item.icon === 'icon-location' ? '📍' : item.icon === 'icon-coupon' ? '🎫' : item.icon === 'icon-service' ? '💬' : '⚙️'}}
-        {{item.title}}
-      
-      ›
-    
-  
+  <view class="menu-section">
+    <view class="menu-item" wx:for="{{menuList}}" wx:key="title" bindtap="onMenuTap" data-url="{{item.url}}">
+      <view class="menu-left">
+        <text class="menu-icon">{{item.icon === 'icon-location' ? '📍' : item.icon === 'icon-coupon' ? '🎫' : item.icon === 'icon-service' ? '🎧' : '⚙️'}}</text>
+        <text class="menu-title">{{item.title}}</text>
+      </view>
+      <text class="arrow">›</text>
+    </view>
+  </view>
 
-  
-  
-    退出登录
-  
+  <view class="logout-section" wx:if="{{isLogin}}">
+    <view class="logout-btn" bindtap="onLogout">退出登录</view>
+  </view>
+</view>
