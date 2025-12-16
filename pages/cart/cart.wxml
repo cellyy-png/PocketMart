@@ -1,15 +1,25 @@
 <view class="container" wx:if="{{cartList.length > 0}}">
   <view class="cart-list">
     <view class="cart-item" wx:for="{{cartList}}" wx:key="cartId">
+      <!-- 选择框 -->
       <view class="item-checkbox" bindtap="onSelectItem" data-id="{{item.cartId || item.id}}">
-        <icon type="{{utils.includes(selectedIds, (item.cartId || item.id)) ? 'success' : 'circle'}}" color="{{utils.includes(selectedIds, (item.cartId || item.id)) ? '#ff6b6b' : '#ccc'}}" size="20"/>
+        <icon type="{{utils.includes(selectedIds, (item.cartId || item.id)) ? 'success' : 'circle'}}" color="{{utils.includes(selectedIds, (item.cartId || item.id)) ? '#ff6b6b' : '#ccc'}}" size="22"/>
       </view>
+      
+      <!-- 商品图 -->
       <image class="item-image" src="{{item.image}}" mode="aspectFill"></image>
+      
+      <!-- 信息区 -->
       <view class="item-detail">
-        <view class="item-name">{{item.name}}</view>
-        <view class="item-spec">{{item.spec}}</view>
+        <view class="item-info-top">
+          <view class="item-name">{{item.name}}</view>
+          <view class="item-delete" catchtap="onDeleteItem" data-id="{{item.cartId || item.id}}">删除</view>
+        </view>
+        <view class="item-spec">{{item.spec || '默认规格'}}</view>
+        
         <view class="item-bottom">
           <view class="item-price">¥{{item.price}}</view>
+          <!-- 数量控制 -->
           <view class="quantity-control">
             <view class="quantity-btn {{item.quantity <= 1 ? 'disabled' : ''}}" 
                   catchtap="onQuantityChange" 
@@ -23,13 +33,13 @@
           </view>
         </view>
       </view>
-      <view class="item-delete" catchtap="onDeleteItem" data-id="{{item.cartId || item.id}}">×</view>
     </view>
   </view>
 
+  <!-- 底部结算栏 -->
   <view class="cart-footer">
     <view class="footer-left" bindtap="onSelectAll">
-      <icon type="{{isAllSelected ? 'success' : 'circle'}}" color="{{isAllSelected ? '#ff6b6b' : '#ccc'}}" size="20"/>
+      <icon type="{{isAllSelected ? 'success' : 'circle'}}" color="{{isAllSelected ? '#ff6b6b' : '#ccc'}}" size="22"/>
       <text class="footer-text">全选</text>
     </view>
     <view class="footer-center">
@@ -42,8 +52,9 @@
   </view>
 </view>
 
+<!-- 空状态 -->
 <view class="empty-cart" wx:else>
-  <image class="empty-img" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIj4KICA8Y2lyY2xlIGN4PSIxMDAiIGN5PSIxMDAiIHI9IjgwIiBmaWxsPSIjRjZGQkZFIi8+CiAgPHBhdGggZmlsbD0iI0ZGQTg5QiIgZD0iTTEzMiA3Mkg2OGMtMi4yIDAtNCAxLjgtNCA0djY0YzAgMi4yIDEuOCA0IDQgNGg2NGMyLjIgMCA0LTEuOCA0LTRWNNmMwLTIuMi0xLjgtNC00LTR6IiBvcGFjaXR5PSIwLjMiLz4KICA8cGF0aCBmaWxsPSIjRkY2QjZCIiBkPSJNMTIwIDgwSDgwYy0yLjIgMC00IDEuOC00IDR2NjRjMCAyLjIgMS44IDQgNCA0aDQwYzIuMiAwIDQtMS44IDQtNFY4NGMwLTIuMi0xLjgtNC00LTR6Ii8+CiAgPHBhdGggZmlsbD0iI0ZGRkZGRiIgZD0iTTkyIDExMGgyMHY0SDkydjEwaC00di0xMGgtMTB2LTRoMTB2LTEwaDR2MTB6Ii8+Cjwvc3ZnPg==" mode="aspectFit"></image>
+  <image class="empty-img" src="/assets/images/icons/cart.png" mode="aspectFit" style="opacity: 0.3;"></image>
   <view class="empty-title">购物车竟然是空的</view>
   <view class="empty-sub">再忙，也要记得买点什么犒劳自己~</view>
   <button class="btn-go-shop" bindtap="onGoShopping">去逛逛</button>

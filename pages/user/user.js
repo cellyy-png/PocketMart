@@ -11,10 +11,10 @@ Page({
       uncommented: 0
     },
     menuList: [
-      { icon: 'icon-location', title: '收货地址', url: '/pages/address/list/list' },
-      { icon: 'icon-coupon', title: '优惠券', url: '/pages/coupon/list/list' },
-      { icon: 'icon-service', title: '客服中心', url: '/pages/service/service' },
-      { icon: 'icon-setting', title: '设置', url: '/pages/setting/setting' }
+      { icon: '📍', title: '收货地址', url: '/pages/address/list/list' },
+      { icon: '🎫', title: '我的优惠券', url: '/pages/coupon/list/list' },
+      { icon: '🎧', title: '联系客服', url: '/pages/service/service' },
+      { icon: '⚙️', title: '设置', url: '/pages/setting/setting' }
     ]
   },
 
@@ -24,7 +24,6 @@ Page({
 
   checkLogin() {
     const app = getApp()
-    // Check global store for login status
     const isLogin = app.store.user.isLogin()
     const userInfo = app.store.user.getUser()
 
@@ -33,7 +32,6 @@ Page({
     if (isLogin) {
       this.loadData()
     } else {
-      // Reset data if logged out
       this.setData({
         userInfo: null,
         orderCount: { unpaid: 0, unshipped: 0, unreceived: 0, uncommented: 0 }
@@ -43,7 +41,6 @@ Page({
 
   async loadData() {
     try {
-      // Refresh User Info and Order Counts
       const [info, counts] = await Promise.all([
         getUserInfo(),
         getOrderCount()
@@ -57,7 +54,7 @@ Page({
         orderCount: counts 
       })
     } catch (error) {
-      console.error('Failed to load user data', error)
+      console.error('加载用户数据失败', error)
     }
   },
 
@@ -74,7 +71,12 @@ Page({
   onMenuTap(e) {
     if (!this.data.isLogin) return this.onLoginTap()
     const { url } = e.currentTarget.dataset
-    wx.navigateTo({ url })
+    // 简单演示页面存在性检查
+    if (url.includes('address')) {
+        wx.navigateTo({ url })
+    } else {
+        wx.showToast({ title: '功能开发中', icon: 'none' })
+    }
   },
 
   onLogout() {
