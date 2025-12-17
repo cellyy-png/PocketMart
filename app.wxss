@@ -1,29 +1,22 @@
-@import './styles/variables.wxss';
-@import './styles/common.wxss';
+/**app.wxss**/
+@import 'styles/variables.wxss';
+@import 'styles/common.wxss';
 
 page {
-  height: 100%;
-  background-color: #f5f5f5;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+  background-color: var(--bg-color);
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica,
+    Segoe UI, Arial, Roboto, 'PingFang SC', 'miui', 'Hiragino Sans GB', 'Microsoft Yahei',
+    sans-serif;
+  font-size: 28rpx;
+  color: var(--text-main);
+  box-sizing: border-box;
 }
 
-/* 图标字体 */
-@font-face {
-  font-family: 'iconfont';
-  src: url('data:application/x-font-woff;charset=utf-8;base64,...') format('woff');
+.container {
+  min-height: 100vh;
+  box-sizing: border-box;
 }
 
-.iconfont {
-  font-family: "iconfont" !important;
-  font-size: 16px;
-  font-style: normal;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-/* 全局滚动条 */
-::-webkit-scrollbar {
-  width: 0;
-  height: 0;
-  color: transparent;
+image {
+  max-width: 100%;
 }

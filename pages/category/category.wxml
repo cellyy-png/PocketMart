@@ -1,53 +1,54 @@
 <view class="container">
-  <!-- 左侧分类菜单 -->
-  <scroll-view class="left-menu" scroll-y>
-    <view 
-      wx:for="{{categories}}" 
-      wx:key="id" 
-      class="menu-item {{currentCategoryId === item.id ? 'active' : ''}}"
-      data-id="{{item.id}}"
-      bindtap="onCategoryTap"
-    >
-      <view class="menu-text">{{item.name}}</view>
+  <!-- 顶部搜索 -->
+  <view class="header">
+    <view class="search-box" bindtap="onSearch">
+      <icon type="search" size="14" color="#999"></icon>
+      <text>搜索商品</text>
     </view>
-  </scroll-view>
+  </view>
 
-  <!-- 右侧商品列表 -->
-  <scroll-view class="right-content" scroll-y bindscrolltolower="onReachBottom">
-    <view class="category-title">
-      <text>{{currentCategoryName}}</text>
-    </view>
-
-    <view class="goods-list" wx:if="{{products.length > 0}}">
+  <view class="content">
+    <!-- 左侧导航 -->
+    <scroll-view class="left-nav" scroll-y>
       <view 
-        class="goods-item" 
-        wx:for="{{products}}" 
+        class="nav-item {{currentId === item.id ? 'active' : ''}}" 
+        wx:for="{{categories}}" 
         wx:key="id"
-        bindtap="onGoodsTap"
+        bindtap="onSwitchTab"
         data-id="{{item.id}}"
+        data-index="{{index}}"
       >
-        <image class="goods-image" src="{{item.image}}" mode="aspectFill"></image>
-        <view class="goods-info">
-          <view class="goods-name">{{item.name}}</view>
-          <view class="goods-desc">{{item.desc}}</view>
-          <view class="goods-bottom">
-            <view class="goods-price">
-              <text class="symbol">¥</text>
-              <text class="num">{{item.price}}</text>
-            </view>
-            <view class="add-cart-btn" catchtap="onAddToCart" data-item="{{item}}">
-              +
-            </view>
-          </view>
+        <view class="indicator" wx:if="{{currentId === item.id}}"></view>
+        {{item.name}}
+      </view>
+    </scroll-view>
+
+    <!-- 右侧内容 -->
+    <scroll-view class="right-content" scroll-y>
+      <!-- 分类Banner -->
+      <view class="cate-banner" wx:if="{{currentSub.banner}}">
+        <image src="{{currentSub.banner}}" mode="aspectFill"></image>
+      </view>
+
+      <!-- 二级分类Grid -->
+      <view class="sub-list" wx:if="{{currentSub.subCategories.length > 0}}">
+        <view 
+          class="sub-item" 
+          wx:for="{{currentSub.subCategories}}" 
+          wx:key="id"
+          bindtap="onTapCategory"
+          data-id="{{item.id}}"
+          data-name="{{item.name}}"
+        >
+          <image class="sub-icon" src="{{item.icon}}" mode="aspectFit"></image>
+          <text class="sub-name">{{item.name}}</text>
         </view>
       </view>
-    </view>
-
-    <view class="empty-state" wx:elif="{{!loading}}">
-      <text>该分类下暂无商品</text>
-    </view>
-    
-    <view class="loading-more" wx:if="{{loading}}">加载中...</view>
-    <view class="no-more" wx:if="{{!hasMore && products.length > 0}}">- 到底了 -</view>
-  </scroll-view>
+      
+      <!-- 空状态兜底 -->
+      <view class="empty-cate" wx:else>
+        <text>暂无子分类</text>
+      </view>
+    </scroll-view>
+  </view>
 </view>

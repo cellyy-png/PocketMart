@@ -1,0 +1,31 @@
+<view class="container" wx:if="{{!loading}}">
+  <!-- 头部信息 -->
+  <view class="header-card">
+    <view class="company-icon">
+      <image src="/assets/images/icons/cart-active.png" mode="aspectFit"></image>
+    </view>
+    <view class="info">
+      <view class="company-name">物流公司：{{logistics.company}}</view>
+      <view class="logistics-no">
+        运单编号：{{logistics.no}}
+        <text class="copy-btn" bindtap="onCopy">复制</text>
+      </view>
+      <view class="official-phone">官方电话：{{logistics.phone}}</view>
+    </view>
+  </view>
+
+  <!-- 轨迹列表 -->
+  <view class="trace-list">
+    <view class="title">物流跟踪</view>
+    <view class="trace-item {{index === 0 ? 'active' : ''}}" wx:for="{{traces}}" wx:key="time">
+      <view class="dot"></view>
+      <view class="line" wx:if="{{index !== traces.length - 1}}"></view>
+      <view class="content">
+        <view class="desc">{{item.desc}}</view>
+        <view class="time">{{item.time}}</view>
+      </view>
+    </view>
+  </view>
+</view>
+
+<loading wx:if="{{loading}}" text="查询物流中..." />

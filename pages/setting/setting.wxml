@@ -1,0 +1,27 @@
+<view class="container">
+  <view class="menu-list">
+    <view class="menu-item" bindtap="onAddress">
+      <view class="label">收货地址管理</view>
+      <view class="arrow">›</view>
+    </view>
+    <view class="menu-item">
+      <view class="label">账号安全</view>
+      <view class="arrow">›</view>
+    </view>
+  </view>
+
+  <view class="menu-list">
+    <view class="menu-item" bindtap="onClearCache">
+      <view class="label">清除缓存</view>
+      <view class="value">{{cacheSize}}</view>
+    </view>
+    <view class="menu-item" bindtap="onAbout">
+      <view class="label">关于我们</view>
+      <view class="arrow">›</view>
+    </view>
+  </view>
+
+  <view class="footer-btn">
+    <button class="logout-btn" bindtap="onLogout">退出登录</button>
+  </view>
+</view>

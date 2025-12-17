@@ -1,0 +1,105 @@
+.container {
+  min-height: 100vh;
+  background: #fff;
+}
+
+.header {
+  background: #ff6b6b;
+  padding: 60rpx 40rpx 100rpx;
+  color: #fff;
+}
+
+.title {
+  font-size: 48rpx;
+  font-weight: bold;
+  margin-bottom: 16rpx;
+}
+
+.subtitle {
+  font-size: 28rpx;
+  opacity: 0.9;
+}
+
+.contact-grid {
+  display: flex;
+  padding: 0 30rpx;
+  margin-top: -60rpx;
+  margin-bottom: 60rpx;
+}
+
+.contact-item {
+  flex: 1;
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 40rpx 0;
+  text-align: center;
+  box-shadow: 0 8rpx 20rpx rgba(0,0,0,0.05);
+  margin: 0 15rpx;
+  border: none;
+  line-height: 1.4;
+}
+
+.contact-item::after {
+  border: none;
+}
+
+.icon {
+  font-size: 48rpx;
+  margin-bottom: 16rpx;
+}
+
+.label {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.desc {
+  font-size: 24rpx;
+  color: #999;
+  margin-top: 8rpx;
+}
+
+.faq-section {
+  padding: 0 40rpx;
+}
+
+.section-title {
+  font-size: 34rpx;
+  font-weight: bold;
+  margin-bottom: 30rpx;
+  color: #333;
+}
+
+.faq-item {
+  border-bottom: 1rpx solid #f5f5f5;
+  padding: 30rpx 0;
+}
+
+.question {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 30rpx;
+  color: #333;
+}
+
+.arrow {
+  color: #ccc;
+  font-size: 24rpx;
+  transition: transform 0.3s;
+}
+
+.arrow.up {
+  transform: rotate(180deg);
+}
+
+.answer {
+  font-size: 26rpx;
+  color: #666;
+  margin-top: 20rpx;
+  line-height: 1.6;
+  background: #f9f9f9;
+  padding: 20rpx;
+  border-radius: 8rpx;
+}

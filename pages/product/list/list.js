@@ -1,60 +1,96 @@
-import { getProducts, searchProducts } from '../../../services/product'
+import { getProductList } from '../../../services/product'
 
 Page({
   data: {
-    products: [],
+    query: {}, // 查询参数
+    list: [],
     loading: false,
+    finished: false,
     page: 1,
-    currentSort: 'default',
-    priceSort: 'desc',
-    categoryId: null,
-    keyword: ''
+    
+    // 筛选状态
+    currentSort: 'general', // general, sales, price
+    priceSort: '', // asc, desc
+    
+    tabs: [
+      { key: 'general', name: '综合' },
+      { key: 'sales', name: '销量' },
+      { key: 'price', name: '价格' }
+    ]
   },
 
   onLoad(options) {
-    // 接收参数：分类ID 或 搜索关键词
-    if (options.categoryId) {
-      this.setData({ categoryId: options.categoryId })
-      wx.setNavigationBarTitle({ title: '商品列表' })
+    this.data.query = options
+    if (options.title) {
+      wx.setNavigationBarTitle({ title: options.title })
     } else if (options.keyword) {
-      this.setData({ keyword: options.keyword })
-      wx.setNavigationBarTitle({ title: `"${options.keyword}"的搜索结果` })
+      wx.setNavigationBarTitle({ title: `搜索: ${options.keyword}` })
     }
-    this.loadData()
+    this.loadData(true)
   },
 
-  async loadData() {
-    if (this.data.loading) return
+  // 切换排序
+  onTabChange(e) {
+    const key = e.currentTarget.dataset.key
+    let priceSort = ''
+
+    if (key === 'price') {
+      // 价格排序切换：默认升序 -> 降序 -> 升序
+      priceSort = this.data.priceSort === 'asc' ? 'desc' : 'asc'
+    }
+
+    this.setData({
+      currentSort: key,
+      priceSort: priceSort,
+      list: [],
+      page: 1,
+      finished: false
+    })
+
+    this.loadData(true)
+  },
+
+  async loadData(reset = false) {
+    if (this.data.loading || this.data.finished) return
+    
     this.setData({ loading: true })
 
     try {
-      // 模拟请求
-      const res = await getProducts({
+      const res = await getProductList({
         page: this.data.page,
         sort: this.data.currentSort,
-        categoryId: this.data.categoryId
+        priceSort: this.data.priceSort,
+        ...this.data.query
       })
+
+      const newList = reset ? res.list : [...this.data.list, ...res.list]
       
       this.setData({
-        products: this.data.page === 1 ? res.list : [...this.data.products, ...res.list],
+        list: newList,
+        page: this.data.page + 1,
+        finished: !res.hasMore,
         loading: false
       })
-    } catch (err) {
+    } catch (error) {
       this.setData({ loading: false })
     }
   },
 
-  onSortTap(e) {
-    const type = e.currentTarget.dataset.type
-    if (type === 'price') {
-      this.setData({ priceSort: this.data.priceSort === 'asc' ? 'desc' : 'asc' })
-    }
-    this.setData({ currentSort: type, page: 1 })
-    this.loadData()
+  toDetail(e) {
+    const id = e.currentTarget.dataset.id
+    wx.navigateTo({
+      url: `/pages/product/detail/detail?id=${id}`
+    })
   },
 
-  onProductTap(e) {
-    const id = e.detail.id || e.currentTarget.dataset.id
-    wx.navigateTo({ url: `/pages/product/detail/detail?id=${id}` })
+  onPullDownRefresh() {
+    this.setData({ page: 1, finished: false })
+    this.loadData(true).then(() => {
+      wx.stopPullDownRefresh()
+    })
+  },
+
+  onReachBottom() {
+    this.loadData()
   }
 })

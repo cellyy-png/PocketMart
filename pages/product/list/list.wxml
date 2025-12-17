@@ -1,21 +1,49 @@
 <view class="container">
+  <!-- 筛选栏 -->
   <view class="filter-bar">
-    <view class="filter-item {{currentSort === 'default' ? 'active' : ''}}" bindtap="onSortTap" data-type="default">综合</view>
-    <view class="filter-item {{currentSort === 'sales' ? 'active' : ''}}" bindtap="onSortTap" data-type="sales">销量</view>
-    <view class="filter-item {{currentSort === 'price' ? 'active' : ''}}" bindtap="onSortTap" data-type="price">
-      价格 <text class="arrow">{{priceSort === 'asc' ? '↑' : '↓'}}</text>
+    <view 
+      class="filter-item {{currentSort === 'general' ? 'active' : ''}}" 
+      bindtap="onTabChange" 
+      data-key="general"
+    >综合</view>
+    <view 
+      class="filter-item {{currentSort === 'sales' ? 'active' : ''}}" 
+      bindtap="onTabChange" 
+      data-key="sales"
+    >销量</view>
+    <view 
+      class="filter-item {{currentSort === 'price' ? 'active' : ''}}" 
+      bindtap="onTabChange" 
+      data-key="price"
+    >
+      <text>价格</text>
+      <view class="sort-icons">
+        <text class="arrow up {{priceSort === 'asc' ? 'active' : ''}}">▲</text>
+        <text class="arrow down {{priceSort === 'desc' ? 'active' : ''}}">▼</text>
+      </view>
     </view>
   </view>
 
-  <scroll-view class="product-list" scroll-y bindscrolltolower="onReachBottom" wx:if="{{products.length > 0}}">
-    <view class="product-grid">
-      <block wx:for="{{products}}" wx:key="id">
-        <product-card product="{{item}}" bind:tap="onProductTap" data-id="{{item.id}}" />
-      </block>
+  <!-- 商品列表 -->
+  <scroll-view scroll-y class="list-scroll" bindscrolltolower="onReachBottom">
+    <view class="product-list" wx:if="{{list.length > 0}}">
+      <view class="product-item" wx:for="{{list}}" wx:key="id" bindtap="toDetail" data-id="{{item.id}}">
+        <image class="img" src="{{item.image}}" mode="aspectFill"></image>
+        <view class="info">
+          <view class="name">{{item.name}}</view>
+          <view class="tags" wx:if="{{item.tags && item.tags.length}}">
+            <text class="tag" wx:for="{{item.tags}}" wx:key="*this" wx:for-item="tag">{{tag}}</text>
+          </view>
+          <view class="price-row">
+            <view class="price">¥<text class="num">{{item.price}}</text></view>
+            <view class="sales">已售 {{item.sales}}</view>
+          </view>
+        </view>
+      </view>
     </view>
+    
+    <empty-state wx:if="{{!loading && list.length === 0}}" title="暂无相关商品" />
     <loading wx:if="{{loading}}" text="加载中..." />
-    <view class="no-more" wx:if="{{!hasMore && !loading}}">没有更多了</view>
+    <view class="no-more" wx:if="{{finished && list.length > 0}}">没有更多了</view>
   </scroll-view>
-
-  <empty-state wx:if="{{!loading && products.length === 0}}" icon="search" text="暂无相关商品" />
 </view>

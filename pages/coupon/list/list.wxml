@@ -1,0 +1,54 @@
+<view class="container">
+  <!-- 顶部Tab -->
+  <view class="tabs">
+    <view 
+      class="tab-item {{currentTab == item.key ? 'active' : ''}}" 
+      wx:for="{{tabs}}" 
+      wx:key="key"
+      bindtap="onTabChange"
+      data-key="{{item.key}}"
+    >
+      {{item.name}}
+    </view>
+  </view>
+
+  <!-- 优惠券列表 -->
+  <scroll-view class="coupon-list" scroll-y>
+    <view 
+      class="coupon-item {{item.status != 0 ? 'disabled' : ''}}" 
+      wx:for="{{coupons}}" 
+      wx:key="id"
+      bindtap="onSelect"
+      data-item="{{item}}"
+    >
+      <view class="coupon-left">
+        <view class="price">
+          <text class="symbol">¥</text>
+          <text class="num">{{item.amount}}</text>
+        </view>
+        <view class="condition">满{{item.minPoint}}可用</view>
+      </view>
+      
+      <view class="coupon-right">
+        <view class="info">
+          <view class="name">
+            <text class="tag">优惠券</text>
+            {{item.name}}
+          </view>
+          <view class="date">{{item.startTime}} - {{item.endTime}}</view>
+        </view>
+        
+        <view class="btn-action" wx:if="{{item.status == 0}}">
+          {{isSelectMode ? '使用' : '去使用'}}
+        </view>
+        <image class="status-icon" src="/assets/images/icons/used.png" wx:if="{{item.status == 1}}" />
+        <image class="status-icon" src="/assets/images/icons/expired.png" wx:if="{{item.status == 2}}" />
+      </view>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty-state" wx:if="{{!loading && coupons.length == 0}}">
+      <text class="empty-text">暂无相关优惠券</text>
+    </view>
+  </scroll-view>
+</view>

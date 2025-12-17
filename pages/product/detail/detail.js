@@ -1,190 +1,115 @@
-import { getProductDetail, addFavorite, removeFavorite } from '../../../services/product'
+import { getProductDetail } from '../../../services/product'
+import { addToCart } from '../../../services/cart'
 
 Page({
   data: {
-    productId: null,
+    id: null,
     product: null,
-    currentImageIndex: 0,
-    selectedSpec: {},
+    loading: true,
+    
+    // 规格选择
+    showSku: false,
+    skuMode: 'cart', // cart or buy
+    selectedSpecs: {}, // { '颜色': '黑色', '内存': '128G' }
     quantity: 1,
-    isFavorite: false,
-    loading: true
+    specText: '请选择规格'
   },
 
   onLoad(options) {
-    const { id } = options
-    this.setData({ productId: id })
-    this.loadProductDetail()
+    this.setData({ id: options.id })
+    this.loadData()
   },
 
-  /**
-   * 加载商品详情
-   */
-  async loadProductDetail() {
+  async loadData() {
     try {
-      const product = await getProductDetail(this.data.productId)
-      
-      // 初始化规格选择
-      const selectedSpec = {}
-      if (product.specs && product.specs.length > 0) {
-        product.specs.forEach(spec => {
-          selectedSpec[spec.name] = spec.values[0]
-        })
-      }
-      
-      this.setData({
-        product,
-        selectedSpec,
-        isFavorite: product.isFavorite,
-        loading: false
+      const product = await getProductDetail(this.data.id)
+      this.setData({ 
+        product, 
+        loading: false 
       })
     } catch (error) {
-      console.error('加载商品详情失败', error)
-      this.setData({ loading: false })
+      wx.showToast({ title: '加载失败', icon: 'none' })
     }
   },
 
-  /**
-   * 图片切换
-   */
-  onImageChange(e) {
-    this.setData({
-      currentImageIndex: e.detail.current
+  // 打开规格弹窗
+  openSku(e) {
+    const mode = e.currentTarget.dataset.mode || 'cart'
+    this.setData({ 
+      showSku: true,
+      skuMode: mode
     })
   },
 
-  /**
-   * 图片预览
-   */
-  onImagePreview() {
-    const { product, currentImageIndex } = this.data
-    wx.previewImage({
-      urls: product.images,
-      current: product.images[currentImageIndex]
-    })
+  closeSku() {
+    this.setData({ showSku: false })
   },
 
-  /**
-   * 规格选择
-   */
-  onSpecTap(e) {
-    const { name, value } = e.currentTarget.dataset
-    const { selectedSpec } = this.data
-    
-    selectedSpec[name] = value
-    this.setData({ selectedSpec })
+  // 选择规格项
+  selectSpec(e) {
+    const { key, value } = e.currentTarget.dataset
+    const selected = { ...this.data.selectedSpecs, [key]: value }
+    this.setData({ selectedSpecs: selected })
+    this.updateSpecText()
   },
 
-  /**
-   * 数量变更
-   */
-  onQuantityChange(e) {
-    const { type } = e.currentTarget.dataset
-    let { quantity } = this.data
-    
-    if (type === 'minus' && quantity > 1) {
-      quantity--
-    } else if (type === 'plus') {
-      quantity++
+  // 数量变化
+  onQtyChange(e) {
+    const type = e.currentTarget.dataset.type
+    let qty = this.data.quantity
+    if (type === 'minus' && qty > 1) qty--
+    if (type === 'plus') qty++
+    this.setData({ quantity: qty })
+  },
+
+  updateSpecText() {
+    const keys = Object.keys(this.data.selectedSpecs)
+    const totalKeys = this.data.product.specs.length
+    if (keys.length === totalKeys) {
+      const values = Object.values(this.data.selectedSpecs).join(' ')
+      this.setData({ specText: `已选: ${values} x${this.data.quantity}` })
     }
-    
-    this.setData({ quantity })
   },
 
-  /**
-   * 收藏/取消收藏
-   */
-  async onFavoriteTap() {
-    const app = getApp()
-    if (!app.store.user.isLogin()) {
-      wx.navigateTo({ url: '/pages/auth/login' })
-      return
-    }
-    
-    try {
-      const { productId, isFavorite } = this.data
-      
-      if (isFavorite) {
-        await removeFavorite(productId)
-        wx.showToast({ title: '已取消收藏', icon: 'success' })
-      } else {
-        await addFavorite(productId)
-        wx.showToast({ title: '收藏成功', icon: 'success' })
+  // 确认提交
+  async confirmSku() {
+    // 校验规格
+    const specs = this.data.product.specs
+    for (let spec of specs) {
+      if (!this.data.selectedSpecs[spec.name]) {
+        wx.showToast({ title: `请选择${spec.name}`, icon: 'none' })
+        return
       }
-      
-      this.setData({ isFavorite: !isFavorite })
-    } catch (error) {
-      console.error('收藏操作失败', error)
+    }
+
+    const item = {
+      id: this.data.product.id,
+      name: this.data.product.name,
+      price: this.data.product.price,
+      image: this.data.product.image,
+      specs: Object.values(this.data.selectedSpecs).join(';'),
+      quantity: this.data.quantity
+    }
+
+    if (this.data.skuMode === 'cart') {
+      await addToCart(item)
+      wx.showToast({ title: '已加入购物车' })
+      this.closeSku()
+    } else {
+      // 立即购买 -> 跳转确认订单，传递参数
+      const productData = encodeURIComponent(JSON.stringify([item]))
+      this.closeSku()
+      wx.navigateTo({
+        url: `/pages/order/confirm/confirm?products=${productData}`
+      })
     }
   },
-
-  /**
-   * 加入购物车
-   */
-  onAddToCart() {
-    const app = getApp()
-    const { product, selectedSpec, quantity } = this.data
-    
-    app.store.cart.addToCart({
-      id: product.id,
-      name: product.name,
-      image: product.images[0],
-      price: product.price,
-      spec: this.formatSpec(selectedSpec),
-      quantity
-    })
-    
-    wx.showToast({
-      title: '已加入购物车',
-      icon: 'success'
-    })
+  
+  toCart() {
+    wx.switchTab({ url: '/pages/cart/cart' })
   },
-
-  /**
-   * 立即购买
-   */
-  onBuyNow() {
-    const { product, selectedSpec, quantity } = this.data
-    
-    const orderProduct = {
-      id: product.id,
-      name: product.name,
-      image: product.images[0],
-      price: product.price,
-      spec: this.formatSpec(selectedSpec),
-      quantity
-    }
-    
-    wx.navigateTo({
-      url: `/pages/order/confirm/confirm?products=${JSON.stringify([orderProduct])}`
-    })
-  },
-
-  /**
-   * 格式化规格
-   */
-  formatSpec(selectedSpec) {
-    return Object.entries(selectedSpec)
-      .map(([key, value]) => `${key}:${value}`)
-      .join('; ')
-  },
-
-  /**
-   * 客服
-   */
-  onContactService() {
-    // 打开客服会话
-  },
-
-  /**
-   * 分享
-   */
-  onShareAppMessage() {
-    const { product } = this.data
-    return {
-      title: product.name,
-      path: `/pages/product/detail/detail?id=${product.id}`,
-      imageUrl: product.images[0]
-    }
+  
+  toHome() {
+    wx.switchTab({ url: '/pages/index/index' })
   }
 })

@@ -1,20 +1,19 @@
 .container {
   min-height: 100vh;
   background: #f5f5f5;
-  padding-bottom: 40rpx;
+  padding: 20rpx;
 }
 
-.user-header {
-  background: #ff6b6b;
-  color: #fff;
-  padding: 40rpx 30rpx 60rpx;
-  margin-bottom: -40rpx; /* 制造悬浮卡片效果 */
-}
-
-.user-info {
+/* 用户卡片 */
+.user-card {
+  background: linear-gradient(135deg, #ff6b6b, #ff4757);
+  padding: 40rpx 30rpx;
+  border-radius: 20rpx;
   display: flex;
   align-items: center;
-  margin-bottom: 40rpx;
+  color: #fff;
+  margin-bottom: 24rpx;
+  position: relative;
 }
 
 .avatar {
@@ -22,72 +21,48 @@
   height: 120rpx;
   border-radius: 50%;
   border: 4rpx solid rgba(255,255,255,0.3);
-  margin-right: 24rpx;
+  margin-right: 30rpx;
   background: #fff;
 }
 
-.user-detail {
+.info {
   flex: 1;
 }
 
 .nickname {
   font-size: 36rpx;
   font-weight: bold;
-  margin-bottom: 8rpx;
+  margin-bottom: 10rpx;
 }
 
-.user-desc {
-  font-size: 24rpx;
+.desc {
+  font-size: 26rpx;
+  opacity: 0.9;
+}
+
+.setting-icon {
+  position: absolute;
+  top: 30rpx;
+  right: 30rpx;
+  font-size: 40rpx;
   opacity: 0.8;
 }
 
-.user-level {
-  display: inline-block;
-  font-size: 20rpx;
-  background: rgba(0,0,0,0.2);
-  padding: 4rpx 12rpx;
-  border-radius: 20rpx;
-}
-
-.user-stats {
-  display: flex;
-  justify-content: space-around;
-  padding-top: 10rpx;
-}
-
-.stat-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.stat-num {
-  font-size: 32rpx;
-  font-weight: bold;
-  margin-bottom: 4rpx;
-}
-
-.stat-name {
-  font-size: 24rpx;
-  opacity: 0.8;
-}
-
-/* 卡片通用样式 */
-.section-card {
+/* 订单卡片 */
+.order-card {
   background: #fff;
   border-radius: 20rpx;
-  margin: 0 24rpx 24rpx;
-  padding: 0 20rpx;
-  position: relative;
-  z-index: 1;
+  padding: 30rpx;
+  margin-bottom: 24rpx;
 }
 
-.section-header {
+.card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 30rpx 10rpx;
-  border-bottom: 1rpx solid #f9f9f9;
+  padding-bottom: 30rpx;
+  border-bottom: 1rpx solid #f5f5f5;
+  margin-bottom: 30rpx;
 }
 
 .title {
@@ -99,91 +74,86 @@
 .more {
   font-size: 24rpx;
   color: #999;
+}
+
+.grid-nav {
   display: flex;
-  align-items: center;
+  justify-content: space-around;
 }
 
-.arrow {
-  margin-left: 6rpx;
-  font-family: monospace;
-}
-
-/* 订单九宫格 */
-.order-grid {
-  display: flex;
-  padding: 30rpx 0;
-}
-
-.grid-item {
-  flex: 1;
+.nav-item {
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: relative;
 }
 
-.icon-wrap {
-  position: relative;
+.nav-icon {
+  width: 56rpx;
+  height: 56rpx;
   margin-bottom: 12rpx;
 }
 
-.grid-icon {
-  font-size: 48rpx;
-}
-
-.badge {
-  position: absolute;
-  top: -10rpx;
-  right: -14rpx;
-  background: #ff4d4f;
-  color: #fff;
-  font-size: 20rpx;
-  padding: 0 8rpx;
-  border-radius: 18rpx;
-  border: 2rpx solid #fff;
-}
-
-.grid-text {
+.nav-item text {
   font-size: 24rpx;
   color: #666;
 }
 
+.badge {
+  position: absolute;
+  top: -8rpx;
+  right: -8rpx;
+  background: #ff4d4f;
+  color: #fff;
+  font-size: 20rpx;
+  min-width: 32rpx;
+  height: 32rpx;
+  border-radius: 16rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 6rpx;
+  box-sizing: border-box;
+}
+
 /* 菜单列表 */
+.menu-group {
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 0 30rpx;
+}
+
 .menu-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 30rpx 10rpx;
-  border-bottom: 1rpx solid #f9f9f9;
+  padding: 34rpx 0;
+  border-bottom: 1rpx solid #f5f5f5;
 }
 
 .menu-item:last-child {
   border-bottom: none;
 }
 
-.menu-left {
+.menu-item:active {
+  background-color: #fafafa;
+}
+
+.left {
   display: flex;
   align-items: center;
-}
-
-.menu-icon {
-  font-size: 36rpx;
-  margin-right: 20rpx;
-}
-
-.menu-title {
-  font-size: 28rpx;
+  font-size: 30rpx;
   color: #333;
 }
 
-/* 退出登录 */
-.logout-area {
-  margin: 60rpx 30rpx;
+.icon {
+  margin-right: 20rpx;
+  font-size: 36rpx;
+  width: 40rpx;
+  text-align: center;
 }
 
-.btn-logout {
-  background: #fff;
-  color: #666;
-  font-size: 30rpx;
-  border-radius: 44rpx;
-  padding: 6rpx 0;
+.arrow {
+  color: #ccc;
+  font-size: 32rpx;
 }

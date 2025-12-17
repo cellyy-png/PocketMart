@@ -1,46 +1,136 @@
 .container {
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    background: #f5f5f5;
-  }
-  
-  .filter-bar {
-    display: flex;
-    background: #fff;
-    height: 88rpx;
-    align-items: center;
-    box-shadow: 0 2rpx 10rpx rgba(0,0,0,0.05);
-    z-index: 10;
-  }
-  
-  .filter-item {
-    flex: 1;
-    text-align: center;
-    font-size: 28rpx;
-    color: #333;
-  }
-  
-  .filter-item.active {
-    color: #ff6b6b;
-    font-weight: bold;
-  }
-  
-  .product-list {
-    flex: 1;
-    padding: 20rpx;
-    box-sizing: border-box;
-  }
-  
-  .product-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20rpx;
-  }
-  
-  .no-more {
-    text-align: center;
-    padding: 30rpx;
-    color: #999;
-    font-size: 24rpx;
-  }
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #f7f8fa;
+}
+
+/* 筛选栏 */
+.filter-bar {
+  height: 88rpx;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  position: relative;
+  z-index: 10;
+  box-shadow: 0 2rpx 10rpx rgba(0,0,0,0.02);
+}
+
+.filter-item {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28rpx;
+  color: #666;
+}
+
+.filter-item.active {
+  color: #ff6b6b;
+  font-weight: bold;
+}
+
+.sort-icons {
+  display: flex;
+  flex-direction: column;
+  margin-left: 8rpx;
+}
+
+.arrow {
+  font-size: 16rpx;
+  line-height: 1;
+  color: #ccc;
+}
+
+.arrow.active {
+  color: #ff6b6b;
+}
+
+.arrow.up { margin-bottom: 2rpx; }
+
+/* 列表区域 */
+.list-scroll {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.product-list {
+  padding: 20rpx;
+}
+
+.product-item {
+  display: flex;
+  background: #fff;
+  padding: 20rpx;
+  border-radius: 16rpx;
+  margin-bottom: 20rpx;
+}
+
+.img {
+  width: 200rpx;
+  height: 200rpx;
+  border-radius: 8rpx;
+  background: #f5f5f5;
+  flex-shrink: 0;
+}
+
+.info {
+  flex: 1;
+  margin-left: 20rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.name {
+  font-size: 28rpx;
+  color: #333;
+  line-height: 1.4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.tags {
+  display: flex;
+  margin-top: 10rpx;
+}
+
+.tag {
+  font-size: 20rpx;
+  color: #ff6b6b;
+  border: 1rpx solid #ff6b6b;
+  padding: 0 6rpx;
+  border-radius: 4rpx;
+  margin-right: 10rpx;
+}
+
+.price-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.price {
+  color: #ff6b6b;
+  font-size: 24rpx;
+}
+
+.price .num {
+  font-size: 36rpx;
+  font-weight: bold;
+}
+
+.sales {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.no-more {
+  text-align: center;
+  padding: 30rpx;
+  color: #999;
+  font-size: 24rpx;
+}

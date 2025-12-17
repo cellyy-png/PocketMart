@@ -1,0 +1,50 @@
+<view class="container">
+  <!-- 评分区域 -->
+  <view class="score-card">
+    <view class="label">商品评分</view>
+    <view class="stars">
+      <view 
+        class="star {{item <= score ? 'active' : ''}}" 
+        wx:for="{{[1,2,3,4,5]}}" 
+        wx:key="*this"
+        bindtap="setScore"
+        data-score="{{item}}"
+      >★</view>
+    </view>
+    <view class="score-text" wx:if="{{score == 5}}">非常好</view>
+    <view class="score-text" wx:elif="{{score >= 4}}">好</view>
+    <view class="score-text" wx:elif="{{score >= 3}}">一般</view>
+    <view class="score-text" wx:else>差</view>
+  </view>
+
+  <!-- 内容输入 -->
+  <view class="content-card">
+    <textarea 
+      class="textarea" 
+      placeholder="宝贝满足你的期待吗？说说你的使用心得，分享给想买的他们吧" 
+      maxlength="200"
+      bindinput="onInput"
+    ></textarea>
+    
+    <!-- 图片上传 -->
+    <view class="image-list">
+      <view class="image-item" wx:for="{{images}}" wx:key="*this">
+        <image src="{{item}}" mode="aspectFill"></image>
+        <view class="delete" bindtap="deleteImage" data-index="{{index}}">×</view>
+      </view>
+      <view 
+        class="upload-btn" 
+        bindtap="chooseImage" 
+        wx:if="{{images.length < maxImages}}"
+      >
+        <view class="icon">+</view>
+        <view class="text">上传图片</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 提交按钮 -->
+  <view class="footer">
+    <button class="submit-btn" bindtap="submit">发布评价</button>
+  </view>
+</view>

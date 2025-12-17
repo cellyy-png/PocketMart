@@ -1,66 +1,157 @@
-// pages/order/detail/detail.js
+import { getOrderDetail, cancelOrder, confirmReceipt, deleteOrder } from '../../../services/order'
+import { ORDER_STATUS, ORDER_STATUS_TEXT } from '../../../utils/constants'
+
 Page({
-
-  /**
-   * 页面的初始数据
-   */
   data: {
-
+    orderId: null,
+    order: null,
+    loading: true,
+    steps: [
+      { text: '买家下单', desc: '' },
+      { text: '商家发货', desc: '' },
+      { text: '交易完成', desc: '' }
+    ]
   },
 
-  /**
-   * 生命周期函数--监听页面加载
-   */
   onLoad(options) {
-
+    if (options.id) {
+      this.setData({ orderId: options.id })
+      this.loadData()
+    } else {
+      wx.showToast({ title: '参数错误', icon: 'none' })
+      setTimeout(() => wx.navigateBack(), 1500)
+    }
   },
 
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady() {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
   onShow() {
+    // 每次显示都刷新，确保状态最新（例如从支付页返回）
+    if (this.data.orderId) {
+      this.loadData()
+    }
+  },
 
+  async loadData() {
+    try {
+      const order = await getOrderDetail(this.data.orderId)
+      
+      // 格式化时间步骤
+      const steps = [
+        { text: '提交订单', desc: order.createTime },
+        { text: '支付成功', desc: order.payTime || '' },
+        { text: '商家发货', desc: order.deliveryTime || '' },
+        { text: '交易完成', desc: order.finishTime || '' }
+      ]
+
+      this.setData({ 
+        order, 
+        steps,
+        loading: false 
+      })
+    } catch (error) {
+      console.error(error)
+      wx.showToast({ title: '加载失败', icon: 'none' })
+    }
   },
 
   /**
-   * 生命周期函数--监听页面隐藏
+   * 复制订单号
    */
-  onHide() {
-
+  onCopyNo() {
+    wx.setClipboardData({
+      data: this.data.order.orderNo,
+      success: () => {
+        wx.showToast({ title: '复制成功', icon: 'none' })
+      }
+    })
   },
 
   /**
-   * 生命周期函数--监听页面卸载
+   * 去支付
    */
-  onUnload() {
-
+  onPay() {
+    wx.navigateTo({
+      url: `/pages/payment/payment?orderId=${this.data.orderId}`
+    })
   },
 
   /**
-   * 页面相关事件处理函数--监听用户下拉动作
+   * 取消订单
    */
-  onPullDownRefresh() {
-
+  onCancel() {
+    wx.showModal({
+      title: '提示',
+      content: '确定要取消订单吗？',
+      success: async (res) => {
+        if (res.confirm) {
+          try {
+            await cancelOrder(this.data.orderId)
+            wx.showToast({ title: '取消成功' })
+            this.loadData() // 刷新状态
+          } catch (error) {
+            wx.showToast({ title: '取消失败', icon: 'none' })
+          }
+        }
+      }
+    })
   },
 
   /**
-   * 页面上拉触底事件的处理函数
+   * 确认收货
    */
-  onReachBottom() {
-
+  onConfirm() {
+    wx.showModal({
+      title: '提示',
+      content: '确认已收到商品？',
+      success: async (res) => {
+        if (res.confirm) {
+          try {
+            await confirmReceipt(this.data.orderId)
+            wx.showToast({ title: '交易完成' })
+            this.loadData()
+          } catch (error) {
+            wx.showToast({ title: '操作失败', icon: 'none' })
+          }
+        }
+      }
+    })
   },
 
   /**
-   * 用户点击右上角分享
+   * 删除订单
    */
-  onShareAppMessage() {
+  onDelete() {
+    wx.showModal({
+      title: '提示',
+      content: '确定要删除该订单吗？删除后不可恢复。',
+      success: async (res) => {
+        if (res.confirm) {
+          try {
+            await deleteOrder(this.data.orderId)
+            wx.showToast({ title: '删除成功' })
+            wx.navigateBack()
+          } catch (error) {
+            wx.showToast({ title: '删除失败', icon: 'none' })
+          }
+        }
+      }
+    })
+  },
 
+  /**
+   * 查看物流
+   */
+  onLogistics() {
+    wx.navigateTo({
+      url: `/pages/logistics/logistics?orderId=${this.data.orderId}`
+    })
+  },
+  
+  /**
+   * 联系客服
+   */
+  onContact() {
+    wx.makePhoneCall({
+      phoneNumber: '400-123-4567' 
+    })
   }
 })

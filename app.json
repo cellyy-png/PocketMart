@@ -13,7 +13,12 @@
     "pages/address/list/list",
     "pages/address/edit/edit",
     "pages/search/search",
-    "pages/auth/login"
+    "pages/auth/login",
+    "pages/coupon/list/list",
+    "pages/logistics/logistics",
+    "pages/comment/comment",
+    "pages/service/service",
+    "pages/setting/setting"
   ],
   "window": {
     "backgroundTextStyle": "light",

@@ -1,1 +1,279 @@
-/* pages/order/detail/detail.wxss */
+.container {
+  min-height: 100vh;
+  background: #f5f5f5;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* 头部状态 */
+.header-status {
+  background: linear-gradient(135deg, #ff6b6b, #ff4757);
+  padding: 40rpx 40rpx 80rpx;
+  color: #fff;
+}
+
+.status-text {
+  font-size: 40rpx;
+  font-weight: bold;
+  margin-bottom: 12rpx;
+}
+
+.status-desc {
+  font-size: 26rpx;
+  opacity: 0.9;
+}
+
+/* 通用卡片 */
+.address-card, .product-card, .info-card, .logistics-card {
+  background: #fff;
+  border-radius: 16rpx;
+  margin: 20rpx;
+  padding: 24rpx;
+}
+
+.address-card, .logistics-card {
+  margin-top: -40rpx; /* 向上浮动覆盖头部 */
+  display: flex;
+  align-items: center;
+}
+
+.logistics-card {
+  margin-bottom: 0; /* 如果有物流卡片，地址卡片就不上浮了，这里简单处理 */
+}
+.header-status + .logistics-card + .address-card {
+  margin-top: 20rpx;
+}
+
+/* 物流卡片 */
+.logistics-icon {
+  width: 60rpx;
+  height: 60rpx;
+  background: #e6f7ff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32rpx;
+  margin-right: 20rpx;
+}
+
+.logistics-info {
+  flex: 1;
+}
+
+.logistics-status {
+  font-size: 28rpx;
+  color: #1890ff;
+  margin-bottom: 6rpx;
+  font-weight: bold;
+}
+
+.logistics-newest {
+  font-size: 24rpx;
+  color: #999;
+}
+
+/* 地址卡片 */
+.location-icon {
+  width: 60rpx;
+  height: 60rpx;
+  background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32rpx;
+  margin-right: 20rpx;
+  color: #fff;
+}
+
+.address-info {
+  flex: 1;
+}
+
+.user-row {
+  margin-bottom: 8rpx;
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.user-row .phone {
+  margin-left: 20rpx;
+  font-size: 26rpx;
+  color: #666;
+  font-weight: normal;
+}
+
+.address-text {
+  font-size: 26rpx;
+  color: #666;
+  line-height: 1.4;
+}
+
+/* 商品列表 */
+.card-header {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 24rpx;
+  padding-bottom: 16rpx;
+  border-bottom: 1rpx solid #f5f5f5;
+}
+
+.goods-item {
+  display: flex;
+  margin-bottom: 24rpx;
+}
+.goods-item:last-child {
+  margin-bottom: 0;
+}
+
+.goods-img {
+  width: 140rpx;
+  height: 140rpx;
+  border-radius: 8rpx;
+  background: #f5f5f5;
+  margin-right: 20rpx;
+}
+
+.goods-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.goods-name {
+  font-size: 28rpx;
+  color: #333;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.goods-spec {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.goods-price-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.goods-price-row .price {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.goods-price-row .qty {
+  font-size: 26rpx;
+  color: #999;
+}
+
+/* 信息卡片 */
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 26rpx;
+  margin-bottom: 20rpx;
+}
+.info-row:last-child {
+  margin-bottom: 0;
+}
+
+.label {
+  color: #666;
+}
+
+.value {
+  color: #333;
+}
+
+.value-wrap {
+  display: flex;
+  align-items: center;
+}
+
+.copy-btn {
+  font-size: 20rpx;
+  color: #666;
+  border: 1rpx solid #ddd;
+  padding: 2rpx 10rpx;
+  border-radius: 4rpx;
+  margin-left: 10rpx;
+}
+
+.value.red {
+  color: #ff6b6b;
+}
+
+.total-row {
+  border-top: 1rpx solid #f9f9f9;
+  padding-top: 20rpx;
+  margin-top: 20rpx;
+}
+
+.label.bold {
+  font-weight: bold;
+  font-size: 28rpx;
+  color: #333;
+}
+
+.value.price-large {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #ff6b6b;
+}
+
+/* 底部栏 */
+.footer-placeholder {
+  height: 120rpx;
+}
+
+.footer-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #fff;
+  padding: 20rpx 30rpx;
+  padding-bottom: calc(20rpx + env(safe-area-inset-bottom));
+  box-shadow: 0 -2rpx 10rpx rgba(0,0,0,0.05);
+  display: flex;
+  justify-content: flex-end;
+  gap: 20rpx;
+  z-index: 100;
+}
+
+.footer-btn {
+  height: 64rpx;
+  padding: 0 32rpx;
+  border-radius: 32rpx;
+  font-size: 26rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.footer-btn.contact {
+  margin-right: auto; /* 靠左 */
+  color: #666;
+  padding: 0;
+}
+
+.footer-btn.default {
+  border: 1rpx solid #ddd;
+  color: #666;
+}
+
+.footer-btn.primary {
+  background: #ff6b6b;
+  color: #fff;
+  border: 1rpx solid #ff6b6b;
+}

@@ -1,89 +1,101 @@
 <view class="container" wx:if="{{!loading}}">
-  <swiper 
-    class="product-swiper" 
-    indicator-dots="{{true}}" 
-    autoplay="{{true}}" 
-    interval="5000" 
-    duration="500"
-    indicator-active-color="#ff6b6b"
-    bindchange="onImageChange"
-  >
-    <swiper-item wx:for="{{product.images}}" wx:key="*this" bindtap="onImagePreview">
-      <image class="swiper-image" src="{{item}}" mode="aspectFill" />
+  <!-- 商品轮播 -->
+  <swiper class="gallery" indicator-dots autoplay circular>
+    <swiper-item wx:for="{{product.images}}" wx:key="*this">
+      <image src="{{item}}" mode="aspectFill" class="gallery-img" />
     </swiper-item>
   </swiper>
 
-  <view class="product-info-card">
+  <!-- 基本信息 -->
+  <view class="info-card">
     <view class="price-row">
-      <view class="current-price">
-        <text class="symbol">¥</text>
-        <text class="num">{{product.price}}</text>
-      </view>
-      <text class="original-price" wx:if="{{product.originalPrice}}">¥{{product.originalPrice}}</text>
-      <view class="sales-info">已售 {{product.sales}}</view>
+      <text class="symbol">¥</text>
+      <text class="price">{{product.price}}</text>
+      <text class="original">¥{{product.originalPrice}}</text>
     </view>
-    
-    <view class="product-title">{{product.name}}</view>
-    <view class="product-desc">{{product.desc}}</view>
+    <view class="title">{{product.name}}</view>
+    <view class="desc">{{product.desc}}</view>
   </view>
 
-  <view class="spec-section" wx:if="{{product.specs.length > 0}}">
-    <view class="spec-row" wx:for="{{product.specs}}" wx:key="name" wx:for-item="spec">
-      <view class="spec-label">{{spec.name}}</view>
-      <view class="spec-values">
-        <view 
-          class="spec-item {{selectedSpec[spec.name] === item ? 'active' : ''}}" 
-          wx:for="{{spec.values}}" 
-          wx:key="*this"
-          data-name="{{spec.name}}"
-          data-value="{{item}}"
-          bindtap="onSpecTap"
-        >
-          {{item}}
-        </view>
-      </view>
-    </view>
-    
-    <view class="quantity-row">
-      <view class="spec-label">数量</view>
-      <view class="quantity-control">
-        <view class="qty-btn {{quantity <= 1 ? 'disabled' : ''}}" bindtap="onQuantityChange" data-type="minus">-</view>
-        <view class="qty-num">{{quantity}}</view>
-        <view class="qty-btn" bindtap="onQuantityChange" data-type="plus">+</view>
-      </view>
+  <!-- 规格选择入口 -->
+  <view class="cell-group" bindtap="openSku" data-mode="cart">
+    <view class="cell">
+      <text class="label">选择</text>
+      <text class="value">{{specText}}</text>
+      <text class="arrow">›</text>
     </view>
   </view>
 
-  <view class="detail-section">
+  <!-- 详情内容 -->
+  <view class="detail-content">
     <view class="section-title">商品详情</view>
-    <view class="detail-content">
-      <rich-text nodes="{{product.detail}}"></rich-text>
+    <rich-text nodes="{{product.detailHtml}}"></rich-text>
+  </view>
+
+  <!-- 底部操作栏 -->
+  <view class="footer-bar">
+    <view class="icons">
+      <view class="icon-btn" bindtap="toHome">
+        <image src="/assets/images/icons/home.png" />
+        <text>首页</text>
+      </view>
+      <view class="icon-btn" bindtap="toCart">
+        <image src="/assets/images/icons/cart.png" />
+        <text>购物车</text>
+      </view>
+    </view>
+    <view class="btns">
+      <view class="btn yellow" bindtap="openSku" data-mode="cart">加入购物车</view>
+      <view class="btn red" bindtap="openSku" data-mode="buy">立即购买</view>
     </view>
   </view>
 
-  <view class="bottom-barsafe-area">
-    <view class="bottom-bar">
-      <view class="action-icons">
-        <view class="icon-item" bindtap="onContactService">
-          <text class="icon-text">🎧</text>
-          <text class="icon-label">客服</text>
+  <!-- SKU弹窗 -->
+  <view class="sku-modal {{showSku ? 'show' : ''}}">
+    <view class="mask" bindtap="closeSku"></view>
+    <view class="content">
+      <view class="sku-header">
+        <image src="{{product.image}}" mode="aspectFill"></image>
+        <view class="sku-info">
+          <view class="sku-price">¥{{product.price}}</view>
+          <view class="sku-selected">已选: {{quantity}}件</view>
         </view>
-        <navigator class="icon-item" url="/pages/cart/cart" open-type="switchTab">
-          <text class="icon-text">🛒</text>
-          <text class="icon-label">购物车</text>
-        </navigator>
-        <view class="icon-item" bindtap="onFavoriteTap">
-          <text class="icon-text" style="color: {{isFavorite ? '#ff6b6b' : '#333'}}">{{isFavorite ? '♥' : '♡'}}</text>
-          <text class="icon-label">收藏</text>
-        </view>
+        <view class="close" bindtap="closeSku">×</view>
       </view>
-      
-      <view class="action-buttons">
-        <view class="btn-cart" bindtap="onAddToCart">加入购物车</view>
-        <view class="btn-buy" bindtap="onBuyNow">立即购买</view>
+
+      <scroll-view scroll-y class="sku-body">
+        <view class="spec-group" wx:for="{{product.specs}}" wx:key="name">
+          <view class="spec-title">{{item.name}}</view>
+          <view class="spec-list">
+            <view 
+              class="spec-item {{selectedSpecs[item.name] == subItem ? 'active' : ''}}" 
+              wx:for="{{item.list}}" 
+              wx:key="*this"
+              wx:for-item="subItem"
+              bindtap="selectSpec"
+              data-key="{{item.name}}"
+              data-value="{{subItem}}"
+            >
+              {{subItem}}
+            </view>
+          </view>
+        </view>
+
+        <view class="qty-row">
+          <text>购买数量</text>
+          <view class="stepper">
+            <view class="minus {{quantity<=1?'disabled':''}}" bindtap="onQtyChange" data-type="minus">-</view>
+            <view class="num">{{quantity}}</view>
+            <view class="plus" bindtap="onQtyChange" data-type="plus">+</view>
+          </view>
+        </view>
+      </scroll-view>
+
+      <view class="sku-footer">
+        <view class="confirm-btn" bindtap="confirmSku">确定</view>
       </view>
     </view>
   </view>
 </view>
 
-<loading wx:else />
+<loading wx:if="{{loading}}" text="加载详情..." />

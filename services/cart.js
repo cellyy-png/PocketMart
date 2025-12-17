@@ -1,43 +1,77 @@
 /**
- * 同步购物车到服务器
+ * 购物车本地服务（模拟）
+ * 实际项目应调用后端API，这里使用Storage模拟
  */
-export const syncCart = (cartData) => {
-  console.log('syncCart调用', cartData)
-  return Promise.resolve({ success: true })
-}
 
-/**
- * 获取服务器购物车
- */
-export const getServerCart = () => {
-  console.log('getServerCart调用')
-  return Promise.resolve([])
-}
+const CART_KEY = 'POCKET_MART_CART'
 
-/**
- * 清空购物车
- */
-export const clearServerCart = () => {
-  console.log('clearServerCart调用')
-  return Promise.resolve({ success: true })
-}
-
-/**
- * 检查商品库存
- */
-export const checkStock = (products) => {
-  console.log('checkStock调用', products)
-  
-  return Promise.resolve({
-    available: true,
-    products: products
+export const getCartList = () => {
+  return new Promise((resolve) => {
+    const list = wx.getStorageSync(CART_KEY) || []
+    resolve(list)
   })
 }
 
-/**
- * 计算运费
- */
-export const calculateShipping = (addressId, products) => {
-  console.log('calculateShipping调用', addressId, products)
-  return Promise.resolve(10.00)
+export const addToCart = (product) => {
+  return new Promise((resolve) => {
+    let list = wx.getStorageSync(CART_KEY) || []
+    
+    // 检查是否已存在同规格商品
+    const index = list.findIndex(item => 
+      item.id === product.id && 
+      item.specs === product.specs
+    )
+
+    if (index > -1) {
+      list[index].quantity += product.quantity
+    } else {
+      list.unshift({
+        cartId: new Date().getTime(), // 唯一ID
+        checked: true,
+        ...product
+      })
+    }
+    
+    wx.setStorageSync(CART_KEY, list)
+    
+    // 更新tabbar数字（如果需要）
+    updateBadge(list.length)
+    
+    resolve({ success: true })
+  })
+}
+
+export const updateCartItem = (cartId, data) => {
+  return new Promise((resolve) => {
+    let list = wx.getStorageSync(CART_KEY) || []
+    const index = list.findIndex(item => item.cartId === cartId)
+    
+    if (index > -1) {
+      list[index] = { ...list[index], ...data }
+      wx.setStorageSync(CART_KEY, list)
+      resolve(list)
+    }
+  })
+}
+
+export const deleteCartItem = (cartIds) => {
+  return new Promise((resolve) => {
+    let list = wx.getStorageSync(CART_KEY) || []
+    list = list.filter(item => !cartIds.includes(item.cartId))
+    
+    wx.setStorageSync(CART_KEY, list)
+    updateBadge(list.length)
+    resolve(list)
+  })
+}
+
+function updateBadge(count) {
+  if (count > 0) {
+    wx.setTabBarBadge({
+      index: 2, // 购物车Tab索引
+      text: count + ''
+    }).catch(() => {})
+  } else {
+    wx.removeTabBarBadge({ index: 2 }).catch(() => {})
+  }
 }

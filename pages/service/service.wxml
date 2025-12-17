@@ -1,0 +1,35 @@
+<view class="container">
+  <!-- 头部Banner -->
+  <view class="header">
+    <view class="title">Hi, 需要什么帮助？</view>
+    <view class="subtitle">我们将竭诚为您服务</view>
+  </view>
+
+  <!-- 联系方式 -->
+  <view class="contact-grid">
+    <button class="contact-item" open-type="contact">
+      <view class="icon">💬</view>
+      <view class="label">在线客服</view>
+      <view class="desc">9:00 - 22:00</view>
+    </button>
+    <view class="contact-item" bindtap="onCall">
+      <view class="icon">📞</view>
+      <view class="label">电话客服</view>
+      <view class="desc">400-123-4567</view>
+    </view>
+  </view>
+
+  <!-- 常见问题 -->
+  <view class="faq-section">
+    <view class="section-title">常见问题</view>
+    <view class="faq-list">
+      <view class="faq-item" wx:for="{{faqs}}" wx:key="q" bindtap="toggleFaq" data-index="{{index}}">
+        <view class="question">
+          <text>{{item.q}}</text>
+          <text class="arrow {{item.open ? 'up' : ''}}">⌄</text>
+        </view>
+        <view class="answer" wx:if="{{item.open}}">{{item.a}}</view>
+      </view>
+    </view>
+  </view>
+</view>

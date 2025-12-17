@@ -1,88 +1,74 @@
 <view class="container">
-  <!-- 头部区域 -->
-  <view class="user-header" bindtap="{{!isLogin ? 'onLoginTap' : ''}}">
-    <view class="user-info">
-      <image class="avatar" src="{{isLogin ? userInfo.avatar : '/assets/images/icons/user.png'}}" mode="aspectFill"></image>
-      <view class="user-detail">
-        <view class="nickname">{{isLogin ? userInfo.nickname : '点击登录 / 注册'}}</view>
-        <view class="user-desc" wx:if="{{!isLogin}}">登录后享受更多权益</view>
-        <view class="user-level" wx:else>VIP会员</view>
-      </view>
+  <!-- 用户信息卡片 -->
+  <view class="user-card" bindtap="{{!hasLogin ? 'toLogin' : ''}}">
+    <image class="avatar" src="{{hasLogin ? userInfo.avatarUrl : '/assets/images/icons/user.png'}}" mode="aspectFill"></image>
+    <view class="info">
+      <view class="nickname">{{hasLogin ? userInfo.nickName : '点击登录/注册'}}</view>
+      <view class="desc" wx:if="{{hasLogin}}">{{userInfo.phone || '普通会员'}}</view>
+      <view class="desc" wx:else>登录后享受更多优惠</view>
     </view>
-    
-    <view class="user-stats" wx:if="{{isLogin}}">
-      <view class="stat-item">
-        <text class="stat-num">{{userInfo.balance || '0.00'}}</text>
-        <text class="stat-name">余额</text>
-      </view>
-      <view class="stat-item">
-        <text class="stat-num">{{userInfo.points || '0'}}</text>
-        <text class="stat-name">积分</text>
-      </view>
-      <view class="stat-item">
-        <text class="stat-num">{{userInfo.coupons || '0'}}</text>
-        <text class="stat-name">优惠券</text>
-      </view>
-    </view>
+    <view class="setting-icon" catchtap="toSetting" wx:if="{{hasLogin}}">⚙️</view>
   </view>
 
-  <!-- 订单区域 -->
-  <view class="section-card">
-    <view class="section-header" bindtap="onOrderTap" data-status="all">
+  <!-- 订单状态栏 -->
+  <view class="order-card">
+    <view class="card-header" bindtap="toOrderList" data-type="0">
       <text class="title">我的订单</text>
-      <view class="more">
-        <text>全部订单</text>
-        <text class="arrow">></text>
-      </view>
+      <view class="more">全部订单 ›</view>
     </view>
-    
-    <view class="order-grid">
-      <view class="grid-item" bindtap="onOrderTap" data-status="0">
-        <view class="icon-wrap">
-          <text class="grid-icon">💳</text>
-          <view class="badge" wx:if="{{orderCount.unpaid > 0}}">{{orderCount.unpaid}}</view>
-        </view>
-        <text class="grid-text">待付款</text>
+    <view class="grid-nav">
+      <view class="nav-item" bindtap="toOrderList" data-type="1">
+        <image src="/assets/images/icons/cart-active.png" class="nav-icon" /> <!-- 替换为具体icon -->
+        <text>待付款</text>
+        <view class="badge" wx:if="{{stats.unpaid > 0}}">{{stats.unpaid}}</view>
       </view>
-      <view class="grid-item" bindtap="onOrderTap" data-status="1">
-        <view class="icon-wrap">
-          <text class="grid-icon">📦</text>
-          <view class="badge" wx:if="{{orderCount.unshipped > 0}}">{{orderCount.unshipped}}</view>
-        </view>
-        <text class="grid-text">待发货</text>
+      <view class="nav-item" bindtap="toOrderList" data-type="2">
+        <image src="/assets/images/icons/category-active.png" class="nav-icon" /> <!-- 替换为具体icon -->
+        <text>待发货</text>
+        <view class="badge" wx:if="{{stats.unshipped > 0}}">{{stats.unshipped}}</view>
       </view>
-      <view class="grid-item" bindtap="onOrderTap" data-status="2">
-        <view class="icon-wrap">
-          <text class="grid-icon">🚚</text>
-          <view class="badge" wx:if="{{orderCount.unreceived > 0}}">{{orderCount.unreceived}}</view>
-        </view>
-        <text class="grid-text">待收货</text>
+      <view class="nav-item" bindtap="toOrderList" data-type="3">
+        <image src="/assets/images/icons/home-active.png" class="nav-icon" /> <!-- 替换为具体icon -->
+        <text>待收货</text>
+        <view class="badge" wx:if="{{stats.shipped > 0}}">{{stats.shipped}}</view>
       </view>
-      <view class="grid-item" bindtap="onOrderTap" data-status="3">
-        <view class="icon-wrap">
-          <text class="grid-icon">💬</text>
-          <view class="badge" wx:if="{{orderCount.uncommented > 0}}">{{orderCount.uncommented}}</view>
-        </view>
-        <text class="grid-text">待评价</text>
+      <view class="nav-item" bindtap="toOrderList" data-type="4">
+        <image src="/assets/images/icons/user-active.png" class="nav-icon" /> <!-- 替换为具体icon -->
+        <text>待评价</text>
+        <view class="badge" wx:if="{{stats.uncomment > 0}}">{{stats.uncomment}}</view>
       </view>
     </view>
   </view>
 
-  <!-- 菜单列表 -->
-  <view class="section-card">
-    <view class="menu-list">
-      <view class="menu-item" wx:for="{{menuList}}" wx:key="title" bindtap="onMenuTap" data-url="{{item.url}}">
-        <view class="menu-left">
-          <text class="menu-icon">{{item.icon}}</text>
-          <text class="menu-title">{{item.title}}</text>
-        </view>
-        <text class="arrow">></text>
+  <!-- 常用功能 -->
+  <view class="menu-group">
+    <view class="menu-item" bindtap="toCoupon">
+      <view class="left">
+        <text class="icon">🎟️</text>
+        <text>我的优惠券</text>
       </view>
+      <view class="arrow">›</view>
     </view>
-  </view>
-
-  <!-- 退出按钮 -->
-  <view class="logout-area" wx:if="{{isLogin}}">
-    <button class="btn-logout" bindtap="onLogout">退出登录</button>
+    <view class="menu-item" bindtap="toAddress">
+      <view class="left">
+        <text class="icon">📍</text>
+        <text>收货地址</text>
+      </view>
+      <view class="arrow">›</view>
+    </view>
+    <view class="menu-item" bindtap="toService">
+      <view class="left">
+        <text class="icon">🎧</text>
+        <text>客户服务</text>
+      </view>
+      <view class="arrow">›</view>
+    </view>
+    <view class="menu-item" bindtap="toSetting">
+      <view class="left">
+        <text class="icon">⚙️</text>
+        <text>系统设置</text>
+      </view>
+      <view class="arrow">›</view>
+    </view>
   </view>
 </view>
