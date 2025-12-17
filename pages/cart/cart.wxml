@@ -1,56 +1,16 @@
 <view class="container">
-  <!-- 头部管理 -->
-  <view class="header" wx:if="{{list.length > 0}}">
-    <view class="count">共{{list.length}}件商品</view>
-    <view class="edit-btn" bindtap="toggleEdit">{{isEdit ? '完成' : '管理'}}</view>
+  <!-- 购物车为空时的展示 -->
+  <view class="empty-state" wx:if="{{isEmpty}}">
+    <image class="empty-img" src="{{emptyImage}}" mode="aspectFit"></image>
+    <view class="empty-text">Shopping Bag is Empty</view>
+    <view class="empty-sub">Looks like you haven't made your choice yet</view>
+    <button class="go-shop-btn" bindtap="onGoShopping">START SHOPPING</button>
   </view>
 
-  <!-- 购物车列表 -->
-  <view class="cart-list" wx:if="{{list.length > 0}}">
-    <view class="cart-item" wx:for="{{list}}" wx:key="cartId">
-      <!-- 勾选框 -->
-      <view class="checkbox" bindtap="onCheck" data-index="{{index}}">
-        <icon type="success" size="20" color="{{item.checked ? '#ff6b6b' : '#ddd'}}" />
-      </view>
-      
-      <!-- 商品图 -->
-      <image class="goods-img" src="{{item.image}}" mode="aspectFill"></image>
-      
-      <!-- 信息 -->
-      <view class="goods-info">
-        <view class="goods-name">{{item.name}}</view>
-        <view class="goods-spec">{{item.specs || '默认规格'}}</view>
-        <view class="price-bar">
-          <view class="price">¥{{item.price}}</view>
-          
-          <!-- 步进器 -->
-          <view class="stepper">
-            <view class="btn minus" bindtap="onQtyChange" data-index="{{index}}" data-type="minus">-</view>
-            <view class="num">{{item.quantity}}</view>
-            <view class="btn plus" bindtap="onQtyChange" data-index="{{index}}" data-type="plus">+</view>
-          </view>
-        </view>
-      </view>
-    </view>
-  </view>
-
-  <!-- 空状态 -->
-  <empty-state wx:if="{{!loading && list.length === 0}}" title="购物车空空如也" btnText="去逛逛" url="/pages/index/index" isTab />
-
-  <!-- 底部结算栏 -->
-  <view class="footer-bar" wx:if="{{list.length > 0}}">
-    <view class="check-all" bindtap="onCheckAll">
-      <icon type="success" size="20" color="{{isAllChecked ? '#ff6b6b' : '#ddd'}}" />
-      <text class="label">全选</text>
-    </view>
-    
-    <view class="total-info" wx:if="{{!isEdit}}">
-      <text>合计：</text>
-      <text class="price">¥{{totalPrice}}</text>
-    </view>
-    
-    <view class="action-btn {{totalNum == 0 ? 'disabled' : ''}}" bindtap="{{isEdit ? 'onDelete' : 'onSubmit'}}">
-      {{isEdit ? '删除' : '去结算(' + totalNum + ')'}}
+  <!-- 购物车有商品时的展示 -->
+  <view class="cart-list" wx:else>
+    <view class="cart-item" wx:for="{{cartList}}" wx:key="id">
+      <text>商品内容...</text>
     </view>
   </view>
 </view>

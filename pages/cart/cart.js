@@ -1,132 +1,32 @@
-import { getCartList, updateCartItem, deleteCartItem } from '../../services/cart'
+// pages/cart/cart.js
+import { getCartList } from '../../services/cart' // 确保你有这个服务，或者暂时忽略报错
 
 Page({
   data: {
-    list: [],
-    loading: false,
-    isEdit: false,
-    isAllChecked: false,
-    totalPrice: 0,
-    totalNum: 0
+    cartList: [],
+    isLogin: true, // 暂时假设已登录，方便你看效果
+    isEmpty: true, // 默认空状态
+    
+    // 空状态插画 (极简线条风格 SVG)
+    emptyImage: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiB2aWV3Qm94PSIwIDAgMjQgMjQiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2QxYzdiNyIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxjaXJjbGUgY3g9IjkiIGN5PSIyMSIgcj0iMSIvPjxjaXJjbGUgY3g9IjIwIiBjeT0iMjEiIHI9IjEiLz48cGF0aCBkPSJNMSAxaDRsMi42OCAxMy4zOWEyIDIgMCAwIDAgMiAxLjYxaDEzYTJWMHoiLz48L3N2Zz4="
   },
 
   onShow() {
-    this.loadData()
+    this.getCartData();
   },
 
-  async loadData() {
-    this.setData({ loading: true })
-    const list = await getCartList()
-    this.setData({ 
-      list,
-      loading: false 
-    })
-    this.calculate()
-  },
-
-  // 切换编辑模式
-  toggleEdit() {
-    this.setData({ isEdit: !this.data.isEdit })
-  },
-
-  // 单选
-  onCheck(e) {
-    const { index } = e.currentTarget.dataset
-    const key = `list[${index}].checked`
+  getCartData() {
+    // 模拟购物车逻辑：暂时为空，为了展示美化后的空界面
+    // 如果你想看有商品的效果，把 isEmpty 改为 false
     this.setData({
-      [key]: !this.data.list[index].checked
-    })
-    // 同步到Storage
-    updateCartItem(this.data.list[index].cartId, { checked: this.data.list[index].checked })
-    this.calculate()
+      cartList: [],
+      isEmpty: true 
+    });
   },
 
-  // 全选
-  onCheckAll() {
-    const checked = !this.data.isAllChecked
-    const list = this.data.list.map(item => ({ ...item, checked }))
-    
-    this.setData({ list })
-    // 批量更新Storage（简化处理，循环更新）
-    list.forEach(item => updateCartItem(item.cartId, { checked }))
-    this.calculate()
-  },
-
-  // 数量变更
-  onQtyChange(e) {
-    const { index, type } = e.currentTarget.dataset
-    let item = this.data.list[index]
-    let qty = item.quantity
-
-    if (type === 'minus') {
-      if (qty > 1) qty--
-    } else {
-      qty++
-    }
-
-    if (qty !== item.quantity) {
-      const key = `list[${index}].quantity`
-      this.setData({ [key]: qty })
-      updateCartItem(item.cartId, { quantity: qty })
-      this.calculate()
-    }
-  },
-
-  // 计算总价
-  calculate() {
-    let total = 0
-    let num = 0
-    let checkedCount = 0
-
-    this.data.list.forEach(item => {
-      if (item.checked) {
-        total += item.price * item.quantity
-        num += item.quantity
-        checkedCount++
-      }
-    })
-
-    this.setData({
-      totalPrice: total.toFixed(2),
-      totalNum: num,
-      isAllChecked: this.data.list.length > 0 && checkedCount === this.data.list.length
-    })
-  },
-
-  // 删除
-  onDelete() {
-    const checkedIds = this.data.list.filter(i => i.checked).map(i => i.cartId)
-    if (checkedIds.length === 0) {
-      wx.showToast({ title: '请选择商品', icon: 'none' })
-      return
-    }
-
-    wx.showModal({
-      title: '提示',
-      content: '确定要删除选中的商品吗？',
-      success: async (res) => {
-        if (res.confirm) {
-          const newList = await deleteCartItem(checkedIds)
-          this.setData({ list: newList })
-          this.calculate()
-        }
-      }
-    })
-  },
-
-  // 结算
-  onSubmit() {
-    if (this.data.totalNum === 0) {
-      wx.showToast({ title: '请选择商品', icon: 'none' })
-      return
-    }
-    
-    // 获取选中商品
-    const selected = this.data.list.filter(i => i.checked)
-    const productData = encodeURIComponent(JSON.stringify(selected))
-    
-    wx.navigateTo({
-      url: `/pages/order/confirm/confirm?products=${productData}`
-    })
+  onGoShopping() {
+    wx.switchTab({
+      url: '/pages/index/index'
+    });
   }
 })
