@@ -3,6 +3,7 @@
  * * 【高级商业色卡版 - 修复版】
  * 1. 修复 ReferenceError: btoa is not defined 报错
  * 2. 使用莫兰迪色系 (Morandi Colors) 纯色 SVG
+ * 3. [新增] getProductDetail 方法，修复详情页加载失败问题
  */
 
 // --- 核心修复：自定义 Base64 编码工具 ---
@@ -68,7 +69,7 @@ const base64Encode = (str) => {
       priceStr: price.toFixed(2),
       originalPrice: (price * 1.2).toFixed(2),
       
-      // 全字段覆盖
+      // 全字段覆盖，确保详情页能取到图片
       url: imgUrl,
       img: imgUrl,
       image: imgUrl,
@@ -142,4 +143,47 @@ const base64Encode = (str) => {
         ]
       }
     ];
+  };
+  
+  // --- 新增：商品详情接口 ---
+  export const getProductDetail = async (id) => {
+    await delay();
+    // 根据ID生成一个基础商品
+    const baseProduct = createItem(id, 'Morandi Collection Item', 'prod1', 299.00);
+  
+    // 返回详情页所需的完整数据结构
+    return {
+      ...baseProduct,
+      // 轮播图数据
+      images: [
+        IMAGES.prod1,
+        IMAGES.prod2,
+        IMAGES.prod3,
+        IMAGES.prod4
+      ],
+      // SKU 规格数据（对应 detail.wxml 中的展示）
+      specs: [
+        {
+          name: '颜色',
+          list: ['Sage Green', 'Dusty Rose', 'Mist Blue']
+        },
+        {
+          name: '尺寸',
+          list: ['S', 'M', 'L', 'XL']
+        }
+      ],
+      // 富文本详情
+      detailHtml: `
+        <div style="padding: 20px 10px; color: #666; font-size: 14px; line-height: 1.6;">
+          <h3 style="color: #333; margin-bottom: 10px;">设计理念</h3>
+          <p>本系列灵感来源于乔治·莫兰迪的静物画作，采用低饱和度的灰色调，营造出宁静、优雅的视觉感受。</p>
+          <br>
+          <img src="${IMAGES.banner1}" style="width: 100%; border-radius: 8px; margin: 10px 0;" />
+          <h3 style="color: #333; margin: 15px 0 10px;">材质工艺</h3>
+          <p>精选环保材料，经过20道工序打磨，手感细腻温润。</p>
+          <br>
+          <img src="${IMAGES.banner2}" style="width: 100%; border-radius: 8px; margin: 10px 0;" />
+        </div>
+      `
+    };
   };

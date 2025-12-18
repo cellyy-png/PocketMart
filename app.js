@@ -1,4 +1,5 @@
 import { checkSession } from './utils/auth'
+import { refreshCartBadge } from './services/cart' // 引入刷新方法
 
 App({
   globalData: {
@@ -8,15 +9,15 @@ App({
   },
 
   onLaunch() {
-    // 获取系统信息
     const systemInfo = wx.getSystemInfoSync()
     this.globalData.systemInfo = systemInfo
-
-    // 检查登录状态
     this.checkLoginStatus()
-
-    // 检查版本更新
     this.checkUpdate()
+  },
+
+  // 【关键】每次切回小程序或显示页面时，重新计算一次红点
+  onShow() {
+    refreshCartBadge()
   },
 
   checkLoginStatus() {
@@ -33,7 +34,6 @@ App({
     if (wx.canIUse('getUpdateManager')) {
       const updateManager = wx.getUpdateManager()
       updateManager.onCheckForUpdate(function (res) {
-        // 请求完新版本信息的回调
         if (res.hasUpdate) {
           console.log('有新版本')
         }

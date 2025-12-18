@@ -1,16 +1,69 @@
-<view class="container">
-  <!-- 购物车为空时的展示 -->
-  <view class="empty-state" wx:if="{{isEmpty}}">
-    <image class="empty-img" src="{{emptyImage}}" mode="aspectFit"></image>
-    <view class="empty-text">Shopping Bag is Empty</view>
-    <view class="empty-sub">Looks like you haven't made your choice yet</view>
-    <button class="go-shop-btn" bindtap="onGoShopping">START SHOPPING</button>
+<view class="page-container" wx:if="{{!isEmpty}}">
+  <view class="cart-list">
+    <view class="cart-card" wx:for="{{cartList}}" wx:key="cartId">
+      
+      <view class="checkbox-area" bindtap="onCheck" data-id="{{item.cartId}}">
+        <view class="custom-checkbox {{item.checked ? 'active' : ''}}">
+          <text wx:if="{{item.checked}}" class="check-icon">✓</text>
+        </view>
+      </view>
+
+      <view class="img-box" bindtap="toDetail" data-id="{{item.id}}">
+        <image class="thumb" src="{{item.image}}" mode="aspectFill" />
+      </view>
+
+      <view class="info-box">
+        <view class="top-row">
+          <view class="title">{{item.name}}</view>
+          <view class="delete-icon" catchtap="onDelete" data-id="{{item.cartId}}">×</view>
+        </view>
+
+        <view class="sku-tag" wx:if="{{item.specs}}">{{item.specs}}</view>
+
+        <view class="bottom-row">
+          <view class="price-box">
+            <text class="symbol">¥</text>
+            <text class="num">{{item.price}}</text>
+          </view>
+          
+          <view class="stepper">
+            <view class="step-btn minus {{item.quantity <= 1 ? 'disabled' : ''}}" 
+                  catchtap="onQtyChange" data-id="{{item.cartId}}" data-type="minus">-</view>
+            <view class="step-num">{{item.quantity}}</view>
+            <view class="step-btn plus" 
+                  catchtap="onQtyChange" data-id="{{item.cartId}}" data-type="plus">+</view>
+          </view>
+        </view>
+      </view>
+    </view>
+    
+    <view style="height: 120rpx;"></view>
   </view>
 
-  <!-- 购物车有商品时的展示 -->
-  <view class="cart-list" wx:else>
-    <view class="cart-item" wx:for="{{cartList}}" wx:key="id">
-      <text>商品内容...</text>
+  <view class="footer-bar">
+    <view class="left-action" bindtap="onCheckAll">
+      <view class="custom-checkbox {{isAllChecked ? 'active' : ''}}">
+        <text wx:if="{{isAllChecked}}" class="check-icon">✓</text>
+      </view>
+      <text class="select-txt">全选</text>
+    </view>
+    
+    <view class="right-action">
+      <view class="total-info">
+        <text class="label">合计</text>
+        <text class="price-symbol">¥</text>
+        <text class="total-price">{{totalPrice}}</text>
+      </view>
+      <view class="checkout-btn" bindtap="toConfirm">
+        去结算 ({{cartList.length}})
+      </view>
     </view>
   </view>
+</view>
+
+<view class="empty-state" wx:else>
+  <image class="empty-img" src="{{emptyImage}}" mode="aspectFit"></image>
+  <view class="empty-text">购物车还是空的</view>
+  <view class="empty-sub">去挑选几件喜欢的商品吧</view>
+  <button class="go-shop-btn" bindtap="onGoShopping">去逛逛</button>
 </view>

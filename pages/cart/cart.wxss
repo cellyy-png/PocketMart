@@ -1,68 +1,260 @@
-page {
-    background-color: #F5F5F7; /* 极简灰白背景 */
-    height: 100%;
-  }
-  
-  .container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    padding: 0 40rpx;
+/* 全局容器：浅灰背景，衬托白色卡片 */
+.page-container {
+    min-height: 100vh;
+    background-color: #F7F8FA;
+    padding: 24rpx;
     box-sizing: border-box;
   }
   
-  /* 空状态容器 */
+  /* --- 商品卡片 --- */
+  .cart-card {
+    display: flex;
+    align-items: center;
+    background: #ffffff;
+    border-radius: 24rpx;
+    padding: 24rpx;
+    margin-bottom: 24rpx;
+    box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.04); /* 极轻的阴影 */
+  }
+  
+  /* 1. 复选框区域 */
+  .checkbox-area {
+    padding-right: 24rpx;
+    display: flex;
+    align-items: center;
+  }
+  
+  /* 自定义圆形复选框 */
+  .custom-checkbox {
+    width: 40rpx;
+    height: 40rpx;
+    border-radius: 50%;
+    border: 2rpx solid #dcdcdc; /* 默认灰色边框 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+  
+  /* 选中状态：黑色背景 (高级感) */
+  .custom-checkbox.active {
+    background-color: #333333;
+    border-color: #333333;
+  }
+  
+  .check-icon {
+    color: #fff;
+    font-size: 24rpx;
+    font-weight: bold;
+  }
+  
+  /* 2. 图片区域 */
+  .img-box {
+    width: 180rpx;
+    height: 180rpx;
+    flex-shrink: 0;
+    border-radius: 12rpx;
+    overflow: hidden;
+    background-color: #f0f0f0;
+    margin-right: 24rpx;
+  }
+  
+  .thumb {
+    width: 100%;
+    height: 100%;
+  }
+  
+  /* 3. 信息区域 */
+  .info-box {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 180rpx; /* 跟图片等高 */
+  }
+  
+  .top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  
+  .title {
+    font-size: 28rpx;
+    color: #333;
+    font-weight: 500;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    margin-right: 10rpx;
+  }
+  
+  .delete-icon {
+    font-size: 36rpx;
+    color: #ccc;
+    padding: 0 0 10rpx 10rpx; /* 增加点击热区 */
+    line-height: 1;
+  }
+  
+  .sku-tag {
+    font-size: 22rpx;
+    color: #999;
+    background-color: #f5f5f5;
+    padding: 4rpx 12rpx;
+    border-radius: 8rpx;
+    align-self: flex-start;
+    margin-top: 8rpx;
+  }
+  
+  .bottom-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: auto; /* 沉底 */
+  }
+  
+  .price-box {
+    color: #333;
+    font-weight: bold;
+  }
+  .symbol { font-size: 24rpx; }
+  .num { font-size: 32rpx; }
+  
+  /* 步进器 */
+  .stepper {
+    display: flex;
+    align-items: center;
+    background: #f7f8fa;
+    border-radius: 8rpx;
+  }
+  
+  .step-btn {
+    width: 50rpx;
+    height: 50rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32rpx;
+    color: #333;
+    font-weight: 300;
+  }
+  
+  .step-btn.disabled {
+    color: #dcdcdc;
+  }
+  
+  .step-num {
+    font-size: 26rpx;
+    min-width: 40rpx;
+    text-align: center;
+    font-weight: 500;
+  }
+  
+  /* --- 底部悬浮栏 --- */
+  .footer-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 110rpx;
+    background: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 30rpx;
+    box-sizing: border-box;
+    padding-bottom: env(safe-area-inset-bottom); /* 适配 iPhone X+ */
+    box-shadow: 0 -2rpx 10rpx rgba(0,0,0,0.05);
+    z-index: 99;
+  }
+  
+  .left-action {
+    display: flex;
+    align-items: center;
+  }
+  
+  .select-txt {
+    font-size: 28rpx;
+    color: #666;
+    margin-left: 16rpx;
+  }
+  
+  .right-action {
+    display: flex;
+    align-items: center;
+  }
+  
+  .total-info {
+    margin-right: 24rpx;
+    text-align: right;
+  }
+  
+  .label {
+    font-size: 24rpx;
+    color: #333;
+    margin-right: 8rpx;
+  }
+  
+  .price-symbol {
+    font-size: 24rpx;
+    color: #ff4d4f; /* 价格可以用一点亮色点缀，或者改成 #333 保持性冷淡 */
+    font-weight: bold;
+  }
+  
+  .total-price {
+    font-size: 36rpx;
+    color: #ff4d4f;
+    font-weight: bold;
+  }
+  
+  .checkout-btn {
+    width: 220rpx;
+    height: 80rpx;
+    background: #333; /* 黑色按钮，高级 */
+    color: #fff;
+    border-radius: 40rpx;
+    font-size: 28rpx;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* --- 空状态 --- */
   .empty-state {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    width: 100%;
-    margin-top: -120rpx; /* 视觉中心微调 */
+    padding-top: 200rpx;
   }
   
-  /* 插画 */
   .empty-img {
-    width: 240rpx;
-    height: 240rpx;
-    margin-bottom: 50rpx;
-    opacity: 0.9;
+    width: 300rpx;
+    height: 300rpx;
+    margin-bottom: 40rpx;
   }
   
-  /* 标题 */
   .empty-text {
-    font-size: 34rpx;
-    color: #2c2c2c;
-    font-weight: 600;
+    font-size: 32rpx;
+    color: #333;
+    font-weight: 500;
     margin-bottom: 16rpx;
-    letter-spacing: 0.5px;
   }
   
-  /* 副标题 */
   .empty-sub {
     font-size: 26rpx;
-    color: #9aa0a6;
-    margin-bottom: 80rpx;
-    text-align: center;
+    color: #999;
+    margin-bottom: 60rpx;
   }
   
-  /* 按钮 - 高级黑金风 */
   .go-shop-btn {
-    min-width: 340rpx;
-    height: 96rpx;
-    line-height: 96rpx;
-    background: #2c2c2c;
-    color: #ffffff;
-    font-size: 26rpx;
-    font-weight: 600;
-    border-radius: 4rpx;
-    letter-spacing: 2px;
-    box-shadow: 0 10rpx 20rpx rgba(0,0,0,0.1);
-    border: none;
-  }
-  
-  .go-shop-btn::after {
-    border: none;
+    width: 240rpx;
+    height: 80rpx;
+    line-height: 80rpx;
+    background: #333;
+    color: #fff;
+    font-size: 28rpx;
+    border-radius: 40rpx;
   }
