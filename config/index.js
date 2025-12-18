@@ -1,18 +1,16 @@
 const env = 'production' // development | production
 
 const config = {
-  development: {
-    apiBaseUrl: 'https://dev-api.example.com',
-    timeout: 10000,
-    uploadUrl: 'https://dev-upload.example.com'
-  },
-  production: {
-    apiBaseUrl: 'https://api.example.com',
-    timeout: 10000,
-    uploadUrl: 'https://upload.example.com'
+    // 开发环境 (连接本地 Node.js 后端)
+    // 如果是真机调试，请将 localhost 换成你电脑的局域网 IP (例如 192.168.1.5)
+    apiBaseUrl: 'http://localhost:3000/api', 
+    
+    // 调试配置
+    debug: true,
+    version: '1.0.0'
   }
-}
-
+  
+  export default config
 export default {
   ...config[env],
   env,
