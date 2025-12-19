@@ -1,4 +1,5 @@
 const app = getApp()
+import { getOrderStats } from '../../services/order'
 
 Page({
   data: {
@@ -38,16 +39,41 @@ Page({
   },
 
   // 更新订单数量统计
-  updateStats() {
-    // 模拟数据，实际应调用接口
+  async updateStats() {
+    try {
+      const stats = await getOrderStats()
+      this.setData({
+        stats
+      })
+      
+      // 设置 tabBar 徽标
+      this.setTabBarBadges(stats)
+    } catch (error) {
+      console.error('获取订单统计失败:', error)
+    }
+  },
+
+  // 设置 tabBar 徽标
+  setTabBarBadges(stats) {
+    // 待付款徽标 - 对应 tabBar 索引 3 (用户页面)
+    if (stats.unpaid > 0) {
+      wx.setTabBarBadge({
+        index: 3,
+        text: String(stats.unpaid)
+      }).catch(() => {})
+    } else {
+      wx.removeTabBarBadge({
+        index: 3
+      }).catch(() => {})
+    }
+  },
+
+  // 从订单列表页面更新统计数据
+  updateStatsFromOrderList(stats) {
     this.setData({
-      stats: {
-        unpaid: 1,
-        unshipped: 0,
-        shipped: 2,
-        uncomment: 5
-      }
+      stats
     })
+    this.setTabBarBadges(stats)
   },
 
   toLogin() {

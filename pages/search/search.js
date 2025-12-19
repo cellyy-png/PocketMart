@@ -114,10 +114,14 @@ Page({
     try {
       const { keyword, page, pageSize, products } = this.data
       
+      console.log('执行搜索，关键词:', keyword) // 添加调试日志
+      
       const res = await searchProducts(keyword, {
         page,
         pageSize
       })
+      
+      console.log('搜索结果:', res) // 添加调试日志
       
       const newProducts = page === 1 ? res.list : [...products, ...res.list]
       
@@ -125,8 +129,20 @@ Page({
         products: newProducts,
         hasMore: res.hasMore
       })
+      
+      // 如果没有搜索到商品，给出提示
+      if (page === 1 && newProducts.length === 0) {
+        wx.showToast({
+          title: '未找到相关商品',
+          icon: 'none'
+        })
+      }
     } catch (error) {
       console.error('搜索失败', error)
+      wx.showToast({
+        title: '搜索失败，请重试',
+        icon: 'none'
+      })
     } finally {
       this.setData({ loading: false })
     }

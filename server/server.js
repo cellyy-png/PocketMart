@@ -6,12 +6,10 @@ const moment = require('moment');
 const app = express();
 const PORT = 3000;
 
-// 中间件
 app.use(cors());
 app.use(bodyParser.json());
 
-// --- 模拟数据库 (内存存储) ---
-// 1. 商品数据 (莫兰迪色系高级版)
+// --- 模拟数据库 ---
 const PRODUCTS = [
   {
     id: 101,
@@ -19,8 +17,9 @@ const PRODUCTS = [
     desc: 'Minimalist Design | Premium Quality',
     price: 299.00,
     originalPrice: 359.00,
-    image: 'https://images.unsplash.com/photo-1581539250439-c96689b516dd?w=500&q=80', // 真实图片链接
+    image: 'https://images.unsplash.com/photo-1581539250439-c96689b516dd?w=500&q=80',
     specs: [{ name: '颜色', list: ['Sage Green', 'Dusty Rose'] }, { name: '尺寸', list: ['S', 'M'] }],
+    category: 1, // Home Decor
     detailHtml: '<div style="padding:10px;"><h3>设计理念</h3><p>源自意大利画家的静物美学。</p></div>'
   },
   {
@@ -31,6 +30,7 @@ const PRODUCTS = [
     originalPrice: 199.00,
     image: 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=500&q=80',
     specs: [{ name: '尺码', list: ['S', 'M', 'L'] }],
+    category: 2, // Apparel
     detailHtml: '<p>100% 有机棉，亲肤透气。</p>'
   },
   {
@@ -41,6 +41,7 @@ const PRODUCTS = [
     originalPrice: 129.00,
     image: 'https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=500&q=80',
     specs: [{ name: '样式', list: ['Flat', 'Deep'] }],
+    category: 1,
     detailHtml: '<p>每一只盘子都是独一无二的手工制作。</p>'
   },
   {
@@ -51,44 +52,41 @@ const PRODUCTS = [
     originalPrice: 499.00,
     image: 'https://images.unsplash.com/photo-1594631252845-d9b502912a68?w=500&q=80',
     specs: [{ name: '尺码', list: ['28', '30', '32'] }],
+    category: 2,
     detailHtml: '<p>亚麻材质，夏季首选。</p>'
   }
 ];
 
-// 2. 内存中的用户数据、购物车和订单
-let users = {}; // token -> userInfo
-let carts = {}; // token -> [cartItems]
-let orders = []; // [orderObjects]
-let addresses = []; // [addressObjects]
+const CATEGORIES = [
+  { id: 1, name: 'Home Decor', banner: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800' },
+  { id: 2, name: 'Apparel', banner: 'https://images.unsplash.com/photo-1472851294608-415522f96319?w=800' }
+];
+
+let users = {}; // token -> user
+let carts = {}; // token -> items
+let orders = [];
+let favorites = {}; // token -> [productIds]
 
 // --- 辅助函数 ---
 const getUserId = (req) => {
   const token = req.headers.authorization ? req.headers.authorization.replace('Bearer ', '') : null;
-  return token; // 简单模拟：token 就是 userId
+  return token;
 };
 
 // --- 接口路由 ---
 
-// 1. 登录接口
+// 1. 用户登录
 app.post('/api/login', (req, res) => {
   const { nickName, avatarUrl } = req.body;
-  // 模拟生成 Token (实际项目会用 JWT)
-  const token = 'user_' + new Date().getTime();
-  
+  const token = 'user_' + Date.now();
   users[token] = {
-    nickName: nickName || '微信用户',
-    avatarUrl: avatarUrl || '',
-    balance: 9999.00
+    id: token,
+    nickName: nickName || '测试用户',
+    avatarUrl: avatarUrl || 'https://via.placeholder.com/120',
+    balance: 1000.00,
+    points: 500
   };
-
-  res.json({
-    code: 0,
-    message: 'success',
-    data: {
-      token,
-      userInfo: users[token]
-    }
-  });
+  res.json({ code: 0, data: { token, userInfo: users[token] } });
 });
 
 // 2. 首页数据
@@ -97,141 +95,95 @@ app.get('/api/home/index', (req, res) => {
     code: 0,
     data: {
       banners: [
-        { id: 1, image: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&q=80', title: 'Autumn Collection' },
-        { id: 2, image: 'https://images.unsplash.com/photo-1472851294608-415522f96319?w=800&q=80', title: 'New Arrival' }
+        { id: 1, image: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800', title: 'Autumn' },
+        { id: 2, image: 'https://images.unsplash.com/photo-1472851294608-415522f96319?w=800', title: 'New' }
       ],
       navs: [
         { id: 1, name: '新品', icon: 'https://cdn-icons-png.flaticon.com/512/3081/3081559.png' },
-        { id: 2, name: '热销', icon: 'https://cdn-icons-png.flaticon.com/512/3081/3081629.png' },
-        { id: 3, name: '居家', icon: 'https://cdn-icons-png.flaticon.com/512/3081/3081709.png' },
-        { id: 4, name: '折扣', icon: 'https://cdn-icons-png.flaticon.com/512/3081/3081395.png' }
+        { id: 2, name: '热销', icon: 'https://cdn-icons-png.flaticon.com/512/3081/3081629.png' }
       ]
     }
   });
 });
 
-// 3. 商品列表
+// 3. 商品列表与搜索
 app.get('/api/goods/list', (req, res) => {
-  // 简单模拟分页
-  res.json({
-    code: 0,
-    data: {
-      list: PRODUCTS,
-      total: PRODUCTS.length,
-      hasMore: false
-    }
-  });
+  const { keyword, categoryId } = req.query;
+  let list = [...PRODUCTS];
+  if (keyword) list = list.filter(p => p.name.toLowerCase().includes(keyword.toLowerCase()));
+  if (categoryId) list = list.filter(p => p.category == categoryId);
+  
+  res.json({ code: 0, data: { list, total: list.length, hasMore: false } });
 });
 
 // 4. 商品详情
 app.get('/api/goods/detail', (req, res) => {
   const id = parseInt(req.query.id);
-  const product = PRODUCTS.find(p => p.id === id) || PRODUCTS[0];
-  
-  res.json({
-    code: 0,
-    data: {
-      ...product,
-      images: [product.image, product.image] // 模拟多图
-    }
-  });
+  const product = PRODUCTS.find(p => p.id === id);
+  if (product) {
+    res.json({ code: 0, data: { ...product, images: [product.image, product.image] } });
+  } else {
+    res.json({ code: -1, message: '商品不存在' });
+  }
 });
 
-// 5. 获取购物车
+// 5. 分类列表
+app.get('/api/category/all', (req, res) => {
+  const data = CATEGORIES.map(cat => ({
+    ...cat,
+    children: PRODUCTS.filter(p => p.category === cat.id)
+  }));
+  res.json({ code: 0, data });
+});
+
+// 6. 购物车相关
 app.get('/api/cart/list', (req, res) => {
   const token = getUserId(req);
-  const list = carts[token] || [];
-  res.json({ code: 0, data: list });
+  res.json({ code: 0, data: carts[token] || [] });
 });
 
-// 6. 添加/更新购物车
 app.post('/api/cart/add', (req, res) => {
   const token = getUserId(req);
+  if (!token) return res.status(401).json({ code: 401, message: '未登录' });
   const { id, quantity, specs } = req.body;
+  if (!carts[token]) carts[token] = [];
   const product = PRODUCTS.find(p => p.id === id);
   
-  if (!carts[token]) carts[token] = [];
-  
-  // 查找是否存在
-  const existItem = carts[token].find(item => item.id === id && item.specs === specs);
-  if (existItem) {
-    existItem.quantity += quantity;
+  const exist = carts[token].find(i => i.id === id && JSON.stringify(i.specs) === JSON.stringify(specs));
+  if (exist) {
+    exist.quantity += quantity;
   } else {
-    carts[token].unshift({
-      cartId: 'cart_' + Date.now(),
-      id: product.id,
-      name: product.name,
-      price: product.price,
-      image: product.image,
-      quantity,
-      specs,
-      checked: true
-    });
+    carts[token].unshift({ cartId: 'C' + Date.now(), ...product, quantity, specs, checked: true });
   }
-  
-  res.json({ code: 0, message: '已加入购物车' });
+  res.json({ code: 0, message: '添加成功' });
 });
 
-// 7. 移除购物车
-app.post('/api/cart/delete', (req, res) => {
-  const token = getUserId(req);
-  const { cartIds } = req.body;
-  if (carts[token]) {
-    carts[token] = carts[token].filter(item => !cartIds.includes(item.cartId));
-  }
-  res.json({ code: 0, message: '删除成功' });
-});
-
-// 8. 创建订单
+// 7. 订单创建
 app.post('/api/order/create', (req, res) => {
   const token = getUserId(req);
-  const { products, address, remark } = req.body;
-  
-  const totalPrice = products.reduce((sum, p) => sum + p.price * p.quantity, 0).toFixed(2);
-  
-  const newOrder = {
+  const { products, address } = req.body;
+  const order = {
     id: 'ORD' + Date.now(),
-    status: 0, // 0: 待支付
+    status: 0, // 0-待支付, 1-待发货, 2-待收货, 3-已完成
     createTime: moment().format('YYYY-MM-DD HH:mm:ss'),
     products,
-    totalPrice,
-    address,
-    remark
+    totalPrice: products.reduce((s, p) => s + p.price * p.quantity, 0).toFixed(2),
+    address
   };
-  
-  orders.push(newOrder);
-  
-  res.json({ code: 0, data: newOrder });
+  orders.push({ ...order, userToken: token });
+  res.json({ code: 0, data: order });
 });
 
-// 9. 订单详情
-app.get('/api/order/detail', (req, res) => {
-  const { id } = req.query;
-  const order = orders.find(o => o.id === id);
-  if (order) {
-    res.json({ code: 0, data: order });
+// 8. 获取个人信息
+app.get('/api/user/info', (req, res) => {
+  const token = getUserId(req);
+  if (users[token]) {
+    res.json({ code: 0, data: users[token] });
   } else {
-    res.json({ code: -1, message: '订单不存在' });
+    res.json({ code: 401, message: '登录失效' });
   }
-});
-
-// 10. 支付订单
-app.post('/api/order/pay', (req, res) => {
-  const { id } = req.body;
-  const order = orders.find(o => o.id === id);
-  if (order) {
-    order.status = 1; // 已支付
-    res.json({ code: 0, message: '支付成功' });
-  } else {
-    res.json({ code: -1, message: '订单不存在' });
-  }
-});
-
-// 11. 获取地址列表 (简单模拟)
-app.get('/api/address/list', (req, res) => {
-  res.json({ code: 0, data: addresses });
 });
 
 app.listen(PORT, () => {
-  console.log(`🚀 后端服务器已启动: http://localhost:${PORT}`);
+  console.log(`🚀 PocketMart Backend Running at http://localhost:${PORT}`);
 });

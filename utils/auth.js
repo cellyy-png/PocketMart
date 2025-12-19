@@ -19,8 +19,19 @@ export const login = (account, password) => {
       const user = users.find(u => u.account === account && u.password === password);
       
       if (user) {
+        const token = mockToken();
+        wx.setStorageSync('token', token);
+        wx.setStorageSync('userInfo', {
+          id: user.id,
+          nickname: user.nickname || '新用户',
+          avatar: '/assets/images/icons/user.png', // 默认头像
+          isVip: false,
+          balance: 0.00,
+          points: 0,
+          coupons: 0
+        });
         resolve({
-          token: mockToken(),
+          token,
           userInfo: {
             id: user.id,
             nickname: user.nickname || '新用户',
@@ -34,8 +45,19 @@ export const login = (account, password) => {
       } else {
         // 为了演示方便，如果账号是 admin/123456 也允许登录
         if (account === 'admin' && password === '123456') {
+          const token = mockToken();
+          wx.setStorageSync('token', token);
+          wx.setStorageSync('userInfo', {
+            id: 1,
+            nickname: '管理员',
+            avatar: '/assets/images/icons/user.png',
+            isVip: true,
+            balance: 9999.00,
+            points: 1000,
+            coupons: 10
+          });
           resolve({
-            token: mockToken(),
+            token,
             userInfo: {
               id: 1,
               nickname: '管理员',

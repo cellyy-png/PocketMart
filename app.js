@@ -1,54 +1,74 @@
-import { checkSession } from './utils/auth'
-import { refreshCartBadge } from './services/cart' // 引入刷新方法
+// app.js
+import store from './store/index'
 
 App({
   globalData: {
-    userInfo: null,
-    hasLogin: false,
-    systemInfo: null
+    token: null,
+    userInfo: null
   },
 
   onLaunch() {
-    const systemInfo = wx.getSystemInfoSync()
-    this.globalData.systemInfo = systemInfo
-    this.checkLoginStatus()
-    this.checkUpdate()
-  },
-
-  // 【关键】每次切回小程序或显示页面时，重新计算一次红点
-  onShow() {
-    refreshCartBadge()
-  },
-
-  checkLoginStatus() {
-    const userInfo = wx.getStorageSync('userInfo')
-    const token = wx.getStorageSync('token')
+    // 初始化状态管理
+    this.store = store
     
-    if (userInfo && token) {
-      this.globalData.userInfo = userInfo
-      this.globalData.hasLogin = true
+    // 检查本地是否有登录信息
+    this.checkLoginStatus()
+  },
+
+  onShow() {
+    // 应用显示时可以做一些检查
+  },
+
+  // 检查登录状态
+  checkLoginStatus() {
+    try {
+      const token = wx.getStorageSync('token')
+      const userInfo = wx.getStorageSync('userInfo')
+      
+      if (token && userInfo) {
+        this.globalData.token = token
+        this.globalData.userInfo = userInfo
+        this.store.setState('hasLogin', true)
+        this.store.setState('userInfo', userInfo)
+      }
+    } catch (error) {
+      console.error('检查登录状态失败:', error)
     }
   },
 
-  checkUpdate() {
-    if (wx.canIUse('getUpdateManager')) {
-      const updateManager = wx.getUpdateManager()
-      updateManager.onCheckForUpdate(function (res) {
-        if (res.hasUpdate) {
-          console.log('有新版本')
-        }
-      })
-      updateManager.onUpdateReady(function () {
-        wx.showModal({
-          title: '更新提示',
-          content: '新版本已经准备好，是否重启应用？',
-          success: function (res) {
-            if (res.confirm) {
-              updateManager.applyUpdate()
-            }
-          }
-        })
-      })
-    }
+  // 设置用户信息
+  setUserInfo(userInfo, token) {
+    this.globalData.token = token
+    this.globalData.userInfo = userInfo
+    
+    // 存储到本地
+    wx.setStorageSync('token', token)
+    wx.setStorageSync('userInfo', userInfo)
+    
+    // 更新状态管理
+    this.store.setState('hasLogin', true)
+    this.store.setState('userInfo', userInfo)
+  },
+
+  // 清除用户信息
+  clearUserInfo() {
+    this.globalData.token = null
+    this.globalData.userInfo = null
+    
+    // 清除本地存储
+    wx.removeStorageSync('token')
+    wx.removeStorageSync('userInfo')
+    
+    // 更新状态管理
+    this.store.setState('hasLogin', false)
+    this.store.setState('userInfo', null)
+    
+    // 清空购物车等用户相关数据
+    this.store.cart.clearCart()
+    
+    // 清除 tabBar 徽标
+    wx.removeTabBarBadge({
+      index: 3
+    }).catch(() => {})
   }
 })

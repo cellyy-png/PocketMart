@@ -24,7 +24,7 @@ Page({
       })
       this.loadProduct(true)
     } catch (error) {
-      console.error(error)
+      console.error('首页数据加载失败:', error)
       wx.showToast({ title: '数据加载失败', icon: 'none' })
     }
   },
@@ -45,7 +45,9 @@ Page({
         page: refresh ? 2 : this.data.page + 1
       })
     } catch (error) {
+      console.error('商品列表加载失败:', error)
       this.setData({ loading: false })
+      wx.showToast({ title: '商品加载失败', icon: 'none' })
     }
   },
 

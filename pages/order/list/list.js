@@ -27,6 +27,11 @@ Page({
     this.loadOrders()
   },
 
+  onShow() {
+    // 页面显示时重新加载数据
+    this.loadOrders()
+  },
+
   onPullDownRefresh() {
     this.setData({
       refreshing: true,
@@ -87,6 +92,9 @@ Page({
         orders: newOrders,
         hasMore: res.hasMore
       })
+      
+      // 更新 tabBar 徽标
+      this.updateTabBarBadge()
     } catch (error) {
       console.error('加载订单失败', error)
     } finally {
@@ -94,6 +102,51 @@ Page({
         loading: false,
         refreshing: false
       })
+    }
+  },
+
+  /**
+   * 更新 tabBar 徽标
+   */
+  async updateTabBarBadge() {
+    try {
+      // 这里可以调用一个专门获取各状态订单数量的接口
+      // 为简化起见，我们只在当前页面是"全部"时更新徽标
+      if (this.data.currentTab === 'all' && this.data.orders.length > 0) {
+        // 统计各种状态订单数量
+        const stats = {
+          unpaid: 0,
+          unshipped: 0,
+          shipped: 0,
+          uncomment: 0
+        }
+        
+        this.data.orders.forEach(order => {
+          switch(order.status) {
+            case ORDER_STATUS.UNPAID:
+              stats.unpaid++
+              break
+            case ORDER_STATUS.PAID:
+              stats.unshipped++
+              break
+            case ORDER_STATUS.SHIPPED:
+              stats.shipped++
+              break
+            case ORDER_STATUS.RECEIVED:
+              stats.uncomment++
+              break
+          }
+        })
+        
+        // 更新用户页面的数据（如果用户页面还在内存中）
+        const pages = getCurrentPages()
+        const userPage = pages.find(page => page.route === 'pages/user/user')
+        if (userPage) {
+          userPage.updateStatsFromOrderList(stats)
+        }
+      }
+    } catch (error) {
+      console.error('更新徽标失败', error)
     }
   },
 

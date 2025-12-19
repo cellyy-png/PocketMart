@@ -70,6 +70,8 @@ class Request {
     // 超时设置
     options.timeout = options.timeout || this.timeout
     
+    console.log('发送请求:', options) // 添加日志便于调试
+    
     return options
   }
 
@@ -190,15 +192,28 @@ class Request {
     
     // 创建请求Promise
     const requestPromise = new Promise((resolve, reject) => {
+      // 添加错误处理
+      const timeout = setTimeout(() => {
+        wx.hideLoading()
+        wx.showToast({
+          title: '请求超时',
+          icon: 'none'
+        })
+        reject(new Error('请求超时'))
+      }, options.timeout || this.timeout)
+      
       wx.request({
         ...options,
         success: (res) => {
+          clearTimeout(timeout)
           this.responseInterceptor(res, options)
             .then(resolve)
             .catch(reject)
         },
         fail: (error) => {
+          clearTimeout(timeout)
           wx.hideLoading()
+          console.error('网络请求失败:', error)
           wx.showToast({
             title: '网络请求失败',
             icon: 'none'
