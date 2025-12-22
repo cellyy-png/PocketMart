@@ -4,7 +4,7 @@ const cors = require('cors');
 const moment = require('moment');
 
 const app = express();
-const PORT = 3000;
+const PORT = 3002;
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -50,7 +50,7 @@ const PRODUCTS = [
     desc: 'Relaxed Fit',
     price: 399.00,
     originalPrice: 499.00,
-    image: 'https://images.unsplash.com/photo-1594631252845-d9b502912a68?w=500&q=80',
+    image: 'https://images.unsplash.com/photo-1594631294608-415522f96319?w=500&q=80',
     specs: [{ name: '尺码', list: ['28', '30', '32'] }],
     category: 2,
     detailHtml: '<p>亚麻材质，夏季首选。</p>'

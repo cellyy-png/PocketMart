@@ -60,6 +60,15 @@ Page({
   },
 
   /**
+   * 清空关键词
+   */
+  onClearKeyword() {
+    this.setData({
+      keyword: ''
+    })
+  },
+
+  /**
    * 搜索输入
    */
   onSearchInput(e) {

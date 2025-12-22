@@ -1,0 +1,30 @@
+# Dependencies
+node_modules/
+
+# Logs
+logs
+*.log
+
+# Environment variables
+.env*
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Project specific
+db.json
+
+# WeChat Mini Program
+/project.config.json
+/project.private.config.json
+/miniprogram_npm/
+/dist/
+
+# Temporary files
+tmp/
+temp/
