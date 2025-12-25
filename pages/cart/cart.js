@@ -13,35 +13,7 @@ Page({
   
     // 加载数据
     loadCartData() {
-      // --- 模拟数据开始 (如果你有后端接口，请注释掉这一段) ---
-      const mockData = [
-        {
-          id: 101,
-          name: 'Morandi Vase / Sage 花瓶标准款',
-          price: '299.00',
-          image: 'https://images.unsplash.com/photo-1581539250439-c96689b516dd?w=500',
-          specs: '标准款',
-          quantity: 1,
-          checked: false
-        },
-        {
-          id: 102,
-          name: 'Soft Cotton Tee 纯棉T恤',
-          price: '159.00',
-          image: 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=500',
-          specs: 'L码; 白色',
-          quantity: 2,
-          checked: false
-        }
-      ];
-      this.setData({ 
-        cartList: mockData,
-        isEmpty: mockData.length === 0 
-      });
-      this.calculateTotal();
-      // --- 模拟数据结束 ---
   
-      /* // --- 真实后端请求参考 (对接时取消注释) ---
       const token = wx.getStorageSync('token');
       if(!token) {
         this.setData({ cartList: [], isEmpty: true });
@@ -61,7 +33,7 @@ Page({
           }
         }
       });
-      */
+    
     },
   
     // 单选

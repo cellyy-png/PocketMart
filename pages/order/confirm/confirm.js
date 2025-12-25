@@ -1,7 +1,6 @@
 import { createOrder } from '../../../services/order'
 import { getAddressList } from '../../../services/address'
 import { calculateShipping } from '../../../services/cart'
-import { wechatPay } from '../../../services/payment'
 
 Page({
   data: {
@@ -27,9 +26,15 @@ Page({
   onLoad(options) {
     const { products } = options
     if (products) {
-      this.setData({
-        products: JSON.parse(decodeURIComponent(products))
-      })
+      try {
+        const decodedProducts = JSON.parse(decodeURIComponent(products));
+        // 确保商品数据包含 cartId，这样后端才能准确删除
+        this.setData({
+          products: decodedProducts
+        })
+      } catch (e) {
+        console.error('解析商品数据失败', e);
+      }
       this.calculatePrice()
       this.loadAddress()
     }
@@ -77,6 +82,7 @@ Page({
       const { address, products } = this.data
       if (!address) return
       
+      // 这里的 calculateShipping 应该是你定义在 service 里的方法
       const shippingFee = await calculateShipping(address.id, products)
       this.setData({ shippingFee })
       this.calculateTotal()
@@ -133,8 +139,9 @@ Page({
     })
   },
 
-// ... 其他代码不变 ...
-
+  /**
+   * 提交订单
+   */
   async onSubmit() {
     const { address, products, remark, submitting } = this.data;
     
@@ -148,25 +155,24 @@ Page({
     try {
       const orderData = {
         address,
-        products,
+        products, // 这里包含了 cartId
         remark
       };
       
+      // 调用创建订单接口
+      // 此时后端 mock-server 会自动把 products 里对应的 cartId 从购物车删除
       const order = await createOrder(orderData);
       
-      // 【修改点】这里不再调用 removeFromCart
-      // 商品保留在购物车，直到支付成功
-      
+      // 成功后跳转到支付页
       wx.redirectTo({
-        url: `/pages/payment/payment?orderId=${order.id}`
+        url: `/pages/payment/payment?orderId=${order.id}&amount=${order.totalPrice}`
       });
       
     } catch (error) {
       console.error('创建订单失败', error);
-      wx.showToast({ title: '订单创建失败', icon: 'none' });
+      wx.showToast({ title: '下单失败', icon: 'none' });
     } finally {
       this.setData({ submitting: false });
     }
   }
-
 })

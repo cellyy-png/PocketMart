@@ -5,6 +5,7 @@ Page({
   data: {
     orderId: null,
     orderInfo: null,
+    amount: '0.00', // 新增：用于接收上个页面传来的金额用于展示
     paymentMethod: 'wechat',
     loading: false,
     
@@ -18,7 +19,10 @@ Page({
 
   onLoad(options) {
     if (options.orderId) {
-      this.setData({ orderId: options.orderId })
+      this.setData({ 
+        orderId: options.orderId,
+        amount: options.amount || '0.00' // 接收金额参数
+      })
       this.loadOrder()
       
       // 页面加载即刻开始倒计时
@@ -75,7 +79,8 @@ Page({
       const order = await getOrderDetail(this.data.orderId)
       this.setData({ orderInfo: order })
     } catch (error) {
-      wx.showToast({ title: '订单加载失败', icon: 'none' })
+      // 即使详情加载失败，只要有金额和订单号也可以尝试支付，或者在这里提示错误
+      console.error('订单详情加载失败', error)
     }
   },
 
@@ -114,8 +119,10 @@ Page({
         wx.showToast({ title: '支付成功', icon: 'success' })
         
         setTimeout(() => {
-          // 跳转到订单列表 (假设 tabbar 页面或普通页面)
-          wx.redirectTo({ url: '/pages/order/list/list?status=1' })
+          // 【修改重点】跳转回订单列表页，并选中 Tab 2 (待发货)
+          // 注意：这里用 type=2，因为 list.js 的 onLoad 读取的是 options.type
+          // 使用 redirectTo 关闭当前支付页，避免用户点返回键又回到支付结果页
+          wx.redirectTo({ url: '/pages/order/list/list?type=2' })
         }, 1500)
         
       } catch (error) {

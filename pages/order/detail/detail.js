@@ -55,10 +55,12 @@ Page({
 
   /**
    * 复制订单号
+   * 修复：后端返回的是 id，优先使用 id
    */
   onCopyNo() {
+    const val = this.data.order.id || this.data.order.orderNo;
     wx.setClipboardData({
-      data: this.data.order.orderNo,
+      data: val,
       success: () => {
         wx.showToast({ title: '复制成功', icon: 'none' })
       }
@@ -147,11 +149,20 @@ Page({
   },
   
   /**
-   * 联系客服
+   * 联系客服 -> 跳转到聊天页面
+   * 携带 orderId 和 productName
    */
   onContact() {
-    wx.makePhoneCall({
-      phoneNumber: '400-123-4567' 
+    const order = this.data.order;
+    // 获取第一个商品名称作为聊天上下文
+    const productName = order.products && order.products.length > 0 ? order.products[0].name : '订单咨询';
+    
+    wx.navigateTo({
+      url: `/pages/chat/chat?orderId=${this.data.orderId}&productName=${encodeURIComponent(productName)}`,
+      fail: (err) => {
+        console.error('跳转聊天页失败', err);
+        wx.showToast({ title: '功能开发中', icon: 'none' });
+      }
     })
   }
 })

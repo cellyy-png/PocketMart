@@ -1,7 +1,7 @@
 <view class="container">
   <view class="tabs">
     <view 
-      class="tab-item {{currentTab === item.key ? 'active' : ''}}" 
+      class="tab-item {{activeTab === item.key ? 'active' : ''}}" 
       wx:for="{{tabs}}" 
       wx:key="key"
       bindtap="onTabChange"
@@ -11,11 +11,11 @@
     </view>
   </view>
 
-  <scroll-view class="order-list" scroll-y wx:if="{{orders.length > 0}}">
+  <scroll-view class="order-list" scroll-y style="height: calc(100vh - 90rpx);" wx:if="{{orders.length > 0}}">
     <view class="order-card" wx:for="{{orders}}" wx:key="id" bindtap="onOrderDetail" data-id="{{item.id}}">
       <view class="card-header">
         <text class="shop-name">PocketMart 自营</text>
-        <text class="status-text {{item.status == 0 ? 'red' : ''}}">{{item.statusDesc}}</text>
+        <text class="status-text {{item.status == 0 ? 'red' : ''}}">{{item.statusDesc || '处理中'}}</text>
       </view>
 
       <view class="goods-group">
@@ -37,7 +37,7 @@
         <text class="total-price">¥{{item.totalPrice}}</text>
       </view>
 
-      <view class="card-footer" catchtap="return">
+      <view class="card-footer">
         <block wx:if="{{item.status == 0}}">
           <button class="btn plain" catchtap="onCancelOrder" data-id="{{item.id}}">取消订单</button>
           <button class="btn primary" catchtap="onPayOrder" data-id="{{item.id}}">去支付</button>
@@ -52,7 +52,7 @@
   </scroll-view>
 
   <view class="empty-state" wx:else>
-    <image class="empty-icon" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iI2NjYyI+PHBhdGggZD0iTTE5IDV2MTRINVY1aDE0bTEuMS0zLjZMMTguOCAyaC0xMy43bC0xLjMgMy4xQzMgNS4yIDIgNS45IDIgN3YxMmMwIDEuMS45IDIgMiAyaDE2YzEuMSAwIDItLjkgMi0ydi0xMmMwLTEuMS0uOS0xLjgtMS45LTEuOXpNNTE5aDE0VjdoLTE0djEyem03LTljMS42NSAwIDMgMS4zNSAzIDNzLTEuMzUgMy0zIDMtMy0xLjM1LTMtMyAxLjM1LTMgMy0zeiIvPjwvc3ZnPg==" />
+    <image class="empty-icon" src="/assets/images/icons/cart.png" />
     <text>暂无相关订单</text>
   </view>
 </view>

@@ -1,5 +1,4 @@
 <view class="container" wx:if="{{!loading && order}}">
-  <!-- 头部状态 -->
   <view class="header-status">
     <view class="status-text">{{order.statusDesc}}</view>
     <view class="status-desc" wx:if="{{order.status == 0}}">请在 15:00 内完成支付，超时将自动取消</view>
@@ -7,7 +6,6 @@
     <view class="status-desc" wx:else>感谢您在 PocketMart 购物</view>
   </view>
 
-  <!-- 物流入口 (仅发货后显示) -->
   <view class="logistics-card" bindtap="onLogistics" wx:if="{{order.status >= 2}}">
     <view class="logistics-icon">🚚</view>
     <view class="logistics-info">
@@ -17,7 +15,6 @@
     <view class="arrow">›</view>
   </view>
 
-  <!-- 地址信息 -->
   <view class="address-card">
     <view class="location-icon">📍</view>
     <view class="address-info">
@@ -29,7 +26,6 @@
     </view>
   </view>
 
-  <!-- 商品列表 -->
   <view class="product-card">
     <view class="card-header">
       <text>PocketMart 自营</text>
@@ -47,13 +43,12 @@
     </view>
   </view>
 
-  <!-- 订单信息 -->
   <view class="info-card">
     <view class="info-row">
       <text class="label">订单编号</text>
       <view class="value-wrap">
-        <text class="value">{{order.orderNo}}</text>
-        <text class="copy-btn" bindtap="onCopyNo">复制</text>
+        <text class="value">{{order.id}}</text>
+        <text class="copy-btn" bindtap="onCopyNo" data-no="{{order.id}}">复制</text>
       </view>
     </view>
     <view class="info-row">
@@ -74,11 +69,10 @@
     </view>
   </view>
 
-  <!-- 金额明细 -->
   <view class="info-card">
     <view class="info-row">
       <text class="label">商品总额</text>
-      <text class="value">¥{{order.productTotal || '0.00'}}</text>
+      <text class="value">¥{{order.productTotal || order.totalPrice}}</text>
     </view>
     <view class="info-row">
       <text class="label">运费</text>
@@ -94,10 +88,8 @@
     </view>
   </view>
   
-  <!-- 底部占位 -->
   <view class="footer-placeholder"></view>
 
-  <!-- 底部操作栏 -->
   <view class="footer-bar">
     <view class="footer-btn contact" bindtap="onContact">联系客服</view>
     

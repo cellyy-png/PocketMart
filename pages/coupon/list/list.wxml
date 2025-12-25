@@ -42,7 +42,7 @@
           {{isSelectMode ? '使用' : '去使用'}}
         </view>
         <image class="status-icon" src="/assets/images/icons/used.png" wx:if="{{item.status == 1}}" />
-        <image class="status-icon" src="/assets/images/icons/expired.png" wx:if="{{item.status == 2}}" />
+        <image class="status-icon" src="https://cdn-icons-png.flaticon.com/512/992/992686.png" wx:if="{{item.status == 2}}" />
       </view>
     </view>
 

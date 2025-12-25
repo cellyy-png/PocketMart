@@ -64,7 +64,7 @@
 </view>
 
 <view class="empty-state" wx:else>
-  <image class="empty-img" src="/assets/images/icons/cart-empty.png" mode="aspectFit"></image>
+    <image class="empty-icon" src="/assets/images/icons/cart.png" mode="aspectFit"></image>
   <view class="empty-text">购物车还是空的</view>
   <view class="empty-sub">去挑选几件喜欢的商品吧</view>
   <button class="go-shop-btn" bindtap="onGoShopping">去逛逛</button>

@@ -19,11 +19,7 @@ const generateAvatar = (name) => {
 
 const getMockReviews = (count = 5) => {
   const MOCK_NAMES = ['Alex', 'Bella', 'Chloe', 'Daniel', 'Ethan', 'Fiona', 'George', 'Hannah', 'Iris', 'Jack'];
-  const MOCK_COMMENTS = [
-    '超级喜欢，质感无敌！', '颜色很温柔，跟图片一模一样。', '物流很快，包装仔细。', 
-    '稍微有一点点色差，但在接受范围内。', '性价比很高，推荐入手。', '送给朋友的礼物，她很喜欢。', 
-    '做工一般般，习惯好评。', '虽然发货慢，但收到很惊喜。', '第二次购买了，品质很稳。'
-  ];
+  const MOCK_COMMENTS = ['超级喜欢，质感无敌！', '颜色很温柔，跟图片一模一样。', '物流很快，包装仔细。', '稍微有一点点色差，但在接受范围内。', '性价比很高，推荐入手。'];
   const reviews = [];
   for (let i = 0; i < count; i++) {
     const name = MOCK_NAMES[Math.floor(Math.random() * MOCK_NAMES.length)];
@@ -68,7 +64,7 @@ const CATEGORIES = [
 
 let users = {}; 
 let carts = {};
-let orders = []; // 存储订单数据
+let orders = [];
 
 // --- API ---
 const getUserId = (req) => req.headers.authorization ? req.headers.authorization.replace('Bearer ', '') : null;
@@ -81,9 +77,7 @@ app.post('/api/login', (req, res) => {
     id: token,
     nickName: account || '测试用户', 
     avatarUrl: '/assets/images/icons/user.png',
-    balance: 0,
-    points: 0,
-    isVip: false
+    balance: 0, points: 0, isVip: false
   };
   if (account === 'admin' && password === '123456') {
     userInfo.nickName = '管理员(Admin)';
@@ -94,12 +88,7 @@ app.post('/api/login', (req, res) => {
   res.json({ code: 0, data: { token, userInfo } });
 });
 
-// 2. 退出
-app.post('/api/logout', (req, res) => {
-  res.json({ code: 0, message: 'Logout success' });
-});
-
-// 首页
+app.post('/api/logout', (req, res) => res.json({ code: 0, message: 'Logout success' }));
 app.get('/api/home/index', (req, res) => {
   res.json({
     code: 0,
@@ -115,12 +104,10 @@ app.get('/api/home/index', (req, res) => {
     }
   });
 });
-
 app.get('/api/category/all', (req, res) => {
   const data = CATEGORIES.map(c => ({ ...c, children: PRODUCTS.filter(p => p.category === c.id) }));
   res.json({ code: 0, data });
 });
-
 app.get('/api/goods/list', (req, res) => {
   const { keyword, categoryId } = req.query;
   let list = [...PRODUCTS];
@@ -128,17 +115,11 @@ app.get('/api/goods/list', (req, res) => {
   if (categoryId) list = list.filter(p => p.category == categoryId);
   res.json({ code: 0, data: { list, total: list.length, hasMore: false } });
 });
-
 app.get('/api/goods/detail', (req, res) => {
   const id = parseInt(req.query.id);
   const product = PRODUCTS.find(p => p.id === id);
-  if (product) {
-    res.json({ code: 0, data: { ...product, images: [product.image, product.image, product.image] } });
-  } else {
-    res.json({ code: -1, message: '商品不存在' });
-  }
+  res.json(product ? { code: 0, data: { ...product, images: [product.image, product.image, product.image] } } : { code: -1, message: '商品不存在' });
 });
-
 app.get('/api/goods/comments', (req, res) => {
   const id = parseInt(req.query.id);
   const product = PRODUCTS.find(p => p.id === id);
@@ -148,9 +129,7 @@ app.get('/api/goods/comments', (req, res) => {
 // 购物车
 app.get('/api/cart/list', (req, res) => {
   const token = getUserId(req);
-  // 确保返回数组，防止前端 length 报错
-  const userCart = carts[token] ? carts[token] : []; 
-  res.json({ code: 0, data: userCart });
+  res.json({ code: 0, data: carts[token] || [] });
 });
 
 app.post('/api/cart/add', (req, res) => {
@@ -162,8 +141,22 @@ app.post('/api/cart/add', (req, res) => {
   if (!product) return res.json({ code: 1 });
   const exist = carts[token].find(i => i.id === id);
   if (exist) exist.quantity += quantity;
-  else carts[token].unshift({ ...product, quantity, specs });
+  else carts[token].unshift({ cartId: 'C'+Date.now(), ...product, quantity, specs });
   res.json({ code: 0 });
+});
+
+// 【新增】删除购物车商品 (补全接口)
+app.post('/api/cart/delete', (req, res) => {
+    const token = getUserId(req);
+    const { ids } = req.body;
+    if (carts[token] && Array.isArray(ids)) {
+        // 兼容处理：传 cartId 或 id 都能删
+        const targetIds = ids.map(String);
+        carts[token] = carts[token].filter(c => 
+            !targetIds.includes(String(c.cartId)) && !targetIds.includes(String(c.id))
+        );
+    }
+    res.json({ code: 0, message: '删除成功' });
 });
 
 // 订单创建
@@ -172,87 +165,95 @@ app.post('/api/order/create', (req, res) => {
   const { products, address } = req.body;
   const order = {
     id: 'ORD' + Date.now() + Math.floor(Math.random()*1000), 
-    status: 0, // 初始状态：待付款
+    status: 0, // 待付款
+    statusDesc: '待付款',
     createTime: moment().format('YYYY-MM-DD HH:mm:ss'),
     products,
     totalPrice: products.reduce((s, p) => s + p.price * p.quantity, 0).toFixed(2),
-    address
+    address,
+    userToken: token
   };
-  orders.push({ ...order, userToken: token });
+  orders.push(order);
+  
+  // 【下单即删购物车】
+  if (carts[token]) {
+      const boughtIds = products.map(p => String(p.id));
+      carts[token] = carts[token].filter(item => !boughtIds.includes(String(item.id)));
+  }
+
   console.log('>>> [Order Created]', order.id);
   res.json({ code: 0, data: order });
 });
 
-// 【关键修改】支付接口：支付成功后清理购物车
-app.post('/api/order/pay', (req, res) => {
-  const token = getUserId(req);
-  const orderId = req.body.orderId || req.body.id;
-  const order = orders.find(o => o.id === orderId);
-  
-  if (!order) {
-    return res.json({ code: -1, msg: '订单不存在' });
-  }
-
-  // 1. 更新订单状态
-  order.status = 1; // 待发货
-  order.payTime = moment().format('YYYY-MM-DD HH:mm:ss');
-  
-  // 2. 【核心新增】从购物车移除已购买商品
-  if (carts[token]) {
-    // 找出订单里的商品ID
-    const productIds = order.products.map(p => p.id);
-    // 过滤掉这些商品
-    carts[token] = carts[token].filter(item => !productIds.includes(item.id));
-  }
-
-  console.log('>>> 支付成功，状态已更新，购物车已清理');
-  res.json({ code: 0, msg: '支付成功' });
-});
-
-// 订单列表
-app.get('/api/order/list', (req, res) => {
-  const token = getUserId(req);
-  const { status } = req.query; 
-  let list = orders.filter(o => o.userToken === token);
-  
-  // 状态映射：前端 0全部, 1待付款(0), 2待发货(1)...
-  if (status && status != 0) {
-    const targetStatus = parseInt(status) - 1; 
-    list = list.filter(o => o.status === targetStatus);
-  }
-  
-  list.sort((a, b) => new Date(b.createTime) - new Date(a.createTime));
-  res.json({ code: 0, data: list });
-});
-
-// 订单详情
-app.get('/api/order/detail', (req, res) => {
-  const token = getUserId(req);
-  const { id } = req.query;
-  const order = orders.find(o => o.id === id); 
+// 【新增】取消订单 (补全接口)
+app.post('/api/order/cancel', (req, res) => {
+  const { id } = req.body;
+  const order = orders.find(o => o.id === id);
   if (order) {
-    res.json({ code: 0, data: order });
+    order.status = 5; 
+    order.statusDesc = '已取消';
+    res.json({ code: 0, message: '订单已取消' });
   } else {
     res.json({ code: -1, message: '订单不存在' });
   }
 });
 
-// 订单统计
+app.post('/api/order/pay', (req, res) => {
+  const orderId = req.body.orderId || req.body.id;
+  const order = orders.find(o => o.id === orderId);
+  if (!order) return res.json({ code: -1, msg: '订单不存在' });
+  order.status = 1; // 待发货
+  order.statusDesc = '待发货';
+  order.payTime = moment().format('YYYY-MM-DD HH:mm:ss');
+  res.json({ code: 0, msg: '支付成功' });
+});
+
+// 【新增】确认收货 (补全接口)
+app.post('/api/order/confirm', (req, res) => {
+    const { id } = req.body;
+    const order = orders.find(o => o.id === id);
+    if(order) { 
+        order.status = 3; 
+        order.statusDesc = '已完成';
+        res.json({ code: 0 });
+    } else {
+        res.json({ code: -1 });
+    }
+});
+
+app.get('/api/order/list', (req, res) => {
+  const token = getUserId(req);
+  const { status } = req.query; 
+  let list = orders.filter(o => o.userToken === token);
+  // 状态映射修正: 前端传0(全部), 1(待付款0), 2(待发货1)...
+  if (status && status != 0) {
+    const targetStatus = parseInt(status) - 1; 
+    list = list.filter(o => o.status === targetStatus);
+  }
+  list.sort((a, b) => new Date(b.createTime) - new Date(a.createTime));
+  res.json({ code: 0, data: list });
+});
+
+app.get('/api/order/detail', (req, res) => {
+  const { id } = req.query;
+  const order = orders.find(o => o.id === id); 
+  res.json(order ? { code: 0, data: order } : { code: -1, message: '订单不存在' });
+});
+
 app.get('/api/order/stats', (req, res) => {
   const token = getUserId(req);
   const userOrders = orders.filter(o => o.userToken === token);
-  const stats = {
+  res.json({ code: 0, data: {
     unpaid: userOrders.filter(o => o.status === 0).length,
     unshipped: userOrders.filter(o => o.status === 1).length,
     unreceived: userOrders.filter(o => o.status === 2).length,
     uncomment: userOrders.filter(o => o.status === 3).length
-  };
-  res.json({ code: 0, data: stats });
+  }});
 });
 
 app.get('/api/user/info', (req, res) => {
   const token = getUserId(req);
-  res.json({ code: 0, data: users[token] || { nickName: '未登录用户', balance: 0, avatarUrl: '' } });
+  res.json({ code: 0, data: users[token] || { nickName: '未登录', balance: 0, avatarUrl: '' } });
 });
 
-app.listen(PORT, () => console.log(`🚀 PocketMart Backend Running at http://localhost:${PORT}`));
+app.listen(PORT, () => console.log(`🚀 PocketMart Server Running at http://localhost:${PORT}`));
