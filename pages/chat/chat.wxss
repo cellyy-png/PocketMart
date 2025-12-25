@@ -1,0 +1,118 @@
+page {
+  background-color: #f5f5f5;
+  height: 100vh;
+  overflow: hidden; /* 禁止页面整体滚动 */
+}
+
+.container {
+  display: block; /* 恢复默认块级布局 */
+  height: 100%;
+  position: relative;
+}
+
+/* 聊天列表区域 */
+.chat-list {
+  width: 100%;
+  /* 【核心修改】高度 = 屏幕高度 - 底部输入框高度(120rpx) - 底部安全区 */
+  height: calc(100vh - 120rpx - env(safe-area-inset-bottom));
+  padding: 20rpx;
+  box-sizing: border-box;
+}
+
+.message-item {
+  display: flex;
+  margin-bottom: 30rpx;
+  align-items: flex-start;
+}
+
+.message-item.right {
+  flex-direction: row-reverse;
+}
+
+.avatar-wrapper {
+  width: 80rpx;
+  height: 80rpx;
+  flex-shrink: 0;
+}
+
+.avatar {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  background-color: #ddd;
+}
+
+.avatar-text {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  background-color: #ccc;
+  color: #fff;
+  font-size: 32rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bubble {
+  max-width: 60%;
+  padding: 20rpx;
+  border-radius: 10rpx;
+  font-size: 28rpx;
+  line-height: 1.5;
+  position: relative;
+  word-wrap: break-word;
+}
+
+.message-item.left .bubble {
+  background-color: #fff;
+  color: #333;
+  margin-left: 20rpx;
+}
+
+.message-item.right .bubble {
+  background-color: #ffc107;
+  color: #333;
+  margin-right: 20rpx;
+}
+
+/* 底部输入框区域 */
+.input-area {
+  position: fixed; /* 强制固定在底部 */
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 120rpx; /* 固定高度，配合上面 calc 计算 */
+  background: #fff;
+  display: flex;
+  align-items: center;
+  padding: 0 20rpx;
+  box-sizing: border-box;
+  border-top: 1rpx solid #e5e5e5;
+  
+  /* 适配底部安全区 */
+  padding-bottom: env(safe-area-inset-bottom);
+  height: calc(120rpx + env(safe-area-inset-bottom));
+  z-index: 999;
+}
+
+.input {
+  flex: 1;
+  height: 70rpx;
+  background: #f5f5f5;
+  border-radius: 35rpx;
+  padding: 0 30rpx;
+  font-size: 28rpx;
+  margin-right: 20rpx;
+}
+
+.send-btn {
+  width: 120rpx;
+  height: 70rpx;
+  line-height: 70rpx;
+  text-align: center;
+  background: #ff4444;
+  color: #fff;
+  border-radius: 35rpx;
+  font-size: 28rpx;
+}

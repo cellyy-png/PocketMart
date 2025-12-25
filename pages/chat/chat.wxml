@@ -1,0 +1,29 @@
+<view class="container">
+  <scroll-view scroll-y class="chat-list" scroll-top="{{scrollTop}}" scroll-with-animation>
+    <block wx:for="{{messages}}" wx:key="id">
+      <view class="message-item {{item.type === 'seller' ? 'left' : 'right'}}">
+        <view class="avatar-wrapper">
+          <image class="avatar" src="{{item.avatar}}" mode="aspectFill" wx:if="{{item.avatar}}"></image>
+          <view class="avatar-text" wx:else>{{item.type === 'seller' ? '店' : '我'}}</view>
+        </view>
+        
+        <view class="bubble">
+          <text>{{item.content}}</text>
+        </view>
+      </view>
+    </block>
+  </scroll-view>
+
+  <view class="input-area">
+    <input 
+      class="input" 
+      type="text" 
+      value="{{inputValue}}" 
+      placeholder="想问点什么..." 
+      bindinput="onInput" 
+      confirm-type="send" 
+      bindconfirm="sendMessage"
+    />
+    <view class="send-btn" bindtap="sendMessage">发送</view>
+  </view>
+</view>
