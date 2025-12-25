@@ -1,7 +1,10 @@
-/* 全局容器：浅灰背景，衬托白色卡片 */
-.page-container {
-    min-height: 100vh;
+/* 全局容器 */
+page {
     background-color: #F7F8FA;
+    min-height: 100%;
+  }
+  
+  .page-container {
     padding: 24rpx;
     box-sizing: border-box;
   }
@@ -11,10 +14,10 @@
     display: flex;
     align-items: center;
     background: #ffffff;
-    border-radius: 24rpx;
+    border-radius: 20rpx;
     padding: 24rpx;
     margin-bottom: 24rpx;
-    box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.04); /* 极轻的阴影 */
+    box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.02);
   }
   
   /* 1. 复选框区域 */
@@ -22,21 +25,21 @@
     padding-right: 24rpx;
     display: flex;
     align-items: center;
+    height: 100%;
   }
   
-  /* 自定义圆形复选框 */
   .custom-checkbox {
     width: 40rpx;
     height: 40rpx;
     border-radius: 50%;
-    border: 2rpx solid #dcdcdc; /* 默认灰色边框 */
+    border: 2rpx solid #dcdcdc;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.2s;
+    background-color: #fff;
   }
   
-  /* 选中状态：黑色背景 (高级感) */
   .custom-checkbox.active {
     background-color: #333333;
     border-color: #333333;
@@ -70,7 +73,7 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    height: 180rpx; /* 跟图片等高 */
+    height: 180rpx;
   }
   
   .top-row {
@@ -88,14 +91,14 @@
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
     overflow: hidden;
-    margin-right: 10rpx;
+    margin-right: 20rpx;
   }
   
   .delete-icon {
-    font-size: 36rpx;
+    font-size: 40rpx;
     color: #ccc;
-    padding: 0 0 10rpx 10rpx; /* 增加点击热区 */
-    line-height: 1;
+    line-height: 0.8;
+    padding: 0 0 20rpx 20rpx;
   }
   
   .sku-tag {
@@ -103,24 +106,22 @@
     color: #999;
     background-color: #f5f5f5;
     padding: 4rpx 12rpx;
-    border-radius: 8rpx;
+    border-radius: 6rpx;
     align-self: flex-start;
-    margin-top: 8rpx;
   }
   
   .bottom-row {
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
-    margin-top: auto; /* 沉底 */
   }
   
   .price-box {
-    color: #333;
+    color: #ff4d4f;
     font-weight: bold;
   }
   .symbol { font-size: 24rpx; }
-  .num { font-size: 32rpx; }
+  .num { font-size: 34rpx; }
   
   /* 步进器 */
   .stepper {
@@ -138,16 +139,13 @@
     justify-content: center;
     font-size: 32rpx;
     color: #333;
-    font-weight: 300;
   }
   
-  .step-btn.disabled {
-    color: #dcdcdc;
-  }
+  .step-btn.disabled { color: #e0e0e0; }
   
   .step-num {
     font-size: 26rpx;
-    min-width: 40rpx;
+    min-width: 50rpx;
     text-align: center;
     font-weight: 500;
   }
@@ -165,7 +163,7 @@
     align-items: center;
     padding: 0 30rpx;
     box-sizing: border-box;
-    padding-bottom: env(safe-area-inset-bottom); /* 适配 iPhone X+ */
+    padding-bottom: env(safe-area-inset-bottom);
     box-shadow: 0 -2rpx 10rpx rgba(0,0,0,0.05);
     z-index: 99;
   }
@@ -188,7 +186,8 @@
   
   .total-info {
     margin-right: 24rpx;
-    text-align: right;
+    display: flex;
+    align-items: baseline;
   }
   
   .label {
@@ -199,12 +198,12 @@
   
   .price-symbol {
     font-size: 24rpx;
-    color: #ff4d4f; /* 价格可以用一点亮色点缀，或者改成 #333 保持性冷淡 */
+    color: #ff4d4f;
     font-weight: bold;
   }
   
   .total-price {
-    font-size: 36rpx;
+    font-size: 38rpx;
     color: #ff4d4f;
     font-weight: bold;
   }
@@ -212,7 +211,7 @@
   .checkout-btn {
     width: 220rpx;
     height: 80rpx;
-    background: #333; /* 黑色按钮，高级 */
+    background: #333;
     color: #fff;
     border-radius: 40rpx;
     font-size: 28rpx;
@@ -220,6 +219,12 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: opacity 0.2s;
+  }
+  
+  .checkout-btn.disabled {
+    background: #ccc;
+    pointer-events: none;
   }
   
   /* --- 空状态 --- */
@@ -231,22 +236,22 @@
   }
   
   .empty-img {
-    width: 300rpx;
-    height: 300rpx;
-    margin-bottom: 40rpx;
+    width: 240rpx;
+    height: 240rpx;
+    margin-bottom: 30rpx;
   }
   
   .empty-text {
     font-size: 32rpx;
     color: #333;
     font-weight: 500;
-    margin-bottom: 16rpx;
+    margin-bottom: 12rpx;
   }
   
   .empty-sub {
     font-size: 26rpx;
     color: #999;
-    margin-bottom: 60rpx;
+    margin-bottom: 50rpx;
   }
   
   .go-shop-btn {

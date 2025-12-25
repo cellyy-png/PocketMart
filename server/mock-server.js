@@ -60,7 +60,7 @@ const PRODUCTS = [
 
 const CATEGORIES = [
   { id: 1, name: 'Home Decor', banner: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800' },
-  { id: 2, name: 'Apparel', banner: 'https://images.unsplash.com/photo-1472851294608-415522f96319?w=800' }
+  { id: 2, name: 'Apparel', banner: 'https://gd-hbimg-edge.huabanimg.com/b1d70abe9f7cbbb7f12b9c3989ad2b698e3051e817ead-y0epox_fw1200webp?auth_key=1766376000-ff9079f2e0c84b099cfedaafee120b00-0-b6c6a9256e09433b5e1f25b19b81576e' }
 ];
 
 let users = {}; // token -> user
@@ -97,7 +97,7 @@ app.get('/api/home/index', (req, res) => {
     data: {
       banners: [
         { id: 1, image: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800', title: 'Autumn' },
-        { id: 2, image: 'https://images.unsplash.com/photo-1472851294608-415522f96319?w=800', title: 'New' }
+        { id: 2, image: 'https://gd-hbimg-edge.huabanimg.com/b1d70abe9f7cbbb7f12b9c3989ad2b698e3051e817ead-y0epox_fw1200webp?auth_key=1766376000-ff9079f2e0c84b099cfedaafee120b00-0-b6c6a9256e09433b5e1f25b19b81576e', title: 'New' }
       ],
       navs: [
         { id: 1, name: '新品', icon: 'https://cdn-icons-png.flaticon.com/512/3081/3081559.png' },

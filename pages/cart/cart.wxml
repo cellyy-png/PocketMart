@@ -1,41 +1,43 @@
 <view class="page-container" wx:if="{{!isEmpty}}">
   <view class="cart-list">
-    <view class="cart-card" wx:for="{{cartList}}" wx:key="cartId">
-      
-      <view class="checkbox-area" bindtap="onCheck" data-id="{{item.cartId}}">
-        <view class="custom-checkbox {{item.checked ? 'active' : ''}}">
-          <text wx:if="{{item.checked}}" class="check-icon">✓</text>
-        </view>
-      </view>
-
-      <view class="img-box" bindtap="toDetail" data-id="{{item.id}}">
-        <image class="thumb" src="{{item.image}}" mode="aspectFill" />
-      </view>
-
-      <view class="info-box">
-        <view class="top-row">
-          <view class="title">{{item.name}}</view>
-          <view class="delete-icon" catchtap="onDelete" data-id="{{item.cartId}}">×</view>
-        </view>
-
-        <view class="sku-tag" wx:if="{{item.specs}}">{{item.specs}}</view>
-
-        <view class="bottom-row">
-          <view class="price-box">
-            <text class="symbol">¥</text>
-            <text class="num">{{item.price}}</text>
-          </view>
-          
-          <view class="stepper">
-            <view class="step-btn minus {{item.quantity <= 1 ? 'disabled' : ''}}" 
-                  catchtap="onQtyChange" data-id="{{item.cartId}}" data-type="minus">-</view>
-            <view class="step-num">{{item.quantity}}</view>
-            <view class="step-btn plus" 
-                  catchtap="onQtyChange" data-id="{{item.cartId}}" data-type="plus">+</view>
+    <block wx:for="{{cartList}}" wx:key="id">
+      <view class="cart-card">
+        
+        <view class="checkbox-area" bindtap="onCheck" data-index="{{index}}">
+          <view class="custom-checkbox {{item.checked ? 'active' : ''}}">
+            <text wx:if="{{item.checked}}" class="check-icon">✓</text>
           </view>
         </view>
+
+        <view class="img-box">
+          <image class="thumb" src="{{item.image}}" mode="aspectFill" />
+        </view>
+
+        <view class="info-box">
+          <view class="top-row">
+            <view class="title">{{item.name}}</view>
+            <view class="delete-icon" catchtap="onDelete" data-index="{{index}}">×</view>
+          </view>
+
+          <view class="sku-tag" wx:if="{{item.specs}}">{{item.specs}}</view>
+
+          <view class="bottom-row">
+            <view class="price-box">
+              <text class="symbol">¥</text>
+              <text class="num">{{item.price}}</text>
+            </view>
+            
+            <view class="stepper">
+              <view class="step-btn minus {{item.quantity <= 1 ? 'disabled' : ''}}" 
+                    catchtap="onQtyChange" data-index="{{index}}" data-type="minus">-</view>
+              <view class="step-num">{{item.quantity}}</view>
+              <view class="step-btn plus" 
+                    catchtap="onQtyChange" data-index="{{index}}" data-type="plus">+</view>
+            </view>
+          </view>
+        </view>
       </view>
-    </view>
+    </block>
     
     <view style="height: 120rpx;"></view>
   </view>
@@ -54,15 +56,15 @@
         <text class="price-symbol">¥</text>
         <text class="total-price">{{totalPrice}}</text>
       </view>
-      <view class="checkout-btn" bindtap="toConfirm">
-        去结算 ({{cartList.length}})
+      <view class="checkout-btn {{totalCount == 0 ? 'disabled' : ''}}" bindtap="toConfirm">
+        去结算 ({{totalCount}})
       </view>
     </view>
   </view>
 </view>
 
 <view class="empty-state" wx:else>
-  <image class="empty-img" src="{{emptyImage}}" mode="aspectFit"></image>
+  <image class="empty-img" src="/assets/images/icons/cart-empty.png" mode="aspectFit"></image>
   <view class="empty-text">购物车还是空的</view>
   <view class="empty-sub">去挑选几件喜欢的商品吧</view>
   <button class="go-shop-btn" bindtap="onGoShopping">去逛逛</button>

@@ -1,5 +1,4 @@
 <view class="container">
-  <!-- 顶部搜索 -->
   <view class="header">
     <view class="search-box" bindtap="onSearch">
       <icon type="search" size="14" color="#999"></icon>
@@ -8,7 +7,6 @@
   </view>
 
   <view class="content">
-    <!-- 左侧导航 -->
     <scroll-view class="left-nav" scroll-y>
       <view 
         class="nav-item {{currentId === item.id ? 'active' : ''}}" 
@@ -23,31 +21,27 @@
       </view>
     </scroll-view>
 
-    <!-- 右侧内容 -->
     <scroll-view class="right-content" scroll-y>
-      <!-- 分类Banner -->
       <view class="cate-banner" wx:if="{{currentSub.banner}}">
         <image src="{{currentSub.banner}}" mode="aspectFill"></image>
       </view>
 
-      <!-- 二级分类Grid -->
-      <view class="sub-list" wx:if="{{currentSub.subCategories.length > 0}}">
+      <view class="sub-list" wx:if="{{currentSub.children && currentSub.children.length > 0}}">
         <view 
           class="sub-item" 
-          wx:for="{{currentSub.subCategories}}" 
+          wx:for="{{currentSub.children}}" 
           wx:key="id"
-          bindtap="onTapCategory"
+          bindtap="toProductDetail"
           data-id="{{item.id}}"
-          data-name="{{item.name}}"
         >
-          <image class="sub-icon" src="{{item.icon}}" mode="aspectFit"></image>
+          <image class="sub-icon" src="{{item.image}}" mode="aspectFill"></image>
           <text class="sub-name">{{item.name}}</text>
+          <text class="sub-price">¥{{item.price}}</text>
         </view>
       </view>
       
-      <!-- 空状态兜底 -->
       <view class="empty-cate" wx:else>
-        <text>暂无子分类</text>
+        <text>该分类暂无商品</text>
       </view>
     </scroll-view>
   </view>
