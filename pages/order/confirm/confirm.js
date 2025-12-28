@@ -8,13 +8,13 @@ Page({
     address: null,
     addressList: [],
     remark: '',
-    couponId: null,
+    couponId: null, // 存储选中的优惠券ID
     pointsUsed: 0,
     
     // 价格信息
     productTotal: 0,
     shippingFee: 0,
-    couponDiscount: 0,
+    couponDiscount: 0, // 优惠券抵扣金额
     pointsDiscount: 0,
     totalPrice: 0,
     
@@ -82,7 +82,6 @@ Page({
       const { address, products } = this.data
       if (!address) return
       
-      // 这里的 calculateShipping 应该是你定义在 service 里的方法
       const shippingFee = await calculateShipping(address.id, products)
       this.setData({ shippingFee })
       this.calculateTotal()
@@ -92,13 +91,15 @@ Page({
   },
 
   /**
-   * 计算总价
+   * 计算总价 (核心计算逻辑)
    */
   calculateTotal() {
     const { productTotal, shippingFee, couponDiscount, pointsDiscount } = this.data
+    // 总价 = 商品总价 + 运费 - 优惠券 - 积分
     const totalPrice = productTotal + shippingFee - couponDiscount - pointsDiscount
     
     this.setData({
+      // 确保金额不小于0
       totalPrice: Math.max(totalPrice, 0).toFixed(2)
     })
   },
@@ -143,7 +144,8 @@ Page({
    * 提交订单
    */
   async onSubmit() {
-    const { address, products, remark, submitting } = this.data;
+    // 1. 解构出 couponId
+    const { address, products, remark, submitting, couponId } = this.data;
     
     if (submitting) return;
     if (!address) {
@@ -156,11 +158,16 @@ Page({
       const orderData = {
         address,
         products, // 这里包含了 cartId
-        remark
+        remark,
+        // 2. 【关键修改】必须把 couponId 传给后端，否则后端无法核销优惠券！
+        couponId: couponId || null 
       };
       
       // 调用创建订单接口
-      // 此时后端 mock-server 会自动把 products 里对应的 cartId 从购物车删除
+      // 此时后端会：
+      // 1. 创建订单
+      // 2. 删除购物车对应商品
+      // 3. 将对应的优惠券标记为已使用 (status=1)
       const order = await createOrder(orderData);
       
       // 成功后跳转到支付页

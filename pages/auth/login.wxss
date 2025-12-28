@@ -103,3 +103,39 @@
   font-size: 24rpx;
   color: #ccc;
 }
+
+/* --- 新增样式: 分割线与微信按钮 --- */
+.divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 60rpx 0 40rpx;
+}
+
+.divider .line {
+  width: 100rpx;
+  height: 1rpx;
+  background: #eee;
+}
+
+.divider text {
+  margin: 0 20rpx;
+  font-size: 24rpx;
+  color: #999;
+}
+
+.btn-wechat {
+  background-color: #07c160;
+  color: #fff;
+  border-radius: 44rpx;
+  height: 88rpx;
+  line-height: 88rpx;
+  font-size: 32rpx;
+  font-weight: bold;
+  width: 100%;
+  margin-top: 20rpx;
+}
+
+.btn-wechat:active {
+  opacity: 0.9;
+}

@@ -1,6 +1,6 @@
 import { getHomeData, getProductList } from '../../services/product'
 
-const app = getApp() // 【新增】获取 app 实例
+const app = getApp() 
 
 Page({
   data: {
@@ -22,7 +22,7 @@ Page({
       const homeData = await getHomeData()
       this.setData({
         banners: homeData.banners,
-        navs: homeData.navs
+        navs: homeData.navs // 这里现在会包含 5 个分类
       })
       this.loadProduct(true)
     } catch (error) {
@@ -67,12 +67,12 @@ Page({
     wx.navigateTo({ url: '/pages/search/search' })
   },
 
-  // 【修改】点击导航跳转逻辑
+  // 【跳转逻辑】
   onNavTap(e) {
     const id = e.currentTarget.dataset.id;
-    // 设置全局变量，告诉分类页要选中哪个 ID
-    // 假设首页 nav 的 id 和分类页的 id 是一一对应的
-    // 例如：首页 nav '新品' id=1，对应分类页 'Home Decor' id=1
+    console.log('点击了分类ID:', id);
+    
+    // 设置全局变量
     app.globalData.categoryToSelect = id;
     
     // 跳转到分类 Tab 页

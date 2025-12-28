@@ -1,17 +1,16 @@
 <view class="container">
-  <!-- 头部Banner -->
   <view class="header">
     <view class="title">Hi, 需要什么帮助？</view>
     <view class="subtitle">我们将竭诚为您服务</view>
   </view>
 
-  <!-- 联系方式 -->
   <view class="contact-grid">
-    <button class="contact-item" open-type="contact">
+    <view class="contact-item" bindtap="toChat">
       <view class="icon">💬</view>
       <view class="label">在线客服</view>
       <view class="desc">9:00 - 22:00</view>
-    </button>
+    </view>
+    
     <view class="contact-item" bindtap="onCall">
       <view class="icon">📞</view>
       <view class="label">电话客服</view>
@@ -19,7 +18,6 @@
     </view>
   </view>
 
-  <!-- 常见问题 -->
   <view class="faq-section">
     <view class="section-title">常见问题</view>
     <view class="faq-list">

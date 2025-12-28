@@ -62,3 +62,11 @@ export const deleteOrder = (id) => {
 export const getOrderStats = () => {
   return request.get('/order/stats')
 }
+
+/**
+ * 【新增】申请售后（退款/退货）
+ * @param {Object} data { id: 订单ID, type: 'refund_only'|'return_refund' }
+ */
+export const applyRefund = (data) => {
+  return request.post('/order/refund', data)
+}

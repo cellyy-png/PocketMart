@@ -8,7 +8,7 @@ Page({
     stats: {
       unpaid: 0,
       unshipped: 0,
-      shipped: 0,
+      unreceived: 0, // 【修改】这里必须叫 unreceived，因为后端返回的是这个字段
       uncomment: 0
     }
   },
@@ -33,7 +33,8 @@ Page({
       this.setData({
         userInfo: null,
         hasLogin: false,
-        stats: { unpaid: 0, unshipped: 0, shipped: 0, uncomment: 0 }
+        // 【修改】重置时也需要用 unreceived
+        stats: { unpaid: 0, unshipped: 0, unreceived: 0, uncomment: 0 }
       })
     }
   },
@@ -43,7 +44,7 @@ Page({
     try {
       const stats = await getOrderStats()
       this.setData({
-        stats
+        stats // 后端返回的数据会自动映射到 data.stats
       })
       
       // 设置 tabBar 徽标

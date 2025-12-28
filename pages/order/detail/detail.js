@@ -1,4 +1,4 @@
-import { getOrderDetail, cancelOrder, confirmReceipt, deleteOrder } from '../../../services/order'
+import { getOrderDetail, cancelOrder, confirmReceipt, deleteOrder, applyRefund } from '../../../services/order'
 import { ORDER_STATUS, ORDER_STATUS_TEXT } from '../../../utils/constants'
 
 Page({
@@ -24,7 +24,7 @@ Page({
   },
 
   onShow() {
-    // 每次显示都刷新，确保状态最新（例如从支付页返回）
+    // 每次显示都刷新
     if (this.data.orderId) {
       this.loadData()
     }
@@ -34,7 +34,6 @@ Page({
     try {
       const order = await getOrderDetail(this.data.orderId)
       
-      // 格式化时间步骤
       const steps = [
         { text: '提交订单', desc: order.createTime },
         { text: '支付成功', desc: order.payTime || '' },
@@ -53,10 +52,6 @@ Page({
     }
   },
 
-  /**
-   * 复制订单号
-   * 修复：后端返回的是 id，优先使用 id
-   */
   onCopyNo() {
     const val = this.data.order.id || this.data.order.orderNo;
     wx.setClipboardData({
@@ -67,18 +62,12 @@ Page({
     })
   },
 
-  /**
-   * 去支付
-   */
   onPay() {
     wx.navigateTo({
       url: `/pages/payment/payment?orderId=${this.data.orderId}`
     })
   },
 
-  /**
-   * 取消订单
-   */
   onCancel() {
     wx.showModal({
       title: '提示',
@@ -97,9 +86,6 @@ Page({
     })
   },
 
-  /**
-   * 确认收货
-   */
   onConfirm() {
     wx.showModal({
       title: '提示',
@@ -118,9 +104,6 @@ Page({
     })
   },
 
-  /**
-   * 删除订单
-   */
   onDelete() {
     wx.showModal({
       title: '提示',
@@ -139,22 +122,14 @@ Page({
     })
   },
 
-  /**
-   * 查看物流
-   */
   onLogistics() {
     wx.navigateTo({
       url: `/pages/logistics/logistics?orderId=${this.data.orderId}`
     })
   },
   
-  /**
-   * 联系客服 -> 跳转到聊天页面
-   * 携带 orderId 和 productName
-   */
   onContact() {
     const order = this.data.order;
-    // 获取第一个商品名称作为聊天上下文
     const productName = order.products && order.products.length > 0 ? order.products[0].name : '订单咨询';
     
     wx.navigateTo({
@@ -164,5 +139,30 @@ Page({
         wx.showToast({ title: '功能开发中', icon: 'none' });
       }
     })
+  },
+
+  // 【新增】处理退款申请
+  onRefund(e) {
+    const { type } = e.currentTarget.dataset;
+    const title = type === 'refund_only' ? '仅退款' : '退货退款';
+
+    wx.showModal({
+      title: '申请售后',
+      content: `确定要申请“${title}”吗？`,
+      success: async (res) => {
+        if (res.confirm) {
+          wx.showLoading({ title: '提交中...' });
+          try {
+            await applyRefund({ id: this.data.orderId, type });
+            wx.hideLoading();
+            wx.showToast({ title: '申请已提交', icon: 'success' });
+            this.loadData();
+          } catch (error) {
+            wx.hideLoading();
+            wx.showToast({ title: '操作失败', icon: 'none' });
+          }
+        }
+      }
+    });
   }
 })

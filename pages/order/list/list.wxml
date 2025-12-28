@@ -42,7 +42,13 @@
           <button class="btn plain" catchtap="onCancelOrder" data-id="{{item.id}}">取消订单</button>
           <button class="btn primary" catchtap="onPayOrder" data-id="{{item.id}}">去支付</button>
         </block>
+
+        <block wx:if="{{item.status == 1}}">
+           <button class="btn plain" catchtap="onRefund" data-id="{{item.id}}" data-type="refund_only">仅退款</button>
+        </block>
+
         <block wx:if="{{item.status == 2}}">
+           <button class="btn plain" catchtap="onRefund" data-id="{{item.id}}" data-type="return_refund">退货退款</button>
            <button class="btn primary" catchtap="onConfirmReceipt" data-id="{{item.id}}">确认收货</button>
         </block>
       </view>

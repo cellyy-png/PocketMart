@@ -1,5 +1,4 @@
 <view class="container">
-  <!-- 用户信息卡片 -->
   <view class="user-card" bindtap="{{!hasLogin ? 'toLogin' : ''}}">
     <image class="avatar" src="{{hasLogin ? userInfo.avatarUrl : '/assets/images/icons/user.png'}}" mode="aspectFill"></image>
     <view class="info">
@@ -10,7 +9,6 @@
     <view class="setting-icon" catchtap="toSetting" wx:if="{{hasLogin}}">⚙️</view>
   </view>
 
-  <!-- 订单状态栏 -->
   <view class="order-card">
     <view class="card-header" bindtap="toOrderList" data-type="0">
       <text class="title">我的订单</text>
@@ -18,29 +16,24 @@
     </view>
     <view class="grid-nav">
       <view class="nav-item" bindtap="toOrderList" data-type="1">
-        <image src="/assets/images/icons/cart-active.png" class="nav-icon" /> <!-- 替换为具体icon -->
-        <text>待付款</text>
+        <image src="/assets/images/icons/cart-active.png" class="nav-icon" /> <text>待付款</text>
         <view class="badge" wx:if="{{stats.unpaid > 0}}">{{stats.unpaid}}</view>
       </view>
       <view class="nav-item" bindtap="toOrderList" data-type="2">
-        <image src="/assets/images/icons/category-active.png" class="nav-icon" /> <!-- 替换为具体icon -->
-        <text>待发货</text>
+        <image src="/assets/images/icons/category-active.png" class="nav-icon" /> <text>待发货</text>
         <view class="badge" wx:if="{{stats.unshipped > 0}}">{{stats.unshipped}}</view>
       </view>
       <view class="nav-item" bindtap="toOrderList" data-type="3">
-        <image src="/assets/images/icons/home-active.png" class="nav-icon" /> <!-- 替换为具体icon -->
-        <text>待收货</text>
-        <view class="badge" wx:if="{{stats.shipped > 0}}">{{stats.shipped}}</view>
+        <image src="/assets/images/icons/home-active.png" class="nav-icon" /> <text>待收货</text>
+        <view class="badge" wx:if="{{stats.unreceived > 0}}">{{stats.unreceived}}</view>
       </view>
       <view class="nav-item" bindtap="toOrderList" data-type="4">
-        <image src="/assets/images/icons/user-active.png" class="nav-icon" /> <!-- 替换为具体icon -->
-        <text>待评价</text>
+        <image src="/assets/images/icons/user-active.png" class="nav-icon" /> <text>待评价</text>
         <view class="badge" wx:if="{{stats.uncomment > 0}}">{{stats.uncomment}}</view>
       </view>
     </view>
   </view>
 
-  <!-- 常用功能 -->
   <view class="menu-group">
     <view class="menu-item" bindtap="toCoupon">
       <view class="left">

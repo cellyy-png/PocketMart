@@ -97,9 +97,14 @@
       <view class="footer-btn default" bindtap="onCancel">取消订单</view>
       <view class="footer-btn primary" bindtap="onPay">立即支付</view>
     </block>
+
+    <block wx:if="{{order.status == 1}}">
+      <view class="footer-btn default" bindtap="onRefund" data-type="refund_only">仅退款</view>
+    </block>
     
     <block wx:if="{{order.status == 2}}">
       <view class="footer-btn default" bindtap="onLogistics">查看物流</view>
+      <view class="footer-btn default" bindtap="onRefund" data-type="return_refund">退货退款</view>
       <view class="footer-btn primary" bindtap="onConfirm">确认收货</view>
     </block>
     

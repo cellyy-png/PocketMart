@@ -1,6 +1,6 @@
 import { getCategoryList } from '../../services/product'
 
-const app = getApp() // 【新增】获取 app 实例
+const app = getApp()
 
 Page({
   data: {
@@ -13,14 +13,13 @@ Page({
     this.loadData()
   },
 
-  // 【新增】每次页面显示时触发
+  // 【核心】每次页面显示时检查是否有跳转指令
   onShow() {
-    // 检查是否有来自首页的跳转指令
     const targetId = app.globalData.categoryToSelect;
     if (targetId) {
-      // 找到了指令，立即执行切换逻辑
+      console.log('检测到自动跳转指令，目标ID:', targetId);
       this.selectCategoryById(targetId);
-      // 清除指令，防止下次进入自动跳
+      // 清除指令
       app.globalData.categoryToSelect = null;
     }
   },
@@ -29,16 +28,12 @@ Page({
     try {
       const list = await getCategoryList()
       if (list && list.length > 0) {
-        // 如果 globalData 里有值，优先用 globalData 的，否则默认用第一个
+        this.setData({ categories: list });
+        
+        // 优先使用 globalData 的指令，否则默认第一个
         const targetId = app.globalData.categoryToSelect || list[0].id;
-        // 清除指令
         if(app.globalData.categoryToSelect) app.globalData.categoryToSelect = null;
 
-        this.setData({
-          categories: list
-        });
-        
-        // 执行选中逻辑
         this.selectCategoryById(targetId);
       }
     } catch (error) {
@@ -46,16 +41,13 @@ Page({
     }
   },
 
-  // 【新增】抽离出一个专门用于选中分类的方法
+  // 选中分类通用方法
   selectCategoryById(id) {
     const list = this.data.categories;
     if (!list || list.length === 0) return;
 
-    // 找到对应的分类项
-    // 注意：id 可能是数字或字符串，用 == 比较比较安全，或者都转成 string
+    // 兼容数字和字符串类型的 ID 比较
     const target = list.find(item => item.id == id);
-    
-    // 如果找到了目标分类，就选中它；如果没找到（比如ID不对），默认选中第一个
     const selectedItem = target || list[0];
 
     this.setData({
@@ -66,7 +58,6 @@ Page({
 
   onSwitchTab(e) {
     const id = e.currentTarget.dataset.id
-    // 调用封装好的选中方法
     this.selectCategoryById(id);
   },
 

@@ -24,19 +24,21 @@ Page({
         id: 1, 
         type: 'seller', 
         content: '亲，您好！欢迎光临 PocketMart 官方旗舰店。',
-        avatar: '/assets/images/icons/kefu.png' // 假设你有个客服图标，没有也没关系，我在wxml里做了兜底
+        // 【修改】把 kefu.png 改为存在的图片，比如 home-active.png
+        avatar: '/assets/images/icons/home-active.png' 
       },
       { 
         id: 2, 
         type: 'seller', 
         content: '请问有什么可以帮您的？比如商品咨询、发货时间等。',
-        avatar: '/assets/images/icons/kefu.png' 
+        // 【修改】同上
+        avatar: '/assets/images/icons/home-active.png' 
       }
     ];
     
     this.setData({ 
       messages: initialMessages,
-      scrollTop: 100 // 稍微滚动一下
+      scrollTop: 100 
     });
   },
 
@@ -50,11 +52,14 @@ Page({
     const content = this.data.inputValue.trim();
     if (!content) return;
 
+    // 【修改】兼容处理：微信登录返回的是 avatarUrl，防止头像不显示
+    const userAvatar = this.data.userInfo.avatarUrl || this.data.userInfo.avatar || '/assets/images/icons/user.png';
+
     const userMsg = { 
       id: Date.now(), 
       type: 'user', 
       content: content,
-      avatar: this.data.userInfo.avatar || '/assets/images/icons/user.png'
+      avatar: userAvatar
     };
 
     const newMessages = [...this.data.messages, userMsg];
@@ -70,8 +75,9 @@ Page({
       const replyMsg = { 
         id: Date.now() + 1, 
         type: 'seller', 
-        content: '收到您的消息，客服正在赶来的路上，请稍候~',
-        avatar: '/assets/images/icons/kefu.png'
+        content: '收到您的消息：' + content + '。客服暂时繁忙，稍后回复您~',
+        // 【修改】这里也必须改，否则发消息后会报错
+        avatar: '/assets/images/icons/home-active.png'
       };
       this.setData({
         messages: [...this.data.messages, replyMsg],

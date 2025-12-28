@@ -1,58 +1,36 @@
 /**
- * 优惠券服务
+ * 优惠券服务 (已对接后端)
  */
 
-// 模拟优惠券数据
-const MOCK_COUPONS = [
-  {
-    id: 1,
-    name: '新人专享券',
-    amount: 10,
-    minPoint: 0,
-    startTime: '2023-10-01',
-    endTime: '2024-12-31',
-    status: 0, // 0:未使用, 1:已使用, 2:已过期
-    desc: '全场通用'
-  },
-  {
-    id: 2,
-    name: '满减优惠券',
-    amount: 30,
-    minPoint: 199,
-    startTime: '2023-10-01',
-    endTime: '2024-12-31',
-    status: 0,
-    desc: '仅限数码产品'
-  },
-  {
-    id: 3,
-    name: '限时活动券',
-    amount: 50,
-    minPoint: 399,
-    startTime: '2023-01-01',
-    endTime: '2023-06-30',
-    status: 2, // 已过期
-    desc: '全场通用'
-  }
-]
+const API_BASE_URL = 'http://localhost:3002/api';
 
 /**
  * 获取优惠券列表
  * @param {Object} params { status: 0|1|2 }
  */
 export const getCouponList = (params = {}) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      let list = MOCK_COUPONS
-      
-      // 状态筛选
-      if (params.status !== undefined) {
-        list = list.filter(c => c.status === Number(params.status))
+  return new Promise((resolve, reject) => {
+    wx.request({
+      url: `${API_BASE_URL}/coupon/list`,
+      method: 'GET',
+      data: params,
+      header: {
+        'Authorization': 'Bearer ' + (wx.getStorageSync('token') || '')
+      },
+      success: (res) => {
+        if (res.data.code === 0) {
+          resolve(res.data.data);
+        } else {
+          // 如果后端报错或没有数据，返回空数组
+          resolve([]);
+        }
+      },
+      fail: (err) => {
+        console.error('获取优惠券失败', err);
+        resolve([]);
       }
-      
-      resolve(list)
-    }, 300)
-  })
+    });
+  });
 }
 
 /**
@@ -60,12 +38,8 @@ export const getCouponList = (params = {}) => {
  * @param {Number} totalAmount 订单总金额
  */
 export const getAvailableCoupons = (totalAmount) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const list = MOCK_COUPONS.filter(c => 
-        c.status === 0 && totalAmount >= c.minPoint
-      )
-      resolve(list)
-    }, 300)
-  })
+  // 先获取所有“未使用(status=0)”的券，再在前端过滤门槛
+  return getCouponList({ status: 0 }).then(list => {
+    return list.filter(c => totalAmount >= c.minPoint);
+  });
 }

@@ -46,6 +46,21 @@
       <text>{{isRegister ? '已有账号？' : '没有账号？'}}</text>
       <text class="link">{{isRegister ? '去登录' : '去注册'}}</text>
     </view>
+
+    <view class="divider" wx:if="{{!isRegister}}">
+      <view class="line"></view>
+      <text>其他登录方式</text>
+      <view class="line"></view>
+    </view>
+
+    <button 
+      class="btn-wechat" 
+      wx:if="{{!isRegister}}"
+      bindtap="onWechatLogin"
+    >
+      微信一键登录
+    </button>
+
   </view>
 
   <view class="footer">
