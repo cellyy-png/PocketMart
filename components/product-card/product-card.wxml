@@ -1,22 +1,37 @@
-  
-  
-    {{product.name}}
-    {{product.desc}}
-    
-    
+<view class="product-card" bindtap="onTap">
+  <view class="image-wrapper">
+    <image 
+      class="product-image" 
+      src="{{product.thumbnail}}" 
+      mode="aspectFill" 
+      lazy-load 
+    />
+    <view class="product-tags" wx:if="{{product.tags && product.tags.length > 0}}">
+      <view class="tag glass-effect" wx:for="{{product.tags}}" wx:key="index">{{item}}</view>
+    </view>
+  </view>
+
+  <view class="product-info">
+    <view class="title-group">
+      <view class="product-name text-truncate-2">{{product.name}}</view>
+      <view class="product-desc text-truncate" wx:if="{{product.desc}}">{{product.desc}}</view>
+    </view>
+
+    <view class="product-bottom">
+      <view class="price-wrapper">
+        <view class="price-box">
+          <text class="price-symbol">¥</text>
+          <text class="price-value">{{product.price}}</text>
+        </view>
+        <text class="price-original" wx:if="{{product.originalPrice}}">¥{{product.originalPrice}}</text>
+      </view>
       
-        ¥
-        {{product.price}}
-        ¥{{product.originalPrice}}
-      
-      
-      
-        已售{{product.sales}}
-      
-    
-  
-  
-  
-  
-    {{item}}
-  
+      <view class="action-row">
+        <text class="sales-text" wx:if="{{product.sales}}">{{product.sales}} sold</text>
+        <view class="add-btn" catchtap="onAddCart">
+          <image class="cart-icon" src="/assets/images/icons/cart-active.png" />
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

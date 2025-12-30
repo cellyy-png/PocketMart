@@ -17,7 +17,7 @@ Page({
   loadComments(id) {
     wx.showLoading({ title: '加载评价' })
     wx.request({
-      url: `http://localhost:3002/api/goods/comments?id=${id}`, // 确保端口号对应
+      url: `http://192.168.126.112:3002/api/goods/comments?id=${id}`, // 确保端口号对应
       success: (res) => {
         if (res.data.code === 0) {
           this.setData({ comments: res.data.data })

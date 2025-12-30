@@ -1,67 +1,75 @@
 <view class="container">
-  <view class="user-card" bindtap="{{!hasLogin ? 'toLogin' : ''}}">
-    <image class="avatar" src="{{hasLogin ? userInfo.avatarUrl : '/assets/images/icons/user.png'}}" mode="aspectFill"></image>
-    <view class="info">
-      <view class="nickname">{{hasLogin ? userInfo.nickName : '点击登录/注册'}}</view>
-      <view class="desc" wx:if="{{hasLogin}}">{{userInfo.phone || '普通会员'}}</view>
-      <view class="desc" wx:else>登录后享受更多优惠</view>
+  <view class="user-header">
+    <view class="user-card" bindtap="{{!hasLogin ? 'toLogin' : ''}}">
+      <image class="avatar" src="{{hasLogin ? userInfo.avatarUrl : '/assets/images/icons/user.png'}}" mode="aspectFill"></image>
+      <view class="info">
+        <view class="nickname">{{hasLogin ? userInfo.nickName : 'Login / Register'}}</view>
+        <view class="desc" wx:if="{{hasLogin}}">{{userInfo.phone || 'Member'}}</view>
+        <view class="desc" wx:else>Welcome to PocketMart</view>
+      </view>
+      <view class="setting-btn" catchtap="toSetting" wx:if="{{hasLogin}}">
+        <view class="icon-gear"></view>
+      </view>
     </view>
-    <view class="setting-icon" catchtap="toSetting" wx:if="{{hasLogin}}">⚙️</view>
   </view>
 
-  <view class="order-card">
-    <view class="card-header" bindtap="toOrderList" data-type="0">
-      <text class="title">我的订单</text>
-      <view class="more">全部订单 ›</view>
+  <view class="order-panel">
+    <view class="panel-header" bindtap="toOrderList" data-type="0">
+      <text class="panel-title">My Orders</text>
+      <view class="panel-more">View All</view>
     </view>
+    
     <view class="grid-nav">
-      <view class="nav-item" bindtap="toOrderList" data-type="1">
-        <image src="/assets/images/icons/cart-active.png" class="nav-icon" /> <text>待付款</text>
-        <view class="badge" wx:if="{{stats.unpaid > 0}}">{{stats.unpaid}}</view>
+      <view class="nav-col" bindtap="toOrderList" data-type="1">
+        <view class="badge-point" wx:if="{{stats.unpaid > 0}}"></view>
+        <image src="/assets/images/icons/cart.png" class="nav-icon" /> 
+        <text class="nav-label">Pending</text>
       </view>
-      <view class="nav-item" bindtap="toOrderList" data-type="2">
-        <image src="/assets/images/icons/category-active.png" class="nav-icon" /> <text>待发货</text>
-        <view class="badge" wx:if="{{stats.unshipped > 0}}">{{stats.unshipped}}</view>
+      <view class="nav-col" bindtap="toOrderList" data-type="2">
+        <view class="badge-point" wx:if="{{stats.unshipped > 0}}"></view>
+        <image src="/assets/images/icons/category.png" class="nav-icon" /> 
+        <text class="nav-label">Processing</text>
       </view>
-      <view class="nav-item" bindtap="toOrderList" data-type="3">
-        <image src="/assets/images/icons/home-active.png" class="nav-icon" /> <text>待收货</text>
-        <view class="badge" wx:if="{{stats.unreceived > 0}}">{{stats.unreceived}}</view>
+      <view class="nav-col" bindtap="toOrderList" data-type="3">
+        <view class="badge-point" wx:if="{{stats.unreceived > 0}}"></view>
+        <image src="/assets/images/icons/home.png" class="nav-icon" /> 
+        <text class="nav-label">Shipped</text>
       </view>
-      <view class="nav-item" bindtap="toOrderList" data-type="4">
-        <image src="/assets/images/icons/user-active.png" class="nav-icon" /> <text>待评价</text>
-        <view class="badge" wx:if="{{stats.uncomment > 0}}">{{stats.uncomment}}</view>
+      <view class="nav-col" bindtap="toOrderList" data-type="4">
+        <view class="badge-point" wx:if="{{stats.uncomment > 0}}"></view>
+        <image src="/assets/images/icons/user.png" class="nav-icon" /> 
+        <text class="nav-label">Review</text>
       </view>
     </view>
   </view>
 
-  <view class="menu-group">
-    <view class="menu-item" bindtap="toCoupon">
-      <view class="left">
-        <text class="icon">🎟️</text>
-        <text>我的优惠券</text>
+  <view class="menu-list">
+    <view class="menu-row" bindtap="toCoupon">
+      <view class="row-left">
+        <text>Coupons</text>
       </view>
-      <view class="arrow">›</view>
+      <view class="row-arrow"></view>
     </view>
-    <view class="menu-item" bindtap="toAddress">
-      <view class="left">
-        <text class="icon">📍</text>
-        <text>收货地址</text>
+    
+    <view class="menu-row" bindtap="toAddress">
+      <view class="row-left">
+        <text>My Address</text>
       </view>
-      <view class="arrow">›</view>
+      <view class="row-arrow"></view>
     </view>
-    <view class="menu-item" bindtap="toService">
-      <view class="left">
-        <text class="icon">🎧</text>
-        <text>客户服务</text>
+    
+    <view class="menu-row" bindtap="toService">
+      <view class="row-left">
+        <text>Service Center</text>
       </view>
-      <view class="arrow">›</view>
+      <view class="row-arrow"></view>
     </view>
-    <view class="menu-item" bindtap="toSetting">
-      <view class="left">
-        <text class="icon">⚙️</text>
-        <text>系统设置</text>
+    
+    <view class="menu-row" bindtap="toSetting">
+      <view class="row-left">
+        <text>Settings</text>
       </view>
-      <view class="arrow">›</view>
+      <view class="row-arrow"></view>
     </view>
   </view>
 </view>

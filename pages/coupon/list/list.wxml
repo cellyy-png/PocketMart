@@ -1,5 +1,4 @@
 <view class="container">
-  <!-- 顶部Tab -->
   <view class="tabs">
     <view 
       class="tab-item {{currentTab == item.key ? 'active' : ''}}" 
@@ -12,43 +11,49 @@
     </view>
   </view>
 
-  <!-- 优惠券列表 -->
   <scroll-view class="coupon-list" scroll-y>
     <view 
-      class="coupon-item {{item.status != 0 ? 'disabled' : ''}}" 
+      class="coupon-card {{item.status != 0 ? 'disabled' : ''}}" 
       wx:for="{{coupons}}" 
       wx:key="id"
       bindtap="onSelect"
       data-item="{{item}}"
     >
-      <view class="coupon-left">
-        <view class="price">
+      <view class="card-left">
+        <view class="price-box">
           <text class="symbol">¥</text>
-          <text class="num">{{item.amount}}</text>
+          <text class="amount">{{item.amount}}</text>
         </view>
-        <view class="condition">满{{item.minPoint}}可用</view>
+        <view class="condition">Over ¥{{item.minPoint}}</view>
+      </view>
+
+      <view class="split-line">
+        <view class="circle-top"></view>
+        <view class="dashed-border"></view>
+        <view class="circle-bottom"></view>
       </view>
       
-      <view class="coupon-right">
-        <view class="info">
-          <view class="name">
-            <text class="tag">优惠券</text>
-            {{item.name}}
+      <view class="card-right">
+        <view class="info-group">
+          <view class="coupon-name">
+            <text class="tag-badge">COUPON</text>
+            <text>{{item.name}}</text>
           </view>
-          <view class="date">{{item.startTime}} - {{item.endTime}}</view>
+          <view class="valid-date">Valid: {{item.startTime}} - {{item.endTime}}</view>
         </view>
         
-        <view class="btn-action" wx:if="{{item.status == 0}}">
-          {{isSelectMode ? '使用' : '去使用'}}
+        <view class="action-area" wx:if="{{item.status == 0}}">
+          <view class="btn-use">{{isSelectMode ? 'SELECT' : 'USE NOW'}}</view>
         </view>
-        <image class="status-icon" src="/assets/images/icons/used.png" wx:if="{{item.status == 1}}" />
-        <image class="status-icon" src="https://cdn-icons-png.flaticon.com/512/992/992686.png" wx:if="{{item.status == 2}}" />
+        
+        <view class="status-stamp" wx:if="{{item.status == 1}}">USED</view>
+        <view class="status-stamp" wx:if="{{item.status == 2}}">EXPIRED</view>
       </view>
     </view>
 
-    <!-- 空状态 -->
     <view class="empty-state" wx:if="{{!loading && coupons.length == 0}}">
-      <text class="empty-text">暂无相关优惠券</text>
+      <view class="empty-icon-box"></view>
+      <text class="empty-text">No coupons found</text>
     </view>
   </scroll-view>
 </view>

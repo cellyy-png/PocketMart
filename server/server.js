@@ -46,16 +46,16 @@ const PRODUCTS_BASE = [
   // --- 1. 家居 (Home Decor) ---
   { id: 101, name: 'Morandi Vase / Sage', price: 299.00, image: 'https://images.unsplash.com/photo-1581539250439-c96689b516dd?w=500', category: 1, desc: 'Minimalist Design' },
   { id: 103, name: 'Ceramic Plate', price: 89.00, image: 'https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=500', category: 1, desc: 'Handmade Craft' },
-  { id: 105, name: 'Nordic Lamp', price: 459.00, image: 'https://images.unsplash.com/photo-1507473888900-52e1ad14592d?w=500', category: 1, desc: 'Warm Light' },
+  { id: 105, name: 'Nordic Lamp', price: 459.00, image: 'https://gd-hbimg-edge.huaban.com/26b9e43d2d1ce396f6609c9a2e13d53bd493069ed7fa16-K8YO9O_fw480webp?auth_key=1767110400-d1261dc44fff4925a5f97bd9f65ec9e3-0-babad61e8c1ee85144361232286ec59f', category: 1, desc: 'Warm Light' },
   { id: 106, name: 'Cushion Cover', price: 79.00, image: 'https://images.unsplash.com/photo-1584100936595-c0654b55a2e2?w=500', category: 1, desc: 'Velvet Touch' },
   { id: 107, name: 'Wall Clock', price: 199.00, image: 'https://images.unsplash.com/photo-1563861826100-9cb868fdbe1c?w=500', category: 1, desc: 'Timeless' },
 
   // --- 2. 服饰 (Apparel) ---
   { id: 102, name: 'Soft Cotton Tee', price: 159.00, image: 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=500', category: 2, desc: 'Summer Collection' },
-  { id: 104, name: 'Linen Trousers', price: 399.00, image: 'https://images.unsplash.com/photo-1594631294608-415522f96319?w=500', category: 2, desc: 'Relaxed Fit' },
+  { id: 104, name: 'Linen Trousers', price: 399.00, image: 'https://gd-hbimg-edge.huaban.com/9b72acde883fac36e9241cbafe712862cd86aaf418d00-b6uCkC_fw480webp?auth_key=1767110400-d1261dc44fff4925a5f97bd9f65ec9e3-0-ab598bf53de942a15a6e0cf1791306ea', category: 2, desc: 'Relaxed Fit' },
   { id: 108, name: 'Denim Jacket', price: 599.00, image: 'https://images.unsplash.com/photo-1576871337632-b9aef4c17ab9?w=500', category: 2, desc: 'Vintage Wash' },
   { id: 109, name: 'Canvas Sneakers', price: 299.00, image: 'https://images.unsplash.com/photo-1560769629-975ec94e6a86?w=500', category: 2, desc: 'Comfort' },
-  { id: 110, name: 'Wool Scarf', price: 129.00, image: 'https://images.unsplash.com/photo-1582476691038-f93822a1f24d?w=500', category: 2, desc: 'Winter Warmth' },
+  { id: 110, name: 'Wool Scarf', price: 129.00, image: 'https://huaban.com/pins/5737197993?searchWord=Wool%20Scarf%E8%AE%BE%E8%AE%A1', category: 2, desc: 'Winter Warmth' },
 
   // --- 3. 数码 (Digital) [新增] ---
   { id: 201, name: '无线降噪耳机', price: 1299.00, image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500', category: 3, desc: '静享音乐' },
@@ -81,8 +81,8 @@ const PRODUCTS = PRODUCTS_BASE.map(p => ({
 
 // 分类列表 (必须包含新增的 ID 3, 4, 5)
 const CATEGORIES = [
-  { id: 1, name: 'Home Decor', banner: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800' },
-  { id: 2, name: 'Apparel', banner: 'https://images.unsplash.com/photo-1472851294608-415522f96319?w=800' },
+  { id: 1, name: 'Home', banner: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800' },
+  { id: 2, name: 'Apparel', banner: 'https://gd-hbimg-edge.huaban.com/0f09d2cbd06a98cdc23fd69073233719c28c21bc9982-x4NcNE_fw480webp?auth_key=1767110400-d1261dc44fff4925a5f97bd9f65ec9e3-0-8005cb3d60e810215595fe888d970f29' },
   { id: 3, name: 'Digital', banner: 'https://images.unsplash.com/photo-1550009158-9ebf69173e03?w=800' },
   { id: 4, name: 'Food', banner: 'https://images.unsplash.com/photo-1490818387583-1baba5e638af?w=800' },
   { id: 5, name: 'Sports', banner: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=800' }
@@ -222,7 +222,7 @@ app.get('/api/home/index', (req, res) => {
     data: {
       banners: [
         { id: 1, image: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800', title: 'Autumn' },
-        { id: 2, image: 'https://images.unsplash.com/photo-1472851294608-415522f96319?w=800', title: 'New' }
+        { id: 2, image: 'https://gd-hbimg-edge.huaban.com/0f09d2cbd06a98cdc23fd69073233719c28c21bc9982-x4NcNE_fw480webp?auth_key=1767110400-d1261dc44fff4925a5f97bd9f65ec9e3-0-8005cb3d60e810215595fe888d970f29', title: 'New' }
       ],
       // 这里的 ID 必须对应 CATEGORIES 中的 ID
       navs: [

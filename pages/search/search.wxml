@@ -1,97 +1,90 @@
-<!--pages/search/search.wxml-->
 <view class="container">
-  <!-- 搜索栏 -->
-  <view class="search-header">
-    <view class="search-bar-wrapper">
-      <icon type="search" size="16" class="search-icon" />
+  <view class="search-sticky" style="padding-top: {{navTop}}px; padding-right: {{navRight}}px">
+    
+    <view class="search-bar-box" style="height: {{navHeight}}px">
+      <icon type="search" size="14" color="#6B7C85" class="icon-search" />
       <input 
         class="search-input" 
-        placeholder="请输入商品名称" 
+        placeholder="Search items..." 
+        placeholder-class="ph-style"
         value="{{keyword}}" 
         bindinput="onSearchInput"
         bindconfirm="onSearch"
         focus="{{true}}"
+        confirm-type="search"
+        style="height: {{navHeight}}px; line-height: {{navHeight}}px"
       />
-      <icon 
-        wx:if="{{keyword}}" 
-        type="clear" 
-        size="16" 
-        class="clear-icon" 
-        bindtap="onClearKeyword"
-      />
+      <view class="icon-clear-box" wx:if="{{keyword}}" bindtap="onClearKeyword">
+        <icon type="clear" size="14" color="#ccc" />
+      </view>
     </view>
-    <text class="cancel-btn" bindtap="onCancel">取消</text>
+    
+    <view class="btn-cancel" bindtap="onCancel">Cancel</view>
   </view>
 
-  <!-- 热门搜索和历史记录 -->
-  <view wx:if="{{!showResult}}" class="search-content">
-    <!-- 热门搜索 -->
-    <view class="hot-search">
-      <view class="section-title">热门搜索</view>
-      <view class="keyword-list">
+  <view wx:if="{{!showResult}}" class="suggestion-area">
+    <view class="section-box">
+      <view class="section-header">POPULAR SEARCH</view>
+      <view class="tag-wrap">
         <view 
           wx:for="{{hotKeywords}}" 
           wx:key="index"
-          class="keyword-item"
+          class="tag-item"
           bindtap="onSearch"
           data-keyword="{{item}}"
         >
-          <text class="keyword-text">{{item}}</text>
+          {{item}}
         </view>
       </view>
     </view>
 
-    <!-- 搜索历史 -->
-    <view class="search-history" wx:if="{{searchHistory.length > 0}}">
-      <view class="history-header">
-        <text class="section-title">搜索历史</text>
-        <text class="clear-history" bindtap="onClearHistory">清空</text>
+    <view class="section-box" wx:if="{{searchHistory.length > 0}}">
+      <view class="section-header">
+        <text>HISTORY</text>
+        <view class="btn-clean" bindtap="onClearHistory">Clear</view>
       </view>
-      <view class="keyword-list">
+      <view class="tag-wrap">
         <view 
           wx:for="{{searchHistory}}" 
           wx:key="index"
-          class="keyword-item history-item"
+          class="tag-item history"
           bindtap="onSearch"
           data-keyword="{{item}}"
         >
-          <text class="keyword-text">{{item}}</text>
+          {{item}}
         </view>
       </view>
     </view>
   </view>
 
-  <!-- 搜索结果 -->
-  <view wx:else class="result-content">
-    <!-- 商品列表 -->
-    <scroll-view scroll-y class="product-list">
-      <!-- 这里直接手动渲染简单的商品卡片结构，或者使用组件 -->
-      <view class="product-item" wx:for="{{products}}" wx:key="id" bindtap="onProductTap" data-id="{{item.id}}">
-        <image class="p-img" src="{{item.image}}" mode="aspectFill"></image>
-        <view class="p-info">
-          <view class="p-name">{{item.name}}</view>
-          <view class="p-price-row">
-            <text class="price-symbol">¥</text>
-            <text class="price-num">{{item.price}}</text>
-            <text class="sales">已售{{item.sales}}</text>
+  <view wx:else class="result-area">
+    <scroll-view scroll-y class="scroll-view" bindscrolltolower="onReachBottom">
+      <view class="product-grid">
+        <view class="product-card" wx:for="{{products}}" wx:key="id" bindtap="onProductTap" data-id="{{item.id}}">
+          <view class="img-box">
+            <image class="p-img" src="{{item.image}}" mode="aspectFill" lazy-load></image>
+          </view>
+          <view class="p-info">
+            <view class="p-name">{{item.name}}</view>
+            <view class="p-meta">
+              <view class="price-box">
+                <text class="symbol">¥</text>
+                <text class="num">{{item.price}}</text>
+              </view>
+              <text class="sales">Sold {{item.sales}}</text>
+            </view>
           </view>
         </view>
       </view>
+
+      <view class="footer-state">
+        <loading wx:if="{{loading}}" text="Loading..." />
+        <view wx:elif="{{!hasMore && products.length > 0}}" class="no-more">- THE END -</view>
+        <view wx:if="{{!loading && products.length === 0}}" class="empty-box">
+          <icon type="search" size="40" color="#E0E0E0" />
+          <text>No results found</text>
+        </view>
+      </view>
     </scroll-view>
-
-    <!-- 加载更多 -->
-    <loading wx:if="{{loading}}" />
-
-    <!-- 没有更多数据 -->
-    <view wx:elif="{{!hasMore && products.length > 0}}" class="no-more">
-      没有更多商品了
-    </view>
-
-    <!-- 空状态 -->
-    <empty-state 
-      wx:if="{{!loading && products.length === 0}}" 
-      icon="search" 
-      text="暂无相关商品" 
-    />
   </view>
 </view>

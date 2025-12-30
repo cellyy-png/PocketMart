@@ -1,141 +1,200 @@
+/* 引入之前的变量，确保风格统一 */
+page {
+  background-color: var(--bg-color, #FDFCF8);
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, sans-serif;
+  color: var(--text-main, #2D3436);
+}
+
 .container {
   min-height: 100vh;
-  background: #fff;
-  padding: 60rpx 40rpx;
+  padding: 80rpx 60rpx;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+/* --- 头部设计 --- */
+.header {
+  margin-bottom: 80rpx;
+}
+
+.brand-en {
+  font-size: 24rpx;
+  letter-spacing: 4rpx;
+  color: var(--primary-color, #6B7C85);
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-bottom: 30rpx;
+}
+
+.title-wrapper {
   display: flex;
   flex-direction: column;
 }
 
-/* 头部 */
-.header {
-  margin-bottom: 80rpx;
-  text-align: center;
+.title-en {
+  font-size: 64rpx;
+  font-weight: 300; /* 细体显得更高级 */
+  color: #2D3436;
+  letter-spacing: 2rpx;
+  margin-bottom: 12rpx;
 }
 
-.logo {
-  width: 140rpx;
-  height: 140rpx;
-  margin-bottom: 30rpx;
+.title-zh {
+  font-size: 28rpx;
+  color: #B2BEC3;
+  letter-spacing: 1rpx;
 }
 
-.title {
-  font-size: 48rpx;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 16rpx;
-}
-
-.sub-title {
-  font-size: 26rpx;
-  color: #999;
-}
-
-/* 表单 */
+/* --- 表单区域 --- */
 .form-section {
   width: 100%;
 }
 
-.input-group {
+.input-item {
+  margin-bottom: 50rpx;
+  position: relative;
+}
+
+.input-label {
+  font-size: 20rpx;
+  color: var(--primary-color, #6B7C85);
+  letter-spacing: 2rpx;
+  font-weight: 700;
+  margin-bottom: 16rpx;
+  display: block;
+}
+
+.input-field {
+  width: 100%;
+  height: 80rpx;
+  font-size: 30rpx;
+  color: #2D3436;
+  border-bottom: 2rpx solid #E3E8EB; /* 极简底边框 */
+  transition: border-color 0.3s var(--ease-out, ease-out);
+}
+
+/* 输入框聚焦效果 */
+.input-field:focus {
+  border-bottom-color: var(--accent-color, #C58F78);
+}
+
+.input-placeholder {
+  color: #DFE4EA;
+  font-weight: 300;
+  font-size: 28rpx;
+}
+
+/* --- 主按钮 (莫兰迪深灰) --- */
+.btn-main {
+  margin-top: 80rpx;
+  height: 100rpx;
+  background-color: #2D3436; /* 接近纯黑的深灰 */
+  color: #FFFFFF;
+  border-radius: 999px; /* 全圆角 */
   display: flex;
   align-items: center;
-  background: #f8f8f8;
-  border-radius: 44rpx;
-  height: 88rpx;
-  padding: 0 30rpx;
-  margin-bottom: 30rpx;
-  border: 1rpx solid transparent;
-  transition: all 0.3s;
+  justify-content: space-between;
+  padding: 0 60rpx;
+  font-size: 30rpx;
+  font-weight: 500;
+  letter-spacing: 2rpx;
+  box-shadow: 0 12rpx 30rpx rgba(45, 52, 54, 0.15);
+  transition: all 0.2s;
 }
 
-.input-group:hover {
-  background: #fff;
-  border-color: #ff6b6b;
-}
-
-.input-icon {
-  font-size: 36rpx;
-  margin-right: 20rpx;
-  color: #666;
-}
-
-.input {
-  flex: 1;
-  height: 100%;
-  font-size: 28rpx;
-  color: #333;
-}
-
-.btn-primary {
-  background: linear-gradient(90deg, #ff6b6b, #ff4757);
-  color: #fff;
-  border-radius: 44rpx;
-  height: 88rpx;
-  line-height: 88rpx;
-  font-size: 32rpx;
-  font-weight: bold;
-  margin-top: 60rpx;
-  box-shadow: 0 8rpx 16rpx rgba(255, 107, 107, 0.3);
-}
-
-.btn-primary:active {
-  opacity: 0.9;
+.btn-main:active {
   transform: scale(0.98);
+  box-shadow: 0 4rpx 12rpx rgba(45, 52, 54, 0.1);
 }
 
-/* 切换模式 */
-.switch-mode {
-  text-align: center;
-  margin-top: 30rpx;
-  font-size: 28rpx;
-  color: #666;
+/* 纯CSS箭头 */
+.btn-arrow {
+  width: 16rpx;
+  height: 16rpx;
+  border-top: 2rpx solid #FFFFFF;
+  border-right: 2rpx solid #FFFFFF;
+  transform: rotate(45deg);
 }
 
-.link {
-  color: #ff6b6b;
-  font-weight: bold;
-  margin-left: 8rpx;
-}
-
-/* 底部 */
-.footer {
-  margin-top: auto;
+/* --- 切换模式 --- */
+.switch-row {
+  margin-top: 40rpx;
   text-align: center;
   font-size: 24rpx;
-  color: #ccc;
 }
 
-/* --- 新增样式: 分割线与微信按钮 --- */
-.divider {
+.switch-text {
+  color: #B2BEC3;
+  margin-right: 12rpx;
+}
+
+.switch-link {
+  color: var(--accent-color, #C58F78); /* 陶土色强调 */
+  font-weight: 600;
+  border-bottom: 1rpx solid currentColor;
+  padding-bottom: 2rpx;
+}
+
+/* --- 分割线 --- */
+.divider-box {
+  margin: 60rpx 0 40rpx;
+  text-align: center;
+  position: relative;
+}
+
+/* 使用伪元素做线条 */
+.divider-box::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 100%;
+  height: 1rpx;
+  background-color: #F0F0F0;
+  z-index: 0;
+}
+
+.divider-text {
+  background-color: var(--bg-color, #FDFCF8); /* 遮挡线条 */
+  padding: 0 20rpx;
+  position: relative;
+  z-index: 1;
+  color: #B2BEC3;
+  font-size: 20rpx;
+  letter-spacing: 2rpx;
+  display: inline-block;
+}
+
+/* --- 微信按钮 --- */
+.btn-wechat {
+  background-color: transparent;
+  color: var(--text-main, #2D3436);
+  border: 1rpx solid #E3E8EB;
+  border-radius: 999px;
+  height: 88rpx;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 60rpx 0 40rpx;
-}
-
-.divider .line {
-  width: 100rpx;
-  height: 1rpx;
-  background: #eee;
-}
-
-.divider text {
-  margin: 0 20rpx;
-  font-size: 24rpx;
-  color: #999;
-}
-
-.btn-wechat {
-  background-color: #07c160;
-  color: #fff;
-  border-radius: 44rpx;
-  height: 88rpx;
-  line-height: 88rpx;
-  font-size: 32rpx;
-  font-weight: bold;
-  width: 100%;
-  margin-top: 20rpx;
+  font-size: 28rpx;
+  font-weight: 500;
+  margin-top: 0; /* 重置 */
 }
 
 .btn-wechat:active {
-  opacity: 0.9;
+  background-color: #F5F5F3;
+}
+
+/* --- 底部 --- */
+.footer {
+  margin-top: auto; /* 沉底 */
+  text-align: center;
+  font-size: 22rpx;
+  color: #B2BEC3;
+  padding-bottom: 20rpx;
+}
+
+.protocol-link {
+  color: var(--text-main, #2D3436);
+  font-weight: 500;
 }

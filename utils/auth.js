@@ -78,7 +78,7 @@ export const logout = () => {
     // 如果有 Token，通知后端我退出了
     if (token) {
       wx.request({
-        url: `${config.apiBaseUrl || 'http://localhost:3002/api'}/logout`,
+        url: `${config.apiBaseUrl || 'http://192.168.126.112:3002/api'}/logout`,
         method: 'POST',
         header: {
           'Authorization': 'Bearer ' + token
@@ -111,7 +111,7 @@ export const login = (account, password) => {
   return new Promise((resolve, reject) => {
     // 发送请求给后端
     wx.request({
-      url: `${config.apiBaseUrl || 'http://localhost:3002/api'}/login`, // 确保地址正确
+      url: `${config.apiBaseUrl || 'http://192.168.126.112:3002/api'}/login`, // 确保地址正确
       method: 'POST',
       data: {
         account: account,

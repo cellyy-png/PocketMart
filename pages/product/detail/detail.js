@@ -10,7 +10,7 @@ Page({
     skuMode: 'cart',
     selectedSpecs: {},
     quantity: 1,
-    specText: '请选择规格'
+    specText: 'Select Specs' // 修改了默认文案
   },
 
   onLoad(options) {
@@ -90,7 +90,7 @@ Page({
   
   updateSpecText() {
     const values = Object.values(this.data.selectedSpecs).join(' ')
-    if(values) this.setData({ specText: `已选: ${values} x${this.data.quantity}` })
+    if(values) this.setData({ specText: `Selected: ${values} x${this.data.quantity}` })
   },
   
   async confirmSku() {
@@ -104,7 +104,7 @@ Page({
     }
     if (this.data.skuMode === 'cart') {
       await addToCart(item)
-      wx.showToast({ title: '已加入购物车' })
+      wx.showToast({ title: 'Added to Cart' })
       this.closeSku()
     } else {
       const productData = encodeURIComponent(JSON.stringify([item]))

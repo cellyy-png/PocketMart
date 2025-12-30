@@ -9,14 +9,38 @@ page {
     sans-serif;
   font-size: 28rpx;
   color: var(--text-main);
+  line-height: 1.6; 
+  letter-spacing: 0.5rpx; 
   box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .container {
   min-height: 100vh;
   box-sizing: border-box;
+  background-color: var(--bg-color);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  color: transparent;
 }
 
 image {
   max-width: 100%;
+  display: block;
+}
+
+/* 高级交互反馈 */
+.hover-opacity {
+  opacity: 0.7;
+  transition: opacity 0.2s var(--ease-out);
+}
+
+.hover-scale {
+  transform: scale(0.98);
+  transition: transform 0.1s var(--ease-out);
 }

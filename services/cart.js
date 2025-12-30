@@ -19,10 +19,11 @@ export const addToCart = (data) => {
 }
 
 /**
- * 删除购物车商品
- * 注意：为了匹配 mock-server，参数名最好统一为 ids
+ * 【修正处】删除购物车商品
+ * 之前叫 deleteCartItems (复数)，导致 payment.js 引用报错
+ * 现在改为 deleteCartItem (单数) 以匹配调用方
  */
-export const deleteCartItems = (ids) => {
+export const deleteCartItem = (ids) => {
   return request.post('/cart/delete', { ids })
 }
 
@@ -34,8 +35,7 @@ export const updateCartItem = (data) => {
 }
 
 /**
- * 【核心修复】计算运费
- * 之前报错就是因为缺了这个函数
+ * 计算运费
  */
 export const calculateShipping = (addressId, products) => {
   return new Promise((resolve) => {

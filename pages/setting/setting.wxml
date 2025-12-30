@@ -1,27 +1,46 @@
 <view class="container">
-  <view class="menu-list">
-    <view class="menu-item" bindtap="onAddress">
-      <view class="label">收货地址管理</view>
-      <view class="arrow">›</view>
+  <view class="page-header">
+    <text class="header-en">SETTINGS</text>
+    <text class="header-zh">系统设置</text>
+  </view>
+
+  <view class="setting-card">
+    <view class="menu-row" bindtap="onAddress">
+      <view class="row-left">
+        <text class="label">Address Management</text>
+        <text class="sub-label">收货地址管理</text>
+      </view>
+      <view class="css-arrow"></view>
     </view>
-    <view class="menu-item">
-      <view class="label">账号安全</view>
-      <view class="arrow">›</view>
+    
+    <view class="menu-row">
+      <view class="row-left">
+        <text class="label">Account Security</text>
+        <text class="sub-label">账号与安全</text>
+      </view>
+      <view class="css-arrow"></view>
     </view>
   </view>
 
-  <view class="menu-list">
-    <view class="menu-item" bindtap="onClearCache">
-      <view class="label">清除缓存</view>
-      <view class="value">{{cacheSize}}</view>
+  <view class="setting-card">
+    <view class="menu-row" bindtap="onClearCache">
+      <view class="row-left">
+        <text class="label">Clear Cache</text>
+        <text class="sub-label">清除缓存</text>
+      </view>
+      <text class="value-text">{{cacheSize}}</text>
     </view>
-    <view class="menu-item" bindtap="onAbout">
-      <view class="label">关于我们</view>
-      <view class="arrow">›</view>
+    
+    <view class="menu-row" bindtap="onAbout">
+      <view class="row-left">
+        <text class="label">About Us</text>
+        <text class="sub-label">关于我们</text>
+      </view>
+      <view class="css-arrow"></view>
     </view>
   </view>
 
-  <view class="footer-btn">
-    <button class="logout-btn" bindtap="onLogout">退出登录</button>
+  <view class="footer-area">
+    <button class="btn-logout" bindtap="onLogout">Log Out</button>
   </view>
 </view>

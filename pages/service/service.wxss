@@ -1,110 +1,191 @@
-/* pages/service/service.wxss */
+/* 引入变量 (假设您已经在app.wxss定义，这里做局部兜底) */
+page {
+  background-color: #FDFCF8; /* 米白底色 */
+  --primary: #6B7C85; /* 莫兰迪蓝灰 */
+  --text-main: #2D3436;
+  --text-light: #B2BEC3;
+}
+
 .container {
-    padding: 30rpx;
-    background-color: #f9f9f9;
-    min-height: 100vh;
-  }
-  
-  .header {
-    margin-bottom: 40rpx;
-    padding: 30rpx 0;
-  }
-  
-  .title {
-    font-size: 40rpx;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 10rpx;
-  }
-  
-  .subtitle {
-    font-size: 26rpx;
-    color: #999;
-  }
-  
-  .contact-grid {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 50rpx;
-  }
-  
-  .contact-item {
-    width: 48%;
-    background: #fff;
-    padding: 30rpx;
-    border-radius: 20rpx;
-    box-shadow: 0 4rpx 20rpx rgba(0,0,0,0.05);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    box-sizing: border-box;
-  }
-  
-  .contact-item:active {
-    transform: scale(0.98);
-  }
-  
-  /* 这里确保 icon 是文字大小，而不是图片 */
-  .icon {
-    font-size: 60rpx; 
-    margin-bottom: 20rpx;
-  }
-  
-  .label {
-    font-size: 30rpx;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 8rpx;
-  }
-  
-  .desc {
-    font-size: 24rpx;
-    color: #999;
-  }
-  
-  .faq-section {
-    background: #fff;
-    border-radius: 20rpx;
-    padding: 30rpx;
-  }
-  
-  .section-title {
-    font-size: 32rpx;
-    font-weight: bold;
-    margin-bottom: 30rpx;
-    border-left: 8rpx solid #ff6b6b;
-    padding-left: 20rpx;
-  }
-  
-  .faq-item {
-    border-bottom: 1rpx solid #eee;
-    padding: 30rpx 0;
-  }
-  
-  .faq-item:last-child {
-    border-bottom: none;
-  }
-  
-  .question {
-    display: flex;
-    justify-content: space-between;
-    font-size: 28rpx;
-    color: #333;
-    font-weight: 500;
-  }
-  
-  .arrow {
-    color: #ccc;
-    transition: transform 0.3s;
-  }
-  
-  .arrow.up {
-    transform: rotate(180deg);
-  }
-  
-  .answer {
-    margin-top: 20rpx;
-    font-size: 26rpx;
-    color: #666;
-    line-height: 1.6;
-  }
+  padding: 40rpx 30rpx;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+/* --- 头部设计 --- */
+.header-section {
+  margin-bottom: 60rpx;
+  padding-left: 10rpx;
+}
+
+.title-en {
+  font-size: 24rpx;
+  color: var(--primary);
+  letter-spacing: 4rpx;
+  font-weight: 600;
+  margin-bottom: 12rpx;
+}
+
+.title-zh {
+  font-size: 48rpx;
+  font-weight: 300; /* 细体显高级 */
+  color: var(--text-main);
+  margin-bottom: 16rpx;
+  letter-spacing: 2rpx;
+}
+
+.subtitle {
+  font-size: 26rpx;
+  color: var(--text-light);
+  font-family: serif; /* 衬线体装饰 */
+  font-style: italic;
+}
+
+/* --- 联系卡片 --- */
+.contact-grid {
+  display: flex;
+  flex-direction: column; /* 改为纵向排列，更像菜单 */
+  gap: 24rpx;
+  margin-bottom: 80rpx;
+}
+
+.contact-card {
+  background: #FFFFFF;
+  border-radius: 20rpx;
+  padding: 30rpx;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 8rpx 24rpx rgba(45, 52, 54, 0.04);
+  transition: transform 0.2s;
+}
+
+.hover-scale:active {
+  transform: scale(0.99);
+}
+
+.icon-box {
+  width: 88rpx;
+  height: 88rpx;
+  background: #F5F5F3;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 30rpx;
+}
+
+.icon-img {
+  width: 44rpx;
+  height: 44rpx;
+  opacity: 0.8;
+}
+
+.card-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: var(--text-main);
+  margin-bottom: 6rpx;
+}
+
+.card-sub {
+  font-size: 22rpx;
+  color: var(--text-light);
+}
+
+.arrow-right {
+  width: 16rpx;
+  height: 16rpx;
+  border-top: 2rpx solid #D1D8DB;
+  border-right: 2rpx solid #D1D8DB;
+  transform: rotate(45deg);
+}
+
+/* --- FAQ 列表 --- */
+.faq-section {
+  padding: 0 10rpx;
+}
+
+.section-header {
+  display: flex;
+  align-items: baseline;
+  margin-bottom: 40rpx;
+}
+
+.section-title {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: var(--text-main);
+  margin-right: 20rpx;
+  letter-spacing: 1rpx;
+}
+
+.section-desc {
+  font-size: 22rpx;
+  color: var(--text-light);
+}
+
+.faq-item {
+  border-bottom: 1rpx solid #F0F0F0;
+  padding: 30rpx 0;
+  transition: all 0.3s;
+}
+
+.question-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.q-text {
+  font-size: 28rpx;
+  color: #636E72;
+  font-weight: 500;
+}
+
+/* 加号/减号图标切换 */
+.toggle-icon {
+  width: 24rpx;
+  height: 24rpx;
+  position: relative;
+}
+
+.toggle-icon::before, .toggle-icon::after {
+  content: '';
+  position: absolute;
+  background-color: var(--primary);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: transform 0.3s;
+}
+
+.toggle-icon::before { width: 24rpx; height: 2rpx; } /* 横线 */
+.toggle-icon::after { width: 2rpx; height: 24rpx; } /* 竖线 */
+
+/* 展开状态样式 */
+.faq-item.active .toggle-icon::after {
+  transform: translate(-50%, -50%) rotate(90deg); /* 旋转竖线变横线，形成减号效果 */
+}
+
+.faq-item.active .q-text {
+  color: var(--text-main);
+  font-weight: 600;
+}
+
+.answer-box {
+  margin-top: 20rpx;
+  padding-left: 10rpx;
+  border-left: 4rpx solid #E3E8EB;
+}
+
+.a-text {
+  font-size: 26rpx;
+  color: #9DA6B0;
+  line-height: 1.6;
+}

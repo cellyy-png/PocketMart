@@ -38,7 +38,7 @@ Page({
     const token = wx.getStorageSync('token');
 
     wx.request({
-      url: 'http://localhost:3002/api/order/list',
+      url: 'http://192.168.126.112:3002/api/order/list',
       data: { status: this.data.activeTab }, 
       header: { 'Authorization': 'Bearer ' + token },
       success: (res) => {
@@ -91,7 +91,7 @@ Page({
 
           // 发起真实请求给后端
           wx.request({
-            url: 'http://localhost:3002/api/order/cancel',
+            url: 'http://192.168.126.112:3002/api/order/cancel',
             method: 'POST',
             data: { id: id },
             header: { 'Authorization': 'Bearer ' + token },
@@ -125,7 +125,7 @@ Page({
         if (res.confirm) {
           const token = wx.getStorageSync('token');
           wx.request({
-            url: 'http://localhost:3002/api/order/confirm',
+            url: 'http://192.168.126.112:3002/api/order/confirm',
             method: 'POST',
             data: { id: id },
             header: { 'Authorization': 'Bearer ' + token },
@@ -155,7 +155,7 @@ Page({
           const token = wx.getStorageSync('token');
 
           wx.request({
-            url: 'http://localhost:3002/api/order/refund', // 调用我们在 server.js 新增的接口
+            url: 'http://192.168.126.112:3002/api/order/refund', // 调用我们在 server.js 新增的接口
             method: 'POST',
             data: { id, type },
             header: { 'Authorization': 'Bearer ' + token },

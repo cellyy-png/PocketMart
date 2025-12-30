@@ -1,117 +1,119 @@
 <view class="container" wx:if="{{!loading && order}}">
   <view class="header-status">
-    <view class="status-text">{{order.statusDesc}}</view>
-    <view class="status-desc" wx:if="{{order.status == 0}}">请在 15:00 内完成支付，超时将自动取消</view>
-    <view class="status-desc" wx:elif="{{order.status == 2}}">商家已发货，请留意物流信息</view>
-    <view class="status-desc" wx:else>感谢您在 PocketMart 购物</view>
-  </view>
-
-  <view class="logistics-card" bindtap="onLogistics" wx:if="{{order.status >= 2}}">
-    <view class="logistics-icon">🚚</view>
-    <view class="logistics-info">
-      <view class="logistics-status">运输中</view>
-      <view class="logistics-newest">最新物流信息正在更新中...</view>
+    <view class="status-content">
+      <view class="status-main">{{order.statusDesc}}</view>
+      <view class="status-sub" wx:if="{{order.status == 0}}">Payment required by 15:00 to avoid cancellation</view>
+      <view class="status-sub" wx:elif="{{order.status == 2}}">Your order has been shipped</view>
+      <view class="status-sub" wx:else>Thank you for shopping with PocketMart</view>
     </view>
-    <view class="arrow">›</view>
   </view>
 
-  <view class="address-card">
-    <view class="location-icon">📍</view>
-    <view class="address-info">
-      <view class="user-row">
-        <text class="name">{{order.address.name}}</text>
-        <text class="phone">{{order.address.phone}}</text>
+  <view class="content-wrapper">
+    <view class="card-box logistics-card" bindtap="onLogistics" wx:if="{{order.status >= 2}}">
+      <view class="icon-truck"></view>
+      <view class="card-info">
+        <view class="logistics-status">In Transit</view>
+        <view class="logistics-desc">Latest tracking info updating...</view>
       </view>
-      <view class="address-text">{{order.address.fullAddress || (order.address.province + order.address.city + order.address.district + order.address.detail)}}</view>
+      <view class="arrow-right"></view>
     </view>
-  </view>
 
-  <view class="product-card">
-    <view class="card-header">
-      <text>PocketMart 自营</text>
+    <view class="card-box address-card">
+      <view class="icon-location"></view>
+      <view class="card-info">
+        <view class="user-info">
+          <text class="name">{{order.address.name}}</text>
+          <text class="phone">{{order.address.phone}}</text>
+        </view>
+        <view class="address-detail">{{order.address.fullAddress || (order.address.province + order.address.city + order.address.district + order.address.detail)}}</view>
+      </view>
     </view>
-    <view class="goods-item" wx:for="{{order.products}}" wx:key="id">
-      <image class="goods-img" src="{{item.image}}" mode="aspectFill"></image>
-      <view class="goods-info">
-        <view class="goods-name">{{item.name}}</view>
-        <view class="goods-spec">{{item.spec || '默认规格'}}</view>
-        <view class="goods-price-row">
-          <text class="price">¥{{item.price}}</text>
-          <text class="qty">x{{item.quantity}}</text>
+
+    <view class="card-box product-card">
+      <view class="card-title">ITEMS</view>
+      <view class="goods-list">
+        <view class="goods-item" wx:for="{{order.products}}" wx:key="id">
+          <image class="goods-img" src="{{item.image}}" mode="aspectFill"></image>
+          <view class="goods-content">
+            <view class="goods-name">{{item.name}}</view>
+            <view class="goods-spec">{{item.spec || 'Standard'}}</view>
+            <view class="goods-bottom">
+              <text class="price">¥{{item.price}}</text>
+              <text class="qty">x{{item.quantity}}</text>
+            </view>
+          </view>
         </view>
       </view>
     </view>
-  </view>
 
-  <view class="info-card">
-    <view class="info-row">
-      <text class="label">订单编号</text>
-      <view class="value-wrap">
-        <text class="value">{{order.id}}</text>
-        <text class="copy-btn" bindtap="onCopyNo" data-no="{{order.id}}">复制</text>
+    <view class="card-box info-card">
+      <view class="info-row">
+        <text class="label">Order ID</text>
+        <view class="val-group">
+          <text class="val">{{order.id}}</text>
+          <view class="btn-copy" bindtap="onCopyNo" data-no="{{order.id}}">COPY</view>
+        </view>
+      </view>
+      <view class="info-row">
+        <text class="label">Time</text>
+        <text class="val">{{order.createTime}}</text>
+      </view>
+      <view class="info-row">
+        <text class="label">Payment</text>
+        <text class="val">Online Payment</text>
+      </view>
+      <view class="info-row" wx:if="{{order.remark}}">
+        <text class="label">Note</text>
+        <text class="val">{{order.remark}}</text>
       </view>
     </view>
-    <view class="info-row">
-      <text class="label">下单时间</text>
-      <text class="value">{{order.createTime}}</text>
-    </view>
-    <view class="info-row">
-      <text class="label">支付方式</text>
-      <text class="value">在线支付</text>
-    </view>
-    <view class="info-row">
-      <text class="label">配送方式</text>
-      <text class="value">普通快递</text>
-    </view>
-    <view class="info-row" wx:if="{{order.remark}}">
-      <text class="label">订单备注</text>
-      <text class="value">{{order.remark}}</text>
-    </view>
-  </view>
 
-  <view class="info-card">
-    <view class="info-row">
-      <text class="label">商品总额</text>
-      <text class="value">¥{{order.productTotal || order.totalPrice}}</text>
-    </view>
-    <view class="info-row">
-      <text class="label">运费</text>
-      <text class="value">+¥10.00</text>
-    </view>
-    <view class="info-row">
-      <text class="label">优惠</text>
-      <text class="value red">-¥0.00</text>
-    </view>
-    <view class="info-row total-row">
-      <text class="label bold">实付款</text>
-      <text class="value price-large">¥{{order.totalPrice}}</text>
+    <view class="card-box price-card">
+      <view class="info-row">
+        <text class="label">Subtotal</text>
+        <text class="val">¥{{order.productTotal || order.totalPrice}}</text>
+      </view>
+      <view class="info-row">
+        <text class="label">Shipping</text>
+        <text class="val">+¥10.00</text>
+      </view>
+      <view class="info-row">
+        <text class="label">Discount</text>
+        <text class="val highlight">-¥0.00</text>
+      </view>
+      <view class="divider"></view>
+      <view class="total-row">
+        <text class="total-label">Total</text>
+        <text class="total-price">¥{{order.totalPrice}}</text>
+      </view>
     </view>
   </view>
   
-  <view class="footer-placeholder"></view>
+  <view class="footer-spacer"></view>
 
   <view class="footer-bar">
-    <view class="footer-btn contact" bindtap="onContact">联系客服</view>
+    <view class="btn-text" bindtap="onContact">Contact Support</view>
     
-    <block wx:if="{{order.status == 0}}">
-      <view class="footer-btn default" bindtap="onCancel">取消订单</view>
-      <view class="footer-btn primary" bindtap="onPay">立即支付</view>
-    </block>
+    <view class="action-group">
+      <block wx:if="{{order.status == 0}}">
+        <view class="btn-outline" bindtap="onCancel">Cancel</view>
+        <view class="btn-primary" bindtap="onPay">Pay Now</view>
+      </block>
 
-    <block wx:if="{{order.status == 1}}">
-      <view class="footer-btn default" bindtap="onRefund" data-type="refund_only">仅退款</view>
-    </block>
-    
-    <block wx:if="{{order.status == 2}}">
-      <view class="footer-btn default" bindtap="onLogistics">查看物流</view>
-      <view class="footer-btn default" bindtap="onRefund" data-type="return_refund">退货退款</view>
-      <view class="footer-btn primary" bindtap="onConfirm">确认收货</view>
-    </block>
-    
-    <block wx:if="{{order.status == 3 || order.status == 4 || order.status == 5}}">
-      <view class="footer-btn default" bindtap="onDelete">删除订单</view>
-    </block>
+      <block wx:if="{{order.status == 1}}">
+        <view class="btn-outline" bindtap="onRefund" data-type="refund_only">Refund</view>
+      </block>
+      
+      <block wx:if="{{order.status == 2}}">
+        <view class="btn-outline" bindtap="onLogistics">Track</view>
+        <view class="btn-primary" bindtap="onConfirm">Confirm</view>
+      </block>
+      
+      <block wx:if="{{order.status >= 3}}">
+        <view class="btn-outline" bindtap="onDelete">Delete</view>
+      </block>
+    </view>
   </view>
 </view>
 
-<loading wx:if="{{loading}}" text="加载订单详情..." />
+<loading wx:if="{{loading}}" text="Loading..." />

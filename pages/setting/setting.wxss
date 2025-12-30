@@ -1,53 +1,127 @@
+/* 引入变量 (兜底) */
+page {
+  background-color: #FDFCF8; /* 米白 */
+  --text-main: #2D3436;      /* 深灰 */
+  --text-sub: #B2BEC3;       /* 浅灰 */
+  --card-bg: #FFFFFF;
+  --danger: #C57878;         /* 莫兰迪红 */
+}
+
 .container {
   min-height: 100vh;
-  background: #f5f5f5;
-  padding-top: 20rpx;
+  padding: 40rpx 30rpx;
+  box-sizing: border-box;
 }
 
-.menu-list {
-  background: #fff;
-  margin-bottom: 20rpx;
+/* --- 页头 --- */
+.page-header {
+  margin-bottom: 60rpx;
+  padding-left: 10rpx;
+  display: flex;
+  flex-direction: column;
 }
 
-.menu-item {
+.header-en {
+  font-size: 24rpx;
+  font-weight: 600;
+  letter-spacing: 4rpx;
+  color: #6B7C85;
+  margin-bottom: 8rpx;
+}
+
+.header-zh {
+  font-size: 48rpx;
+  font-weight: 300;
+  color: var(--text-main);
+  letter-spacing: 2rpx;
+}
+
+/* --- 卡片容器 --- */
+.setting-card {
+  background: var(--card-bg);
+  border-radius: 24rpx;
+  padding: 10rpx 30rpx;
+  margin-bottom: 30rpx;
+  box-shadow: 0 8rpx 24rpx rgba(45, 52, 54, 0.04);
+}
+
+/* --- 菜单行 --- */
+.menu-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 32rpx 30rpx;
-  border-bottom: 1rpx solid #f5f5f5;
-  font-size: 30rpx;
-  color: #333;
+  padding: 36rpx 0;
+  border-bottom: 1rpx solid #F9F9F9;
+  transition: opacity 0.2s;
 }
 
-.menu-item:last-child {
+.menu-row:last-child {
   border-bottom: none;
 }
 
-.menu-item:active {
-  background: #fafafa;
+.menu-row:active {
+  opacity: 0.6;
 }
 
-.arrow {
-  color: #ccc;
-  font-size: 32rpx;
+.row-left {
+  display: flex;
+  flex-direction: column;
 }
 
-.value {
-  color: #999;
+.label {
+  font-size: 30rpx;
+  font-weight: 500;
+  color: var(--text-main);
+  margin-bottom: 4rpx;
+  font-family: -apple-system, sans-serif;
+}
+
+.sub-label {
+  font-size: 22rpx;
+  color: var(--text-sub);
+}
+
+.value-text {
+  font-size: 26rpx;
+  color: #6B7C85;
+  font-family: 'DIN Alternate', sans-serif;
+  font-weight: 600;
+}
+
+/* 纯CSS箭头 */
+.css-arrow {
+  width: 14rpx;
+  height: 14rpx;
+  border-top: 3rpx solid #D1D8DB;
+  border-right: 3rpx solid #D1D8DB;
+  transform: rotate(45deg);
+}
+
+/* --- 底部按钮 --- */
+.footer-area {
+  margin-top: 80rpx;
+  padding: 0 20rpx;
+}
+
+.btn-logout {
+  background: transparent;
+  color: var(--danger);
   font-size: 28rpx;
+  font-weight: 600;
+  border: 1rpx solid var(--danger);
+  border-radius: 999px;
+  height: 96rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: 2rpx;
+  transition: all 0.2s;
 }
 
-.footer-btn {
-  margin-top: 60rpx;
-  padding: 0 30rpx;
-}
+.btn-logout::after { border: none; }
 
-.logout-btn {
-  background: #fff;
-  color: #ff4d4f;
-  font-size: 32rpx;
-  border-radius: 8rpx;
-}
-.logout-btn::after {
-  border: none;
+.btn-logout:active {
+  background: var(--danger);
+  color: #fff;
+  opacity: 0.9;
 }

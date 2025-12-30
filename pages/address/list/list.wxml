@@ -1,30 +1,32 @@
 <view class="container">
   <view class="address-list" wx:if="{{addressList.length > 0}}">
-    <view class="address-item" wx:for="{{addressList}}" wx:key="id" bindtap="onAddressTap" data-item="{{item}}">
-      <view class="info-content">
-        <view class="user-row">
-          <text class="name">{{item.name}}</text>
-          <text class="phone">{{item.phone}}</text>
-          <text class="tag-default" wx:if="{{item.isDefault}}">默认</text>
+    <view class="address-card hover-scale" wx:for="{{addressList}}" wx:key="id" bindtap="onAddressTap" data-item="{{item}}">
+      <view class="card-left">
+        <view class="user-info">
+          <text class="user-name">{{item.name}}</text>
+          <text class="user-phone">{{item.phone}}</text>
+          <view class="tag-default" wx:if="{{item.isDefault}}">DEFAULT</view>
         </view>
-        <view class="address-text">{{item.province}} {{item.city}} {{item.district}} {{item.detail}}</view>
+        <view class="address-detail">{{item.province}} {{item.city}} {{item.district}} {{item.detail}}</view>
       </view>
       
-      <view class="edit-btn" catchtap="onEditTap" data-id="{{item.id}}">
-        <text class="edit-icon-text">编辑</text>
+      <view class="edit-action" catchtap="onEditTap" data-id="{{item.id}}">
+        <view class="icon-edit"></view>
       </view>
     </view>
   </view>
 
   <view class="empty-state" wx:else>
-   <image class="empty-img" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iI2NjYyI+PHBhdGggZD0iTTEyIDJDMTcuNTIgMiAyMiA2LjQ4IDIyIDEyQzIyIDE3LjUyIDE3LjUyIDIyIDEyIDIyQzYuNDggMjIgMiAxNy41MiAyIDEyQzIgNi40OCA2LjQ4IDIgMTIgMlpNMTEgN1YxM0gxM1Y3SDExWk0xMSAxNVYxN0gxM1YxNUgxMVoiLz48L3N2Zz4=" mode="aspectFit" style="width:120rpx;height:120rpx;margin-bottom:20rpx;opacity:0.6;"></image>
-    <text class="empty-text">暂无收货地址</text>
+    <view class="empty-box">
+      <view class="icon-location"></view>
+      <text class="empty-tips">No addresses yet</text>
+    </view>
   </view>
 
-  <view class="footer-safe-area">
-    <view class="btn-add-wrapper" bindtap="onAddTap">
-      <view class="plus-icon">+</view>
-      <text>新建收货地址</text>
+  <view class="footer-fixed">
+    <view class="btn-add" bindtap="onAddTap">
+      <text class="icon-plus">+</text>
+      <text>Add New Address</text>
     </view>
   </view>
 </view>

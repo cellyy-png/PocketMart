@@ -9,6 +9,7 @@ Page({
     wx.showModal({
       title: '提示',
       content: '确定要退出登录吗？',
+      confirmColor: '#C57878', // 适配莫兰迪红
       success: (res) => {
         if (res.confirm) {
           removeToken()
@@ -27,7 +28,7 @@ Page({
     setTimeout(() => {
       wx.hideLoading()
       this.setData({ cacheSize: '0KB' })
-      wx.showToast({ title: '清理完成' })
+      wx.showToast({ title: '清理完成', icon: 'none' })
     }, 1000)
   },
 
@@ -39,7 +40,8 @@ Page({
     wx.showModal({
       title: '关于 PocketMart',
       content: 'PocketMart 是一个演示用的微信小程序商城项目。\n版本号：v1.0.0',
-      showCancel: false
+      showCancel: false,
+      confirmColor: '#6B7C85' // 适配莫兰迪蓝
     })
   }
 })

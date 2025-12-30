@@ -8,17 +8,17 @@ Page({
     address: null,
     addressList: [],
     remark: '',
-    couponId: null, // 存储选中的优惠券ID
+    couponId: null, // Stores selected coupon ID
     pointsUsed: 0,
     
-    // 价格信息
+    // Price Info
     productTotal: 0,
     shippingFee: 0,
-    couponDiscount: 0, // 优惠券抵扣金额
+    couponDiscount: 0, // Coupon discount amount
     pointsDiscount: 0,
     totalPrice: 0,
     
-    // UI状态
+    // UI State
     loading: false,
     submitting: false
   },
@@ -28,12 +28,12 @@ Page({
     if (products) {
       try {
         const decodedProducts = JSON.parse(decodeURIComponent(products));
-        // 确保商品数据包含 cartId，这样后端才能准确删除
+        // Ensure product data includes cartId for backend deletion
         this.setData({
           products: decodedProducts
         })
       } catch (e) {
-        console.error('解析商品数据失败', e);
+        console.error('Failed to parse product data', e);
       }
       this.calculatePrice()
       this.loadAddress()
@@ -41,7 +41,7 @@ Page({
   },
 
   /**
-   * 加载地址
+   * Load Addresses
    */
   async loadAddress() {
     try {
@@ -57,12 +57,12 @@ Page({
         this.calculateShipping()
       }
     } catch (error) {
-      console.error('加载地址失败', error)
+      console.error('Failed to load addresses', error)
     }
   },
 
   /**
-   * 计算商品总价
+   * Calculate Product Total
    */
   calculatePrice() {
     const { products } = this.data
@@ -75,7 +75,7 @@ Page({
   },
 
   /**
-   * 计算运费
+   * Calculate Shipping Fee
    */
   async calculateShipping() {
     try {
@@ -86,26 +86,26 @@ Page({
       this.setData({ shippingFee })
       this.calculateTotal()
     } catch (error) {
-      console.error('计算运费失败', error)
+      console.error('Failed to calculate shipping', error)
     }
   },
 
   /**
-   * 计算总价 (核心计算逻辑)
+   * Calculate Grand Total
    */
   calculateTotal() {
     const { productTotal, shippingFee, couponDiscount, pointsDiscount } = this.data
-    // 总价 = 商品总价 + 运费 - 优惠券 - 积分
+    // Total = Product Total + Shipping - Coupon - Points
     const totalPrice = productTotal + shippingFee - couponDiscount - pointsDiscount
     
     this.setData({
-      // 确保金额不小于0
+      // Ensure total is not negative
       totalPrice: Math.max(totalPrice, 0).toFixed(2)
     })
   },
 
   /**
-   * 选择地址
+   * Select Address
    */
   onAddressSelect() {
     wx.navigateTo({
@@ -114,7 +114,7 @@ Page({
   },
 
   /**
-   * 新增地址
+   * Add New Address
    */
   onAddressAdd() {
     wx.navigateTo({
@@ -123,7 +123,7 @@ Page({
   },
 
   /**
-   * 备注输入
+   * Input Remark
    */
   onRemarkInput(e) {
     this.setData({
@@ -132,7 +132,7 @@ Page({
   },
 
   /**
-   * 选择优惠券
+   * Select Coupon
    */
   onCouponSelect() {
     wx.navigateTo({
@@ -141,15 +141,15 @@ Page({
   },
 
   /**
-   * 提交订单
+   * Submit Order
    */
   async onSubmit() {
-    // 1. 解构出 couponId
+    // 1. Destructure data
     const { address, products, remark, submitting, couponId } = this.data;
     
     if (submitting) return;
     if (!address) {
-      return wx.showToast({ title: '请选择收货地址', icon: 'none' });
+      return wx.showToast({ title: 'Please select an address', icon: 'none' });
     }
     
     this.setData({ submitting: true });
@@ -157,27 +157,23 @@ Page({
     try {
       const orderData = {
         address,
-        products, // 这里包含了 cartId
+        products, // Includes cartId
         remark,
-        // 2. 【关键修改】必须把 couponId 传给后端，否则后端无法核销优惠券！
+        // 2. Pass couponId to backend
         couponId: couponId || null 
       };
       
-      // 调用创建订单接口
-      // 此时后端会：
-      // 1. 创建订单
-      // 2. 删除购物车对应商品
-      // 3. 将对应的优惠券标记为已使用 (status=1)
+      // Call create order API
       const order = await createOrder(orderData);
       
-      // 成功后跳转到支付页
+      // Redirect to payment page on success
       wx.redirectTo({
         url: `/pages/payment/payment?orderId=${order.id}&amount=${order.totalPrice}`
       });
       
     } catch (error) {
-      console.error('创建订单失败', error);
-      wx.showToast({ title: '下单失败', icon: 'none' });
+      console.error('Create order failed', error);
+      wx.showToast({ title: 'Order Failed', icon: 'none' });
     } finally {
       this.setData({ submitting: false });
     }

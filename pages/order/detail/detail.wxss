@@ -1,142 +1,131 @@
+/* 引入变量 */
+page {
+  background-color: #F5F5F3;
+  --primary: #6B7C85; /* 莫兰迪蓝灰 */
+  --accent: #C58F78;  /* 陶土色 */
+  --text-main: #2D3436;
+  --text-light: #B2BEC3;
+}
+
 .container {
   min-height: 100vh;
-  background: #f5f5f5;
   padding-bottom: env(safe-area-inset-bottom);
 }
 
-/* 头部状态 */
+/* --- 头部状态 --- */
 .header-status {
-  background: linear-gradient(135deg, #ff6b6b, #ff4757);
-  padding: 40rpx 40rpx 80rpx;
+  background-color: var(--primary);
+  padding: 60rpx 40rpx 120rpx; /* 底部预留给悬浮卡片 */
   color: #fff;
 }
 
-.status-text {
+.status-main {
   font-size: 40rpx;
-  font-weight: bold;
+  font-weight: 600;
   margin-bottom: 12rpx;
+  letter-spacing: 1rpx;
 }
 
-.status-desc {
-  font-size: 26rpx;
-  opacity: 0.9;
+.status-sub {
+  font-size: 24rpx;
+  opacity: 0.8;
+  font-weight: 300;
 }
 
-/* 通用卡片 */
-.address-card, .product-card, .info-card, .logistics-card {
-  background: #fff;
-  border-radius: 16rpx;
-  margin: 20rpx;
-  padding: 24rpx;
+/* --- 内容区悬浮 --- */
+.content-wrapper {
+  padding: 0 24rpx;
+  margin-top: -80rpx; /* 核心：层叠效果 */
 }
 
-.address-card, .logistics-card {
-  margin-top: -40rpx; /* 向上浮动覆盖头部 */
+.card-box {
+  background: #FFFFFF;
+  border-radius: 20rpx;
+  padding: 36rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 0 8rpx 24rpx rgba(45, 52, 54, 0.04);
+}
+
+/* --- 物流与地址卡片 --- */
+.logistics-card, .address-card {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
 }
 
-.logistics-card {
-  margin-bottom: 0; /* 如果有物流卡片，地址卡片就不上浮了，这里简单处理 */
-}
-.header-status + .logistics-card + .address-card {
-  margin-top: 20rpx;
-}
-
-/* 物流卡片 */
-.logistics-icon {
-  width: 60rpx;
-  height: 60rpx;
-  background: #e6f7ff;
+/* 纯CSS图标 */
+.icon-truck, .icon-location {
+  width: 40rpx;
+  height: 40rpx;
+  margin-right: 24rpx;
+  margin-top: 6rpx;
+  background-color: #F0F2F5;
   border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 32rpx;
-  margin-right: 20rpx;
 }
+/* 这里可以用伪元素画简单的图形，或者直接用背景图 */
+.icon-truck { border: 2rpx solid var(--primary); } 
+.icon-location { border: 2rpx solid var(--accent); }
 
-.logistics-info {
-  flex: 1;
-}
+.card-info { flex: 1; }
 
 .logistics-status {
+  color: var(--primary);
+  font-weight: 600;
   font-size: 28rpx;
-  color: #1890ff;
-  margin-bottom: 6rpx;
-  font-weight: bold;
-}
-
-.logistics-newest {
-  font-size: 24rpx;
-  color: #999;
-}
-
-/* 地址卡片 */
-.location-icon {
-  width: 60rpx;
-  height: 60rpx;
-  background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 32rpx;
-  margin-right: 20rpx;
-  color: #fff;
-}
-
-.address-info {
-  flex: 1;
-}
-
-.user-row {
   margin-bottom: 8rpx;
+}
+
+.logistics-desc {
+  color: var(--text-light);
+  font-size: 24rpx;
+}
+
+.user-info {
+  margin-bottom: 8rpx;
+}
+
+.name {
   font-size: 30rpx;
-  font-weight: bold;
-  color: #333;
+  font-weight: 600;
+  margin-right: 20rpx;
+  color: var(--text-main);
 }
 
-.user-row .phone {
-  margin-left: 20rpx;
-  font-size: 26rpx;
-  color: #666;
-  font-weight: normal;
-}
-
-.address-text {
-  font-size: 26rpx;
-  color: #666;
-  line-height: 1.4;
-}
-
-/* 商品列表 */
-.card-header {
+.phone {
   font-size: 28rpx;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 24rpx;
-  padding-bottom: 16rpx;
-  border-bottom: 1rpx solid #f5f5f5;
+  color: #636E72;
+  font-family: 'DIN Alternate', sans-serif;
+}
+
+.address-detail {
+  font-size: 26rpx;
+  color: #636E72;
+  line-height: 1.5;
+}
+
+/* --- 商品卡片 --- */
+.card-title {
+  font-size: 24rpx;
+  color: var(--text-light);
+  font-weight: 600;
+  letter-spacing: 2rpx;
+  margin-bottom: 30rpx;
 }
 
 .goods-item {
   display: flex;
-  margin-bottom: 24rpx;
+  margin-bottom: 30rpx;
 }
-.goods-item:last-child {
-  margin-bottom: 0;
-}
+.goods-item:last-child { margin-bottom: 0; }
 
 .goods-img {
   width: 140rpx;
   height: 140rpx;
-  border-radius: 8rpx;
-  background: #f5f5f5;
-  margin-right: 20rpx;
+  border-radius: 12rpx;
+  background: #F9F9F9;
+  margin-right: 24rpx;
 }
 
-.goods-info {
+.goods-content {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -145,135 +134,134 @@
 
 .goods-name {
   font-size: 28rpx;
-  color: #333;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
+  color: var(--text-main);
+  line-height: 1.4;
 }
 
 .goods-spec {
-  font-size: 24rpx;
-  color: #999;
+  font-size: 22rpx;
+  color: var(--text-light);
 }
 
-.goods-price-row {
+.goods-bottom {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-end;
 }
 
-.goods-price-row .price {
-  font-size: 30rpx;
-  font-weight: bold;
-  color: #333;
+.price {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: var(--text-main);
+  font-family: 'DIN Alternate', sans-serif;
 }
 
-.goods-price-row .qty {
+.qty {
   font-size: 26rpx;
-  color: #999;
+  color: var(--text-light);
 }
 
-/* 信息卡片 */
+/* --- 信息行 --- */
 .info-row {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  font-size: 26rpx;
   margin-bottom: 20rpx;
+  font-size: 26rpx;
 }
-.info-row:last-child {
-  margin-bottom: 0;
-}
+.info-row:last-child { margin-bottom: 0; }
 
-.label {
-  color: #666;
-}
+.label { color: #9DA6B0; }
+.val { color: var(--text-main); }
+.val.highlight { color: var(--accent); }
 
-.value {
-  color: #333;
-}
+.val-group { display: flex; align-items: center; }
 
-.value-wrap {
-  display: flex;
-  align-items: center;
-}
-
-.copy-btn {
-  font-size: 20rpx;
-  color: #666;
-  border: 1rpx solid #ddd;
-  padding: 2rpx 10rpx;
+.btn-copy {
+  font-size: 18rpx;
+  border: 1rpx solid #E0E0E0;
+  padding: 2rpx 8rpx;
+  margin-left: 12rpx;
   border-radius: 4rpx;
-  margin-left: 10rpx;
+  color: #9DA6B0;
 }
 
-.value.red {
-  color: #ff6b6b;
+.divider {
+  height: 1rpx;
+  background: #F0F0F0;
+  margin: 24rpx 0;
 }
 
 .total-row {
-  border-top: 1rpx solid #f9f9f9;
-  padding-top: 20rpx;
-  margin-top: 20rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.label.bold {
-  font-weight: bold;
-  font-size: 28rpx;
-  color: #333;
+.total-label {
+  font-weight: 600;
+  font-size: 30rpx;
 }
 
-.value.price-large {
-  font-size: 36rpx;
-  font-weight: bold;
-  color: #ff6b6b;
+.total-price {
+  font-size: 40rpx;
+  font-weight: 600;
+  color: var(--accent);
+  font-family: 'DIN Alternate', sans-serif;
 }
 
-/* 底部栏 */
-.footer-placeholder {
-  height: 120rpx;
-}
+/* --- 底部栏 --- */
+.footer-spacer { height: 140rpx; }
 
 .footer-bar {
   position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: #fff;
-  padding: 20rpx 30rpx;
-  padding-bottom: calc(20rpx + env(safe-area-inset-bottom));
-  box-shadow: 0 -2rpx 10rpx rgba(0,0,0,0.05);
+  bottom: 0; left: 0; right: 0;
+  background: #FFFFFF;
+  padding: 20rpx 40rpx calc(20rpx + env(safe-area-inset-bottom));
   display: flex;
-  justify-content: flex-end;
-  gap: 20rpx;
-  z-index: 100;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 -4rpx 20rpx rgba(0,0,0,0.03);
+  z-index: 99;
 }
 
-.footer-btn {
-  height: 64rpx;
-  padding: 0 32rpx;
-  border-radius: 32rpx;
+.btn-text {
+  font-size: 24rpx;
+  color: #9DA6B0;
+  text-decoration: underline;
+}
+
+.action-group {
+  display: flex;
+  gap: 20rpx;
+}
+
+.btn-outline, .btn-primary {
+  height: 72rpx;
+  padding: 0 40rpx;
+  border-radius: 999px;
   font-size: 26rpx;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-weight: 500;
 }
 
-.footer-btn.contact {
-  margin-right: auto; /* 靠左 */
-  color: #666;
-  padding: 0;
+.btn-outline {
+  border: 2rpx solid #E0E0E0;
+  color: var(--text-main);
+  background: transparent;
 }
 
-.footer-btn.default {
-  border: 1rpx solid #ddd;
-  color: #666;
-}
-
-.footer-btn.primary {
-  background: #ff6b6b;
+.btn-primary {
+  background: var(--text-main); /* 莫兰迪风格常用深灰代替大红 */
   color: #fff;
-  border: 1rpx solid #ff6b6b;
+  border: 2rpx solid var(--text-main);
+  box-shadow: 0 8rpx 16rpx rgba(45, 52, 54, 0.15);
+}
+
+.arrow-right {
+  width: 14rpx; height: 14rpx;
+  border-top: 2rpx solid #D1D8DB;
+  border-right: 2rpx solid #D1D8DB;
+  transform: rotate(45deg);
 }

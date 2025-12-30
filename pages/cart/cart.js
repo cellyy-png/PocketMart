@@ -20,7 +20,7 @@ Page({
         return;
       }
       wx.request({
-        url: 'http://localhost:3002/api/cart/list',
+        url: 'http://192.168.126.112:3002/api/cart/list',
         header: { 'Authorization': 'Bearer ' + token },
         success: (res) => {
           if (res.data.code === 0) {

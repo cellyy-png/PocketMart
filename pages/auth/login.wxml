@@ -1,69 +1,73 @@
 <view class="container">
   <view class="header">
-    <image class="logo" src="/assets/images/icons/home-active.png" mode="aspectFit"></image>
-    <view class="title">{{isRegister ? '欢迎注册' : '欢迎回来'}}</view>
-    <view class="sub-title">{{isRegister ? '注册账号以体验更多功能' : '登录账号以同步您的订单和资产'}}</view>
+    <view class="brand-en">PocketMart</view>
+    <view class="title-wrapper">
+      <text class="title-en">{{isRegister ? 'JOIN US' : 'WELCOME'}}</text>
+      <text class="title-zh">{{isRegister ? '注册新账号' : '登录您的账号'}}</text>
+    </view>
   </view>
 
   <view class="form-section">
-    <view class="input-group">
-      <view class="input-icon">👤</view>
+    <view class="input-item">
+      <text class="input-label">ACCOUNT</text>
       <input 
-        class="input" 
+        class="input-field" 
         placeholder="请输入账号/手机号" 
+        placeholder-class="input-placeholder"
         model:value="{{account}}" 
         maxlength="20"
       />
     </view>
 
-    <view class="input-group">
-      <view class="input-icon">🔒</view>
+    <view class="input-item">
+      <text class="input-label">PASSWORD</text>
       <input 
-        class="input" 
+        class="input-field" 
         placeholder="请输入密码" 
+        placeholder-class="input-placeholder"
         password 
         model:value="{{password}}" 
         maxlength="20"
       />
     </view>
 
-    <view class="input-group" wx:if="{{isRegister}}">
-      <view class="input-icon">🔐</view>
+    <view class="input-item" wx:if="{{isRegister}}">
+      <text class="input-label">CONFIRM</text>
       <input 
-        class="input" 
+        class="input-field" 
         placeholder="请再次确认密码" 
+        placeholder-class="input-placeholder"
         password 
         model:value="{{confirmPassword}}" 
         maxlength="20"
       />
     </view>
 
-    <button class="btn-primary" bindtap="onSubmit" loading="{{loading}}">
-      {{isRegister ? '立即注册' : '登 录'}}
+    <button class="btn-main" bindtap="onSubmit" loading="{{loading}}">
+      <text>{{isRegister ? 'Sign Up' : 'Log In'}}</text>
+      <view class="btn-arrow"></view>
     </button>
 
-    <view class="switch-mode" bindtap="toggleMode">
-      <text>{{isRegister ? '已有账号？' : '没有账号？'}}</text>
-      <text class="link">{{isRegister ? '去登录' : '去注册'}}</text>
+    <view class="switch-row" bindtap="toggleMode">
+      <text class="switch-text">{{isRegister ? 'Already have an account?' : 'New to PocketMart?'}}</text>
+      <text class="switch-link">{{isRegister ? 'Login' : 'Register'}}</text>
     </view>
 
-    <view class="divider" wx:if="{{!isRegister}}">
-      <view class="line"></view>
-      <text>其他登录方式</text>
-      <view class="line"></view>
-    </view>
+    <block wx:if="{{!isRegister}}">
+      <view class="divider-box">
+        <view class="divider-text">OR</view>
+      </view>
 
-    <button 
-      class="btn-wechat" 
-      wx:if="{{!isRegister}}"
-      bindtap="onWechatLogin"
-    >
-      微信一键登录
-    </button>
-
+      <button class="btn-wechat" bindtap="onWechatLogin">
+        <text>WeChat Login</text>
+      </button>
+    </block>
   </view>
 
   <view class="footer">
-    登录即代表同意 <text class="link">用户协议</text> 和 <text class="link">隐私政策</text>
+    <text>登录即代表同意</text>
+    <text class="protocol-link">《用户协议》</text>
+    <text>和</text>
+    <text class="protocol-link">《隐私政策》</text>
   </view>
 </view>

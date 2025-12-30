@@ -5,51 +5,63 @@ Page({
   data: {
     keyword: '',
     searchHistory: [],
-    hotKeywords: ['手机', '电脑', '耳机', '数码', '家电'],
+    hotKeywords: ['Lamp', 'Chair', 'Vase', 'Ceramic', 'Sofa'],
     products: [],
     page: 1,
     pageSize: 20,
     hasMore: true,
     loading: false,
-    showResult: false
+    showResult: false,
+    
+    // 【新增】导航栏适配数据
+    navTop: 44,       // 搜索栏顶部距离
+    navHeight: 32,    // 搜索框高度
+    navRight: 0       // 右侧留白（避开胶囊）
   },
 
   onLoad() {
+    this.calcNavBar() // 计算导航栏位置
     this.loadSearchHistory()
   },
 
   /**
-   * 加载搜索历史
+   * 【核心修复】精准计算胶囊按钮位置
    */
+  calcNavBar() {
+    // 获取胶囊按钮（右上角...）的布局信息
+    const menu = wx.getMenuButtonBoundingClientRect()
+    // 获取系统信息
+    const system = wx.getSystemInfoSync()
+    
+    // 计算右侧需要留出的宽度 = (屏幕宽度 - 胶囊左边界) + 额外一点间隙
+    const rightMargin = system.screenWidth - menu.left + 8
+    
+    this.setData({
+      navTop: menu.top,      // 搜索栏直接对齐胶囊顶部
+      navHeight: menu.height, // 搜索栏高度与胶囊一致
+      navRight: rightMargin   // 右侧留白，防止取消按钮撞到胶囊
+    })
+  },
+
   loadSearchHistory() {
     const history = Storage.get('searchHistory', [])
     this.setData({ searchHistory: history.slice(0, 10) })
   },
 
-  /**
-   * 保存搜索历史
-   */
   saveSearchHistory(keyword) {
     let history = Storage.get('searchHistory', [])
-    
-    // 去重并添加到最前面
     history = history.filter(item => item !== keyword)
     history.unshift(keyword)
-    
-    // 只保留最近10条
     history = history.slice(0, 10)
-    
     Storage.set('searchHistory', history)
     this.setData({ searchHistory: history })
   },
 
-  /**
-   * 清空搜索历史
-   */
   onClearHistory() {
     wx.showModal({
-      title: '提示',
-      content: '确定要清空搜索历史吗？',
+      title: 'Clear History',
+      content: 'Are you sure?',
+      confirmColor: '#C58F78',
       success: (res) => {
         if (res.confirm) {
           Storage.remove('searchHistory')
@@ -59,48 +71,29 @@ Page({
     })
   },
 
-  /**
-   * 清空关键词
-   */
   onClearKeyword() {
-    this.setData({
-      keyword: ''
-    })
+    this.setData({ keyword: '', showResult: false })
   },
 
-  /**
-   * 搜索输入
-   */
   onSearchInput(e) {
-    this.setData({
-      keyword: e.detail.value
-    })
+    this.setData({ keyword: e.detail.value })
   },
 
-  /**
-   * 执行搜索
-   */
   async onSearch(e) {
     let keyword = this.data.keyword
     
-    // 从历史或热词点击
     if (e && e.currentTarget && e.currentTarget.dataset.keyword) {
       keyword = e.currentTarget.dataset.keyword
       this.setData({ keyword })
     }
     
     if (!keyword.trim()) {
-      wx.showToast({
-        title: '请输入搜索关键词',
-        icon: 'none'
-      })
+      wx.showToast({ title: 'Please enter keyword', icon: 'none' })
       return
     }
     
-    // 保存搜索历史
     this.saveSearchHistory(keyword)
     
-    // 重置状态
     this.setData({
       page: 1,
       hasMore: true,
@@ -108,13 +101,9 @@ Page({
       showResult: true
     })
     
-    // 执行搜索
     await this.loadProducts()
   },
 
-  /**
-   * 加载商品
-   */
   async loadProducts() {
     if (this.data.loading) return
     
@@ -123,14 +112,7 @@ Page({
     try {
       const { keyword, page, pageSize, products } = this.data
       
-      console.log('执行搜索，关键词:', keyword) // 添加调试日志
-      
-      const res = await searchProducts(keyword, {
-        page,
-        pageSize
-      })
-      
-      console.log('搜索结果:', res) // 添加调试日志
+      const res = await searchProducts(keyword, { page, pageSize })
       
       const newProducts = page === 1 ? res.list : [...products, ...res.list]
       
@@ -139,46 +121,25 @@ Page({
         hasMore: res.hasMore
       })
       
-      // 如果没有搜索到商品，给出提示
-      if (page === 1 && newProducts.length === 0) {
-        wx.showToast({
-          title: '未找到相关商品',
-          icon: 'none'
-        })
-      }
     } catch (error) {
-      console.error('搜索失败', error)
-      wx.showToast({
-        title: '搜索失败，请重试',
-        icon: 'none'
-      })
+      console.error(error)
+      wx.showToast({ title: 'Search failed', icon: 'none' })
     } finally {
       this.setData({ loading: false })
     }
   },
 
-  /**
-   * 取消搜索
-   */
   onCancel() {
     wx.navigateBack()
   },
 
-  /**
-   * 触底加载
-   */
   async onReachBottom() {
     if (!this.data.hasMore || this.data.loading || !this.data.showResult) return
     
-    this.setData({
-      page: this.data.page + 1
-    })
+    this.setData({ page: this.data.page + 1 })
     await this.loadProducts()
   },
 
-  /**
-   * 商品点击
-   */
   onProductTap(e) {
     const { id } = e.currentTarget.dataset
     wx.navigateTo({

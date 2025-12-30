@@ -1,49 +1,55 @@
 <view class="container">
-  <!-- 顶部搜索 -->
-  <view class="search-header">
-    <view class="search-bar" bindtap="onSearchTap">
-      <icon type="search" size="16" color="#999"></icon>
-      <text class="placeholder">搜索商品名称</text>
+  <view class="glass-header">
+    <view class="search-box" bindtap="onSearchTap">
+      <icon type="search" size="14" color="#6B7C85"/>
+      <text class="placeholder">Search specifically...</text>
     </view>
   </view>
 
-  <!-- 轮播图 -->
-  <swiper class="banner-swiper" indicator-dots autoplay circular indicator-active-color="#fff">
-    <swiper-item wx:for="{{banners}}" wx:key="id">
-      <image src="{{item.image}}" mode="aspectFill" class="banner-img" />
-    </swiper-item>
-  </swiper>
+  <view class="header-spacer"></view>
 
-  <!-- 快捷导航 -->
-  <view class="nav-grid">
+  <view class="banner-wrapper">
+    <swiper class="banner-swiper" indicator-dots="{{true}}" autoplay="{{true}}" circular="{{true}}" indicator-color="rgba(255,255,255,0.4)" indicator-active-color="#FFFFFF">
+      <swiper-item wx:for="{{banners}}" wx:key="id" class="banner-item">
+        <image src="{{item.image}}" mode="aspectFill" class="banner-img" />
+      </swiper-item>
+    </swiper>
+  </view>
+
+  <view class="nav-section">
     <view class="nav-item" wx:for="{{navs}}" wx:key="id" bindtap="onNavTap" data-id="{{item.id}}">
-      <view class="nav-icon-bg">
+      <view class="nav-icon-box shadow-blur">
         <text class="nav-icon-text">{{item.name[0]}}</text>
       </view>
       <text class="nav-text">{{item.name}}</text>
     </view>
   </view>
 
-  <!-- 推荐商品 -->
-  <view class="section-title">
-    <text class="title">猜你喜欢</text>
+  <view class="section-header">
+    <text class="en-title">Selected</text>
+    <text class="zh-title">猜你喜欢</text>
   </view>
 
-  <view class="product-list">
-    <!-- 这里直接手动渲染简单的商品卡片结构，或者使用组件 -->
-    <view class="product-item" wx:for="{{productList}}" wx:key="id" bindtap="onProductTap" data-id="{{item.id}}">
-      <image class="p-img" src="{{item.image}}" mode="aspectFill"></image>
+  <view class="product-grid">
+    <view class="product-card" wx:for="{{productList}}" wx:key="id" bindtap="onProductTap" data-id="{{item.id}}">
+      <view class="image-wrapper">
+        <image class="p-img" src="{{item.image}}" mode="aspectFill" lazy-load></image>
+      </view>
       <view class="p-info">
         <view class="p-name">{{item.name}}</view>
-        <view class="p-price-row">
-          <text class="price-symbol">¥</text>
-          <text class="price-num">{{item.price}}</text>
-          <text class="sales">已售{{item.sales}}</text>
+        <view class="p-meta">
+          <view class="price-group">
+            <text class="symbol">¥</text>
+            <text class="num">{{item.price}}</text>
+          </view>
+          <text class="sales-tag" wx:if="{{item.sales}}">{{item.sales}} sold</text>
         </view>
       </view>
     </view>
   </view>
 
-  <loading wx:if="{{loading}}" text="加载中..." />
-  <view class="no-more" wx:if="{{!loading && !hasMore}}">到底啦 ~</view>
+  <view class="loading-state">
+    <loading wx:if="{{loading}}" text="Loading..." />
+    <view class="no-more" wx:if="{{!loading && !hasMore}}">- End -</view>
+  </view>
 </view>

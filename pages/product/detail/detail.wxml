@@ -1,108 +1,129 @@
 <view class="container" wx:if="{{!loading}}">
-  <swiper class="gallery" indicator-dots autoplay circular>
+  <swiper class="gallery" indicator-dots="{{true}}" indicator-color="rgba(255,255,255,0.4)" indicator-active-color="#ffffff" autoplay circular>
     <swiper-item wx:for="{{product.images}}" wx:key="*this">
       <image src="{{item}}" mode="aspectFill" class="gallery-img" />
     </swiper-item>
   </swiper>
 
-  <view class="info-card">
-    <view class="price-row">
-      <text class="symbol">¥</text>
-      <text class="price">{{product.price}}</text>
-      <text class="original">¥{{product.originalPrice}}</text>
+  <view class="main-card">
+    <view class="price-header">
+      <view class="price-group">
+        <text class="symbol">¥</text>
+        <text class="amount">{{product.price}}</text>
+      </view>
+      <text class="original-price" wx:if="{{product.originalPrice}}">¥{{product.originalPrice}}</text>
     </view>
+    
     <view class="title">{{product.name}}</view>
     <view class="desc">{{product.desc}}</view>
   </view>
 
   <view class="cell-group" bindtap="openSku" data-mode="cart">
-    <view class="cell">
-      <text class="label">选择</text>
+    <view class="cell-row">
+      <text class="label">SPECS</text>
       <text class="value">{{specText}}</text>
-      <text class="arrow">›</text>
+      <view class="arrow-right"></view>
     </view>
   </view>
 
-  <view class="comment-card" bindtap="goToComments" wx:if="{{product.reviews && product.reviews.length > 0}}">
+  <view class="comment-section" bindtap="goToComments" wx:if="{{product.reviews && product.reviews.length > 0}}">
     <view class="section-header">
-      <text class="section-title-text">买家评价 ({{product.reviews.length}})</text>
-      <text class="more-text">查看全部 ></text>
+      <text class="section-title">REVIEWS ({{product.reviews.length}})</text>
+      <view class="more-link">View All</view>
     </view>
     
-    <view class="comment-preview-list">
+    <view class="comment-list">
       <block wx:for="{{product.reviews}}" wx:key="id" wx:if="{{index < 2}}">
-        <view class="comment-preview-item">
-          <image class="cp-avatar" src="{{item.userAvatar}}" mode="aspectFill"></image>
-          <view class="cp-right">
-            <view class="cp-top">
-              <text class="cp-name">{{item.userName}}</text>
-              <view class="cp-stars">
-                <text wx:for="{{item.score}}" wx:key="*this">★</text>
+        <view class="comment-item">
+          <image class="avatar" src="{{item.userAvatar}}" mode="aspectFill"></image>
+          <view class="comment-body">
+            <view class="user-row">
+              <text class="username">{{item.userName}}</text>
+              <view class="rating">
+                <text class="star" wx:for="{{item.score}}" wx:key="*this">★</text>
               </view>
             </view>
-            <view class="cp-content">{{item.content}}</view>
+            <view class="content-text">{{item.content}}</view>
           </view>
         </view>
       </block>
     </view>
   </view>
 
-  <view class="detail-content">
-    <view class="section-title">商品详情</view>
-    <rich-text nodes="{{product.detailHtml}}"></rich-text>
+  <view class="detail-container">
+    <view class="detail-header">DETAILS</view>
+    <rich-text nodes="{{product.detailHtml}}" class="rich-content"></rich-text>
   </view>
+
+  <view class="footer-spacer"></view>
 
   <view class="footer-bar">
-    <view class="icons">
+    <view class="action-icons">
       <view class="icon-btn" bindtap="toHome">
-        <image src="/assets/images/icons/home.png" />
-        <text>首页</text>
+        <view class="icon-home"></view>
+        <text>Home</text>
       </view>
       <view class="icon-btn" bindtap="toChat">
-        <image src="/assets/images/icons/user.png" />
-        <text>客服</text>
+        <view class="icon-chat"></view>
+        <text>Chat</text>
       </view>
       <view class="icon-btn" bindtap="toCart">
-        <image src="/assets/images/icons/cart.png" />
-        <text>购物车</text>
+        <view class="icon-cart"></view>
+        <text>Cart</text>
       </view>
     </view>
-    <view class="btns">
-      <view class="btn yellow" bindtap="openSku" data-mode="cart">加入购物车</view>
-      <view class="btn red" bindtap="openSku" data-mode="buy">立即购买</view>
+    
+    <view class="action-btns">
+      <view class="btn-cart" bindtap="openSku" data-mode="cart">Add to Cart</view>
+      <view class="btn-buy" bindtap="openSku" data-mode="buy">Buy Now</view>
     </view>
   </view>
 
-  <view class="sku-modal {{showSku ? 'show' : ''}}">
+  <view class="sku-modal {{showSku ? 'visible' : ''}}">
     <view class="mask" bindtap="closeSku"></view>
-    <view class="content">
-      <view class="sku-header">
-        <image src="{{product.image}}" mode="aspectFill"></image>
-        <view class="sku-info">
+    <view class="modal-content">
+      <view class="modal-header">
+        <image class="sku-thumb" src="{{product.image}}" mode="aspectFill"></image>
+        <view class="sku-meta">
           <view class="sku-price">¥{{product.price}}</view>
-          <view class="sku-selected">已选: {{quantity}}件</view>
+          <view class="sku-selected">Selected: {{quantity}} items</view>
         </view>
-        <view class="close" bindtap="closeSku">×</view>
+        <view class="btn-close" bindtap="closeSku">×</view>
       </view>
-      <scroll-view scroll-y class="sku-body">
-        <view class="spec-group" wx:for="{{product.specs}}" wx:key="name">
-          <view class="spec-title">{{item.name}}</view>
-          <view class="spec-list">
-            <view class="spec-item {{selectedSpecs[item.name] == subItem ? 'active' : ''}}" wx:for="{{item.list}}" wx:key="*this" wx:for-item="subItem" bindtap="selectSpec" data-key="{{item.name}}" data-value="{{subItem}}">{{subItem}}</view>
+      
+      <scroll-view scroll-y class="modal-body">
+        <view class="spec-section" wx:for="{{product.specs}}" wx:key="name">
+          <view class="spec-name">{{item.name}}</view>
+          <view class="spec-options">
+            <view 
+              class="option-tag {{selectedSpecs[item.name] == subItem ? 'active' : ''}}" 
+              wx:for="{{item.list}}" 
+              wx:key="*this" 
+              wx:for-item="subItem" 
+              bindtap="selectSpec" 
+              data-key="{{item.name}}" 
+              data-value="{{subItem}}"
+            >
+              {{subItem}}
+            </view>
           </view>
         </view>
-        <view class="qty-row">
-          <text>购买数量</text>
-          <view class="stepper">
-            <view class="minus {{quantity<=1?'disabled':''}}" bindtap="onQtyChange" data-type="minus">-</view>
-            <view class="num">{{quantity}}</view>
-            <view class="plus" bindtap="onQtyChange" data-type="plus">+</view>
+        
+        <view class="qty-section">
+          <text class="qty-label">Quantity</text>
+          <view class="stepper-box">
+            <view class="step-btn {{quantity<=1?'disabled':''}}" bindtap="onQtyChange" data-type="minus">-</view>
+            <view class="step-num">{{quantity}}</view>
+            <view class="step-btn" bindtap="onQtyChange" data-type="plus">+</view>
           </view>
         </view>
       </scroll-view>
-      <view class="sku-footer">
-        <view class="confirm-btn" bindtap="confirmSku">确定</view>
+      
+      <view class="modal-footer">
+        <view class="btn-confirm" bindtap="confirmSku">CONFIRM</view>
       </view>
     </view>
   </view>
 </view>
+
+<loading wx:if="{{loading}}" text="Loading..." />

@@ -1,124 +1,157 @@
+/* 引入全局变量 (局部定义兜底) */
+page {
+  background-color: #FDFCF8; /* 米白 */
+  --primary: #6B7C85; /* 莫兰迪蓝灰 */
+  --accent: #C58F78;  /* 陶土色 */
+  --text-main: #2D3436;
+  --text-light: #B2BEC3;
+}
+
 .container {
-    min-height: 100vh;
-    background: #f5f5f5;
-    padding-bottom: 180rpx; /* 留出底部按钮空间 */
-  }
-  
-  .address-list {
-    padding: 24rpx;
-  }
-  
-  .address-item {
-    background: #fff;
-    border-radius: 20rpx;
-    padding: 32rpx;
-    margin-bottom: 24rpx;
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    box-shadow: 0 4rpx 16rpx rgba(0,0,0,0.02);
-  }
-  
-  .info-content {
-    flex: 1;
-    margin-right: 24rpx;
-  }
-  
-  .user-row {
-    margin-bottom: 16rpx;
-    display: flex;
-    align-items: center;
-  }
-  
-  .name {
-    font-size: 34rpx;
-    font-weight: 600;
-    color: #333;
-    margin-right: 20rpx;
-  }
-  
-  .phone {
-    font-size: 30rpx;
-    color: #666;
-    font-family: Arial, Helvetica, sans-serif;
-  }
-  
-  .tag-default {
-    font-size: 20rpx;
-    color: #fff;
-    background: #ff6b6b;
-    padding: 4rpx 10rpx;
-    border-radius: 8rpx;
-    margin-left: 16rpx;
-    line-height: 1;
-  }
-  
-  .address-text {
-    font-size: 28rpx;
-    color: #333;
-    line-height: 1.5;
-  }
-  
-  .edit-btn {
-    padding-left: 24rpx;
-    border-left: 1rpx solid #eee;
-    display: flex;
-    align-items: center;
-    height: 80rpx;
-  }
-  
-  .edit-icon-text {
-    font-size: 26rpx;
-    color: #999;
-  }
-  
-  /* 空状态 */
-  .empty-state {
-    padding-top: 30%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  .empty-text {
-    color: #999;
-    font-size: 28rpx;
-    margin-top: 20rpx;
-  }
-  
-  /* 底部按钮优化 */
-  .footer-safe-area {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: #fff;
-    padding: 20rpx 40rpx;
-    padding-bottom: calc(20rpx + env(safe-area-inset-bottom));
-    box-shadow: 0 -4rpx 20rpx rgba(0,0,0,0.05);
-    z-index: 100;
-  }
-  
-  .btn-add-wrapper {
-    height: 88rpx;
-    background: linear-gradient(135deg, #ff6b6b, #ff4757);
-    border-radius: 44rpx;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    font-size: 30rpx;
-    font-weight: 500;
-    box-shadow: 0 8rpx 24rpx rgba(255, 107, 107, 0.3);
-    transition: opacity 0.2s;
-  }
-  
-  .btn-add-wrapper:active {
-    opacity: 0.9;
-  }
-  
-  .plus-icon {
-    font-size: 40rpx;
-    margin-right: 12rpx;
-    font-weight: 300;
-    margin-top: -4rpx; /* 微调对齐 */
-  }
+  min-height: 100vh;
+  padding-bottom: 200rpx; /* 留出底部按钮空间 */
+  box-sizing: border-box;
+}
+
+.address-list {
+  padding: 30rpx;
+}
+
+/* 地址卡片 */
+.address-card {
+  background: #FFFFFF;
+  border-radius: 20rpx;
+  padding: 40rpx;
+  margin-bottom: 24rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 8rpx 24rpx rgba(45, 52, 54, 0.04);
+  transition: transform 0.2s;
+}
+
+.hover-scale:active {
+  transform: scale(0.99);
+}
+
+.card-left {
+  flex: 1;
+  margin-right: 30rpx;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12rpx;
+}
+
+.user-name {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: var(--text-main);
+  margin-right: 20rpx;
+}
+
+.user-phone {
+  font-size: 28rpx;
+  color: #636E72;
+  font-family: 'DIN Alternate', sans-serif; /* 数字优化 */
+  margin-right: 16rpx;
+}
+
+/* 默认标签 */
+.tag-default {
+  background: var(--text-main);
+  color: #fff;
+  font-size: 18rpx;
+  padding: 4rpx 12rpx;
+  border-radius: 6rpx;
+  letter-spacing: 1rpx;
+  font-weight: 500;
+}
+
+.address-detail {
+  font-size: 26rpx;
+  color: #636E72;
+  line-height: 1.5;
+}
+
+/* 编辑按钮 (左侧竖线分隔) */
+.edit-action {
+  padding-left: 30rpx;
+  border-left: 2rpx solid #F0F0F0;
+  height: 60rpx;
+  display: flex;
+  align-items: center;
+}
+
+/* 纯CSS编辑图标 */
+.icon-edit {
+  width: 32rpx;
+  height: 32rpx;
+  border: 3rpx solid var(--text-light);
+  border-radius: 6rpx;
+  position: relative;
+}
+.icon-edit::after {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 20rpx; height: 3rpx;
+  background: var(--text-light);
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+/* 空状态 */
+.empty-state {
+  padding-top: 200rpx;
+  display: flex;
+  justify-content: center;
+}
+.empty-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  opacity: 0.5;
+}
+.icon-location {
+  width: 80rpx; height: 80rpx;
+  border: 4rpx solid var(--text-light);
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  margin-bottom: 20rpx;
+}
+.empty-tips { font-size: 26rpx; color: var(--text-light); letter-spacing: 1rpx; }
+
+/* 底部悬浮按钮 */
+.footer-fixed {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: rgba(253, 252, 248, 0.95);
+  padding: 20rpx 40rpx 60rpx;
+  backdrop-filter: blur(10px);
+  z-index: 99;
+}
+
+.btn-add {
+  height: 96rpx;
+  background: var(--text-main); /* 深灰显贵 */
+  color: #fff;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30rpx;
+  font-weight: 500;
+  letter-spacing: 2rpx;
+  box-shadow: 0 12rpx 32rpx rgba(45, 52, 54, 0.15);
+  transition: opacity 0.2s;
+}
+
+.btn-add:active { opacity: 0.9; }
+
+.icon-plus {
+  font-size: 40rpx;
+  margin-right: 12rpx;
+  margin-top: -6rpx;
+}

@@ -1,66 +1,90 @@
+/* 引入变量 */
+page {
+  background-color: #FDFCF8;
+  --primary: #6B7C85;
+  --text-main: #2D3436;
+  --line-color: #F0F0F0;
+}
+
 .container {
-    min-height: 100vh;
-    background: #f5f5f5;
-    padding: 20rpx;
-  }
-  
-  .form-group {
-    background: #fff;
-    border-radius: 16rpx;
-    padding: 0 30rpx;
-    margin-bottom: 30rpx;
-  }
-  
-  .form-item {
-    display: flex;
-    align-items: center;
-    min-height: 100rpx;
-    border-bottom: 1rpx solid #f5f5f5;
-    font-size: 28rpx;
-  }
-  
-  .form-item:last-child {
-    border-bottom: none;
-  }
-  
-  .label {
-    width: 160rpx;
-    color: #333;
-  }
-  
-  .input, .picker-view, .textarea {
-    flex: 1;
-    color: #333;
-  }
-  
-  .placeholder {
-    color: #999;
-  }
-  
-  .textarea {
-    padding: 30rpx 0;
-    line-height: 1.5;
-  }
-  
-  .switch-item {
-    justify-content: space-between;
-  }
-  
-  .footer-btn {
-    margin-top: 60rpx;
-  }
-  
-  .btn-save {
-    background: linear-gradient(90deg, #ff6b6b, #ff4757);
-    color: #fff;
-    border-radius: 44rpx;
-    font-size: 32rpx;
-    margin-bottom: 30rpx;
-  }
-  
-  .btn-delete {
-    background: #fff;
-    color: #666;
-    border-radius: 44rpx;
-    font-size: 32rpx;
-  }
+  min-height: 100vh;
+  padding: 40rpx 60rpx; /* 增加左右留白 */
+}
+
+.form-wrapper {
+  margin-bottom: 80rpx;
+}
+
+.form-item {
+  margin-bottom: 50rpx;
+}
+
+.form-item.switch-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 60rpx;
+  border-bottom: none; /* 开关行不需要底线 */
+}
+
+/* 英文标签 */
+.label {
+  display: block;
+  font-size: 20rpx;
+  color: var(--primary);
+  font-weight: 700;
+  letter-spacing: 2rpx;
+  margin-bottom: 20rpx;
+}
+
+/* 极简输入框 */
+.input, .picker-val, .textarea {
+  width: 100%;
+  font-size: 30rpx;
+  color: var(--text-main);
+  border-bottom: 2rpx solid var(--line-color);
+  padding: 10rpx 0 20rpx;
+  transition: border-color 0.3s;
+}
+
+/* 聚焦效果 (部分组件不支持 focus 伪类，可忽略) */
+.input:focus { border-bottom-color: var(--primary); }
+
+.ph-style {
+  color: #D1D8DB;
+  font-weight: 300;
+}
+
+.textarea {
+  line-height: 1.5;
+  min-height: 80rpx;
+}
+
+/* 底部按钮 */
+.action-footer {
+  margin-top: 80rpx;
+  text-align: center;
+}
+
+.btn-save {
+  height: 100rpx;
+  background: var(--text-main);
+  color: #fff;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28rpx;
+  font-weight: 600;
+  letter-spacing: 3rpx;
+  box-shadow: 0 12rpx 32rpx rgba(45, 52, 54, 0.15);
+  margin-bottom: 40rpx;
+}
+
+.btn-delete {
+  font-size: 24rpx;
+  color: #C57878; /* 莫兰迪红 */
+  text-decoration: underline;
+  padding: 20rpx;
+  display: inline-block;
+}
